@@ -419,10 +419,10 @@ sudo mkdir -p /opt/wrightyard-bot /etc/wrightyard-bot
 sudo chown wrightyard:wrightyard /opt/wrightyard-bot
 
 # 2. Clone and install as the service user.
-sudo -u wrightyard git clone https://github.com/PrinceAscending/Wrightyard-bot.git /opt/wrightyard-bot
+sudo -u wrightyard -H git clone https://github.com/PrinceAscending/Wrightyard-bot.git /opt/wrightyard-bot
 cd /opt/wrightyard-bot
-sudo -u wrightyard npm ci
-sudo -u wrightyard npm run build
+sudo -u wrightyard -H npm ci
+sudo -u wrightyard -H npm run build
 
 # 3. Create the environment file. Readable by the service user only.
 sudo install -m 640 -o root -g wrightyard .env.example /etc/wrightyard-bot/wrightyard-bot.env
@@ -430,7 +430,7 @@ sudo nano /etc/wrightyard-bot/wrightyard-bot.env
 
 # 4. Register commands once. WRIGHTYARD_ENV_FILE tells the deploy script where
 #    the systemd-managed env file lives.
-sudo -u wrightyard env WRIGHTYARD_ENV_FILE=/etc/wrightyard-bot/wrightyard-bot.env npm run deploy-commands
+sudo -u wrightyard -H env WRIGHTYARD_ENV_FILE=/etc/wrightyard-bot/wrightyard-bot.env npm run deploy-commands
 
 # 5. Install and start the service.
 sudo cp deploy/wrightyard-bot.service /etc/systemd/system/wrightyard-bot.service
@@ -451,9 +451,9 @@ For updates:
 
 ```bash
 cd /opt/wrightyard-bot
-sudo -u wrightyard git pull --ff-only
-sudo -u wrightyard npm ci
-sudo -u wrightyard npm run build
+sudo -u wrightyard -H git pull --ff-only
+sudo -u wrightyard -H npm ci
+sudo -u wrightyard -H npm run build
 sudo systemctl restart wrightyard-bot
 ```
 
