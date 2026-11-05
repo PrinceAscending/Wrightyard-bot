@@ -414,8 +414,9 @@ non-root service user.
 
 ```bash
 # 1. Create the service user and directories.
-sudo adduser --system --group --home /opt/wrightyard-bot wrightyard
-sudo mkdir -p /etc/wrightyard-bot
+sudo adduser --system --group --home /var/lib/wrightyard-bot wrightyard
+sudo mkdir -p /opt/wrightyard-bot /etc/wrightyard-bot
+sudo chown wrightyard:wrightyard /opt/wrightyard-bot
 
 # 2. Clone and install as the service user.
 sudo -u wrightyard git clone https://github.com/PrinceAscending/Wrightyard-bot.git /opt/wrightyard-bot
