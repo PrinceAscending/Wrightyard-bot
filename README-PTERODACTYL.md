@@ -2,35 +2,30 @@
 
 This repository is the complete Wrightyard bot: the Discord gateway, the ticket
 ledger, auto-role and the XP ladder, the website heartbeat, and the Groq-powered
-`/ask` and `/brief` commands.
+`/ask` and `/brief` commands. The release is one self-contained `index.js`; no
+`npm install` or build step is needed on the panel.
 
 ## 1. Create the server
 
 Use a **Node.js** egg on Node **22.12 or newer**. A 1 GB RAM / 1 vCPU server is
 plenty. The bot needs one long-running process and no inbound web traffic.
 
-Set the startup command to one of these:
+Set the startup command to:
 
 ```text
-sh start.sh
+node index.js
 ```
 
-or, if the panel does not allow shell wrappers:
-
-```text
-node dist/index.js
-```
-
-`start.sh` uses Pterodactyl's `SERVER_PORT` for the local health endpoint and
-installs production dependencies the first time if `node_modules` is missing.
+`start.sh` is still included for panels that require a wrapper; it maps
+Pterodactyl's `SERVER_PORT` to `PORT` and then runs the same `index.js`.
 
 ## 2. Upload the files
 
 1. Open **File Manager** for the server.
-2. Upload the zip.
-3. Extract it **into the server root**. The root must contain `package.json`,
-   `dist/`, `start.sh`, and `README-PTERODACTYL.md` directly. If the zip
-   extracts into a folder, move its contents up one level.
+2. Upload the release zip.
+3. Extract it **into the server root**. The root must contain `index.js`,
+   `.env.example`, and `start.sh` directly. If the zip extracts into a folder,
+   move its contents up one level.
 4. Delete the zip after extraction if the panel has a tight disk quota.
 
 ## 3. Create `.env`
@@ -95,14 +90,8 @@ INFO  [bot:heartbeat] Website heartbeat started ...
 INFO  [bot:heartbeat] Website heartbeat accepted
 ```
 
-If `node_modules` was not included in the zip, the first start runs
-`npm ci --omit=dev`. If the panel blocks that, open the **Console** and run:
-
-```bash
-npm ci --omit=dev --no-audit --no-fund
-```
-
-Then restart the server.
+There is no dependency install or build step. If startup fails, check that
+`index.js` is in the server root and that Node is 22.12 or newer.
 
 ## 5. Register the commands
 
@@ -110,7 +99,7 @@ The bot registers commands when the website asks it to sync, or you can do it
 once from the Pterodactyl console:
 
 ```bash
-node dist/deploy-commands.js
+node index.js --deploy-commands
 ```
 
 You should see ten commands:
@@ -151,10 +140,10 @@ Do not run a second copy as a backup.
 | --- | --- |
 | `DISCORD_TOKEN is missing` | The `.env` file is not in the server root, or the panel environment is empty. |
 | `Gateway ready` never appears | The token is wrong, the bot is not invited, or `Guilds` / `GuildMembers` / `GuildMessages` is off in the Discord Developer Portal. |
-| Commands missing | Run `node dist/deploy-commands.js` and confirm `DISCORD_GUILD_ID` is the Wrightyard guild. |
+| Commands missing | Run `node index.js --deploy-commands` and confirm `DISCORD_GUILD_ID` is the Wrightyard guild. |
 | Website says bot offline | `SITE_URL` must be `https://wrightyard.vercel.app`; `BOT_HEARTBEAT_SECRET` must match Vercel exactly. Check the console for `Website heartbeat accepted`. |
 | `/ask` says AI is not wired | `GROQ_API_KEY` is missing or still the placeholder. |
-| `npm ci` fails | Use Node 22+, check disk space, and run it from the console to see the full error. |
+| `node index.js` fails immediately | Use Node 22.12+, confirm `index.js` is in the server root, and check the console for the exact error. |
 | Health check fails | The bot listens on `PORT` (default `8080`). If the panel assigns a different port, `start.sh` maps `SERVER_PORT` to `PORT` automatically. |
 
 ## Security

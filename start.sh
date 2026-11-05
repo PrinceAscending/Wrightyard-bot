@@ -7,14 +7,5 @@ if [ -n "${SERVER_PORT:-}" ]; then
   export PORT="$SERVER_PORT"
 fi
 
-if [ ! -d node_modules ]; then
-  echo "[wrightyard] Installing dependencies..."
-  npm ci --no-audit --no-fund
-fi
-
-if [ ! -f dist/index.js ]; then
-  echo "[wrightyard] Building the bot..."
-  npm run build
-fi
-
-exec node dist/index.js
+# The release is self-contained. No install or build step.
+exec node index.js

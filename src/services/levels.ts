@@ -1,7 +1,6 @@
 import { randomInt } from "node:crypto";
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
-import { dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+import { dirname, resolve } from "node:path";
 import { MongoClient, type Collection } from "mongodb";
 import type { Logger } from "../logger.js";
 import { serializeError } from "../logger.js";
@@ -111,8 +110,7 @@ export class LevelStore {
     this.logger = options.logger;
     this.jsonMode = !options.uri;
     this.jsonPath =
-      process.env.LEVELS_FILE?.trim() ||
-      fileURLToPath(new URL("../../data/levels.json", import.meta.url));
+      process.env.LEVELS_FILE?.trim() || resolve(process.cwd(), "data", "levels.json");
   }
 
   public get durable(): boolean {

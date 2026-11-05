@@ -6,8 +6,9 @@ tickets, community roles, the XP ladder, owner controls, and the signed
 heartbeat that keeps the website's live report honest.
 
 - **Runtime:** Node.js 22.12+ (Docker uses `node:22-alpine`)
+- **Release:** one self-contained root `index.js`; run `node index.js`
 - **Library:** `discord.js` 14
-- **Language:** TypeScript, ESM
+- **Language:** TypeScript source, bundled to CommonJS for the release
 - **Intents:** `Guilds`, `GuildMembers`, `GuildMessages` — **Message Content is off**
 - **State:** MongoDB for tickets and XP; channel topics and `data/levels.json` are the fallbacks
 - **Process:** exactly one long-running gateway process
@@ -48,6 +49,29 @@ requested; XP only needs message metadata.
 
 ## Quick start
 
+### From the release zip
+
+The release contains `index.js`, `.env.example`, and the runbooks. There is no
+install or build step:
+
+```bash
+cp .env.example .env
+# fill in the real values
+node index.js
+```
+
+On first setup, register the slash commands once:
+
+```bash
+node index.js --deploy-commands
+```
+
+Then start the bot with `node index.js`. Open
+<http://localhost:8080/health>. A healthy process reports `"ok": true` once the
+gateway is ready.
+
+### From source
+
 On Linux, macOS, or WSL:
 
 ```bash
@@ -70,8 +94,8 @@ npm run deploy-commands
 npm start
 ```
 
-Open <http://localhost:8080/health>. A healthy process reports `"ok": true` once
-the gateway is ready.
+Build the standalone bundle yourself with `npm run bundle`. That writes
+`index.js`, which is the same file shipped in the release.
 
 The loader reads `.env.local` first, then `.env`. Values already present in the
 process environment win, which is how systemd, Docker, Railway, Fly, Render, and
@@ -80,10 +104,14 @@ before the local ones (used by the systemd deploy step below).
 
 ### Register slash commands
 
-Commands are **not** deployed on `ready`. Register them after a build:
+Commands are **not** deployed on `ready`. Register them after a release or
+build:
 
 ```bash
-npm run build
+# Release zip:
+node index.js --deploy-commands
+
+# Source checkout:
 npm run deploy-commands
 ```
 
@@ -406,7 +434,7 @@ The bot must run on a persistent Linux host. Vercel functions cannot hold a
 
 ### Linux with systemd (recommended)
 
-This is the plain-metal path: Node runs the compiled bot directly, and systemd
+This is the plain-metal path: Node runs the bundled `index.js`, and systemd
 keeps exactly one process alive.
 
 Requirements: a Debian/Ubuntu (or similar) server, Node.js 22.12+, Git, and a
@@ -418,22 +446,25 @@ sudo adduser --system --group --home /var/lib/wrightyard-bot wrightyard
 sudo mkdir -p /opt/wrightyard-bot /etc/wrightyard-bot
 sudo chown wrightyard:wrightyard /opt/wrightyard-bot
 
-# 2. Clone and install as the service user.
-sudo -u wrightyard -H git clone https://github.com/PrinceAscending/Wrightyard-bot.git /opt/wrightyard-bot
-cd /opt/wrightyard-bot
-sudo -u wrightyard -H npm ci
-sudo -u wrightyard -H npm run build
+# 2. Get the release. The repository contains the built index.js, so no npm
+#    install or build is needed. (A release zip works the same way.)
+sudo -u wrightyard -H git clone --depth 1 \
+  https://github.com/PrinceAscending/Wrightyard-bot.git /opt/wrightyard-bot
 
 # 3. Create the environment file. Readable by the service user only.
-sudo install -m 640 -o root -g wrightyard .env.example /etc/wrightyard-bot/wrightyard-bot.env
+sudo install -m 640 -o root -g wrightyard \
+  /opt/wrightyard-bot/.env.example /etc/wrightyard-bot/wrightyard-bot.env
 sudo nano /etc/wrightyard-bot/wrightyard-bot.env
 
-# 4. Register commands once. WRIGHTYARD_ENV_FILE tells the deploy script where
-#    the systemd-managed env file lives.
-sudo -u wrightyard -H env WRIGHTYARD_ENV_FILE=/etc/wrightyard-bot/wrightyard-bot.env npm run deploy-commands
+# 4. Register commands once. WRIGHTYARD_ENV_FILE points the release at the
+#    systemd-managed env file.
+sudo -u wrightyard -H env \
+  WRIGHTYARD_ENV_FILE=/etc/wrightyard-bot/wrightyard-bot.env \
+  /usr/bin/node /opt/wrightyard-bot/index.js --deploy-commands
 
 # 5. Install and start the service.
-sudo cp deploy/wrightyard-bot.service /etc/systemd/system/wrightyard-bot.service
+sudo cp /opt/wrightyard-bot/deploy/wrightyard-bot.service \
+  /etc/systemd/system/wrightyard-bot.service
 sudo systemctl daemon-reload
 sudo systemctl enable --now wrightyard-bot
 
@@ -447,13 +478,11 @@ The unit uses `EnvironmentFile=/etc/wrightyard-bot/wrightyard-bot.env`, so the
 secrets never live in the repository. If the bot writes the JSON fallback
 ledger, ensure `/opt/wrightyard-bot/data` is writable by `wrightyard`.
 
-For updates:
+For updates, replace `index.js` and restart. With a Git checkout:
 
 ```bash
 cd /opt/wrightyard-bot
 sudo -u wrightyard -H git pull --ff-only
-sudo -u wrightyard -H npm ci
-sudo -u wrightyard -H npm run build
 sudo systemctl restart wrightyard-bot
 ```
 
@@ -467,8 +496,8 @@ docker build -t wrightyard-bot .
 docker run --rm --env-file .env -p 8080:8080 wrightyard-bot
 ```
 
-The image is multi-stage, runs as the non-root `node` user, installs production
-dependencies only in the final stage, and includes a health check.
+The image builds the same standalone `index.js`, runs as the non-root `node`
+user, needs no production `node_modules`, and includes a health check.
 
 ### Docker Compose
 
@@ -485,8 +514,8 @@ docker compose up -d --build
 3. Add every environment variable in the service’s Variables tab.
 4. Keep exactly **one replica**.
 5. Deploy and check `GET /health`.
-6. Run `npm run deploy-commands` once from a trusted machine, or use
-   `/admin sync` after the first deploy.
+6. Register commands once with `node index.js --deploy-commands` from a trusted
+   machine, or use `/admin sync` after the first deploy.
 
 `railway.json` points Railway at the Dockerfile and `/health` with an
 `ON_FAILURE` restart policy.
@@ -512,12 +541,13 @@ rotate presence.
 See [`README-PTERODACTYL.md`](./README-PTERODACTYL.md). In short:
 
 1. Create a Node.js server on Node 22.12+ with 1 GB RAM.
-2. Upload this repository, run `npm ci` and `npm run build`, then start with
-   `sh start.sh` (or `node dist/index.js`).
+2. Upload the release zip and extract it so `index.js` sits in the server root.
 3. Create `.env` with the values from the environment table.
-4. Start the server, run `node dist/deploy-commands.js` once, then verify
-   `/health`, `/status`, and `Website heartbeat accepted`.
-5. Stop any old bot process first. One gateway process only.
+4. Start with `node index.js` (or `sh start.sh`), run
+   `node index.js --deploy-commands` once, then verify `/health`, `/status`, and
+   `Website heartbeat accepted`.
+5. Stop any old bot process first. One gateway process only. There is no
+   `npm install` or build step.
 
 ### Any other host
 
@@ -550,7 +580,7 @@ client, and exit. A 10-second timer forces exit if cleanup hangs.
 | Symptom | Check |
 | --- | --- |
 | `DISCORD_TOKEN is missing.` | The env file is not in the project root or the host variable is absent. |
-| Commands do not appear | Run `npm run deploy-commands` against the correct `DISCORD_GUILD_ID`; allow Discord a moment; use `/admin sync`. |
+| Commands do not appear | Run `node index.js --deploy-commands` (or `npm run deploy-commands` from source) against the correct `DISCORD_GUILD_ID`; allow Discord a moment; use `/admin sync`. |
 | `/admin` is hidden | It is registered for Administrators and refuses non-owners. Confirm both the guild permission and `OWNER_ID`. |
 | Ticket opening says intake is not configured | `STAFF_ROLE_IDS` is empty or none of the IDs exist in the guild. |
 | Ticket creation fails | Confirm Manage Channels and Manage Roles, and that the bot role is above the staff roles. |
@@ -577,7 +607,7 @@ client, and exit. A 10-second timer forces exit if cleanup hangs.
   on outgoing messages, so announcements and ticket notices cannot ping
   `@everyone`.
 - Message Content is not requested. XP uses message metadata only.
-- Secrets belong in `.env.local` or the host’s secret manager. `.env*` is ignored
+- Secrets belong in `.env` / `.env.local` on the host or the host’s secret manager. `.env*` is ignored
   except `.env.example`, and `.dockerignore` keeps env files out of the image.
 
 If a token, MongoDB URI, heartbeat secret, or Groq key has ever been exposed,
@@ -588,16 +618,22 @@ deployments together.
 ## Project layout
 
 ```text
+index.js            self-contained release bundle; run with node index.js
 src/
   admin/            owner subcommand implementations
-  commands/         loaded slash command modules
+  commands/         slash command modules
   interactions/     command/button routing and safe replies
   services/         presence, heartbeat, health, command sync, levels, community, AI
   tickets/          ledger, topic schema, lifecycle, Mongo history
   views/            embeds and component rows
   config.ts         environment parsing and validation
   index.ts          boot, ready, shutdown
-  deploy-commands.ts REST command registration
+  deploy.ts         command registration
+  deploy-commands.ts CLI wrapper
+scripts/
+  bundle.mjs        builds index.js
+  smoke.mjs         health and signed-heartbeat checks
+  check-version.mjs keeps package.json and src/version.ts aligned
 Dockerfile
 docker-compose.yml
 railway.json
@@ -614,14 +650,21 @@ Run locally:
 
 ```powershell
 npm run typecheck
+npm run check-version
 npm run build
 npm run smoke
+npm run bundle
+npm run bundle:check
 ```
 
 `npm run smoke` starts a stubbed health server and a local signed-heartbeat
 receiver. It verifies the 503/200 health responses, the exact HMAC over the raw
 request body, website presence and maintenance conversion, website-override
 clearing, and the sync flag. It does not connect to Discord.
+
+`npm run bundle` writes the release `index.js`; `npm run bundle:check` verifies
+that the output parses. `npm run check-version` keeps `package.json` and the
+version embedded in the bundle aligned.
 
 Live verification still requires a real setup:
 

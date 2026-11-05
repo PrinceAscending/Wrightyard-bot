@@ -1,7 +1,29 @@
-import { readdir } from "node:fs/promises";
-import { join } from "node:path";
-import { fileURLToPath, pathToFileURL } from "node:url";
 import type { Command, CommandRegistry } from "./types.js";
+import admin from "./commands/admin.js";
+import ask from "./commands/ask.js";
+import brief from "./commands/brief.js";
+import help from "./commands/help.js";
+import leaderboard from "./commands/leaderboard.js";
+import rank from "./commands/rank.js";
+import site from "./commands/site.js";
+import stats from "./commands/stats.js";
+import status from "./commands/status.js";
+import ticket from "./commands/ticket.js";
+
+// Static imports keep the command registry visible to the bundler. The
+// standalone index.js has no command directory to scan at runtime.
+const COMMAND_MODULES: readonly Command[] = [
+  admin,
+  ask,
+  brief,
+  help,
+  leaderboard,
+  rank,
+  site,
+  stats,
+  status,
+  ticket,
+];
 
 function isCommand(value: unknown): value is Command {
   if (!value || typeof value !== "object") {
@@ -16,24 +38,12 @@ function isCommand(value: unknown): value is Command {
   );
 }
 
-export async function loadCommands(directory: URL): Promise<CommandRegistry> {
-  const entries = await readdir(directory, { withFileTypes: true });
-  const files = entries
-    .filter((entry) => entry.isFile())
-    .map((entry) => entry.name)
-    .filter((name) => (name.endsWith(".js") || name.endsWith(".ts")) && !name.endsWith(".d.ts"))
-    .sort();
-
+export async function loadCommands(): Promise<CommandRegistry> {
   const commands = new Map<string, Command>();
-  const basePath = fileURLToPath(directory);
 
-  for (const file of files) {
-    const fileUrl = pathToFileURL(join(basePath, file));
-    const module = (await import(fileUrl.href)) as { default?: unknown };
-    const command = module.default;
-
+  for (const command of COMMAND_MODULES) {
     if (!isCommand(command)) {
-      throw new Error(`Command module ${file} does not export a valid command.`);
+      throw new Error("A command module does not export a valid command.");
     }
 
     if (commands.has(command.data.name)) {
@@ -50,7 +60,7 @@ export async function loadCommands(directory: URL): Promise<CommandRegistry> {
   }
 
   if (commands.size === 0) {
-    throw new Error(`No commands found in ${basePath}.`);
+    throw new Error("No commands found.");
   }
 
   return commands;

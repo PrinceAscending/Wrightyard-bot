@@ -1,5 +1,4 @@
 import "./env.js";
-import { readFileSync } from "node:fs";
 import type { Server } from "node:http";
 import {
   Client,
@@ -24,16 +23,8 @@ import { TicketService } from "./tickets/service.js";
 import { CommandSyncer } from "./services/command-sync.js";
 import type { BotContext } from "./types.js";
 import { validateGuildConfiguration } from "./validate.js";
-
-function readVersion(): string {
-  try {
-    const raw = readFileSync(new URL("../package.json", import.meta.url), "utf8");
-    const parsed = JSON.parse(raw) as { version?: unknown };
-    return typeof parsed.version === "string" ? parsed.version : "0.0.0";
-  } catch {
-    return "0.0.0";
-  }
-}
+import { deployCommands } from "./deploy.js";
+import { VERSION } from "./version.js";
 
 async function main(): Promise<void> {
   const logger = new Logger("bot");
@@ -58,7 +49,7 @@ async function main(): Promise<void> {
   }
 
   const { config } = loaded;
-  const version = readVersion();
+  const version = VERSION;
   logger.info("Starting Wrightyard bot", {
     version,
     node: process.version,
@@ -76,7 +67,7 @@ async function main(): Promise<void> {
     allowedMentions: { parse: [] },
   });
 
-  const commands = await loadCommands(new URL("./commands/", import.meta.url));
+  const commands = await loadCommands();
   logger.info("Commands loaded", { count: commands.size, commands: [...commands.keys()] });
 
   const presence = new PresenceService(client, config, state, logger.child("presence"));
@@ -290,8 +281,16 @@ async function main(): Promise<void> {
   }
 }
 
-main().catch((error: unknown) => {
-  const logger = new Logger("bot");
-  logger.error("Fatal startup error", { error: serializeError(error) });
-  process.exitCode = 1;
-});
+if (process.argv.includes("--deploy-commands")) {
+  deployCommands().catch((error: unknown) => {
+    const logger = new Logger("deploy");
+    logger.error("Command deployment failed", { error: serializeError(error) });
+    process.exitCode = 1;
+  });
+} else {
+  main().catch((error: unknown) => {
+    const logger = new Logger("bot");
+    logger.error("Fatal startup error", { error: serializeError(error) });
+    process.exitCode = 1;
+  });
+}
