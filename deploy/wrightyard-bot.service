@@ -9,6 +9,7 @@ Type=simple
 User=wrightyard
 Group=wrightyard
 WorkingDirectory=/opt/wrightyard-bot
+Environment=NODE_ENV=production
 EnvironmentFile=/etc/wrightyard-bot/wrightyard-bot.env
 ExecStart=/usr/bin/node dist/index.js
 Restart=always
