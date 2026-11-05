@@ -18,6 +18,8 @@ ENV NODE_ENV=production \
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev --no-audit --no-fund && npm cache clean --force
 COPY --from=build /app/dist ./dist
+# The JSON level ledger is the fallback when MongoDB is not configured.
+RUN mkdir -p /app/data && chown node:node /app/data
 USER node
 EXPOSE 8080
 STOPSIGNAL SIGTERM
