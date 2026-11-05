@@ -1,0 +1,11 @@
+node_modules
+dist
+data
+.env
+.env.*
+.git
+.github
+.gitignore
+*.log
+*.tsbuildinfo
+*.zip

@@ -1,0 +1,36 @@
+[Unit]
+Description=Wrightyard Discord bot
+Documentation=https://github.com/PrinceAscending/Wrightyard-bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=wrightyard
+Group=wrightyard
+WorkingDirectory=/opt/wrightyard-bot
+EnvironmentFile=/etc/wrightyard-bot/wrightyard-bot.env
+ExecStart=/usr/bin/node dist/index.js
+Restart=always
+RestartSec=10
+KillSignal=SIGTERM
+TimeoutStopSec=30
+
+# Keep the bot's own logs in the journal.
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=wrightyard-bot
+
+# Basic hardening. The bot only needs outbound network and its own directory.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target
