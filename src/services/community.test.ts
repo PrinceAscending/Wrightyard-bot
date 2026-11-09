@@ -34,7 +34,7 @@ function makeConfig(): Config {
     groqModel: "test",
     port: 8080,
     nodeEnv: "test",
-  } as Config;
+  } as unknown as Config;
 }
 
 function makeMember(bot: boolean): { member: GuildMember; added: string[][] } {

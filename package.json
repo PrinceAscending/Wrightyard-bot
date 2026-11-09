@@ -17,7 +17,7 @@
     "bundle:check": "node --check index.js",
     "check-version": "node scripts/check-version.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "npm run build && node --test dist/services/community.test.js",
+    "test": "npm run build && node --test dist",
     "smoke": "npm run build && node scripts/smoke.mjs"
   },
   "dependencies": {
