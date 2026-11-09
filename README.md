@@ -5,7 +5,7 @@ studio and an after-hours crew. The bot runs the public commands, private
 tickets, community roles, the XP ladder, owner controls, and the signed
 heartbeat that keeps the website's live report honest.
 
-- **Runtime:** Node.js 22.12+ (Docker uses `node:22-alpine`)
+- **Runtime:** Node.js 20.19+ (22.12+ recommended; Docker uses `node:22-alpine`)
 - **Release:** one self-contained root `index.js`; run `node index.js`
 - **Library:** `discord.js` 14
 - **Language:** TypeScript source, bundled to CommonJS for the release
@@ -437,7 +437,7 @@ The bot must run on a persistent Linux host. Vercel functions cannot hold a
 This is the plain-metal path: Node runs the bundled `index.js`, and systemd
 keeps exactly one process alive.
 
-Requirements: a Debian/Ubuntu (or similar) server, Node.js 22.12+, Git, and a
+Requirements: a Debian/Ubuntu (or similar) server, Node.js 20.19+, Git, and a
 non-root service user.
 
 ```bash
@@ -540,7 +540,7 @@ rotate presence.
 
 See [`README-PTERODACTYL.md`](./README-PTERODACTYL.md). In short:
 
-1. Create a Node.js server on Node 22.12+ with 1 GB RAM.
+1. Create a Node.js server on Node 20.19+ with 512 MB RAM; 1 GB gives headroom.
 2. Upload the release zip and extract it so `index.js` sits in the server root.
 3. Create `.env` with the values from the environment table.
 4. Start with `node index.js` (or `sh start.sh`), run
@@ -553,7 +553,7 @@ See [`README-PTERODACTYL.md`](./README-PTERODACTYL.md). In short:
 
 Any persistent process host works. The requirements are:
 
-- Node.js 22.12+
+- Node.js 20.19+
 - One long-running process
 - Environment variables from the table above
 - A routed port equal to `PORT`

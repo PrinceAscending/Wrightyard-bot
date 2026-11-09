@@ -4,7 +4,7 @@
   "private": true,
   "description": "The Wrightyard yard bot: status, stats, tickets, and a quiet heartbeat.",
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=20.19.0"
   },
   "scripts": {
     "dev": "tsx watch src/index.ts",

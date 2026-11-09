@@ -7,8 +7,9 @@ ledger, auto-role and the XP ladder, the website heartbeat, and the Groq-powered
 
 ## 1. Create the server
 
-Use a **Node.js** egg on Node **22.12 or newer**. A 1 GB RAM / 1 vCPU server is
-plenty. The bot needs one long-running process and no inbound web traffic.
+Use a **Node.js** egg on Node **20.19 or newer** (Node 22 LTS recommended). A
+512 MB / 1 vCPU server is enough; 1 GB gives headroom. The bot needs one
+long-running process and no inbound web traffic.
 
 Set the startup command to:
 
@@ -91,7 +92,7 @@ INFO  [bot:heartbeat] Website heartbeat accepted
 ```
 
 There is no dependency install or build step. If startup fails, check that
-`index.js` is in the server root and that Node is 22.12 or newer.
+`index.js` is in the server root and that Node is 20.19 or newer.
 
 ## 5. Register the commands
 
@@ -143,7 +144,7 @@ Do not run a second copy as a backup.
 | Commands missing | Run `node index.js --deploy-commands` and confirm `DISCORD_GUILD_ID` is the Wrightyard guild. |
 | Website says bot offline | `SITE_URL` must be `https://wrightyard.vercel.app`; `BOT_HEARTBEAT_SECRET` must match Vercel exactly. Check the console for `Website heartbeat accepted`. |
 | `/ask` says AI is not wired | `GROQ_API_KEY` is missing or still the placeholder. |
-| `node index.js` fails immediately | Use Node 22.12+, confirm `index.js` is in the server root, and check the console for the exact error. |
+| `node index.js` fails immediately | Use Node 20.19+, confirm `index.js` is in the server root, and check the console for the exact error. |
 | Health check fails | The bot listens on `PORT` (default `8080`). If the panel assigns a different port, `start.sh` maps `SERVER_PORT` to `PORT` automatically. |
 
 ## Security

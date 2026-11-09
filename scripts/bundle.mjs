@@ -30,7 +30,7 @@ await build({
   outfile: join(root, "index.js"),
   bundle: true,
   platform: "node",
-  target: "node22",
+  target: "node20",
   format: "cjs",
   banner: { js: "#!/usr/bin/env node" },
   external: optionalExternals,
