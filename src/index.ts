@@ -250,6 +250,7 @@ async function main(): Promise<void> {
       });
       logger.info("Community systems ready", {
         autoRoles: config.autoRoleIds.length,
+        botAutoRoles: config.botAutoRoleIds.length,
         levelRoles: config.levelRoles.length,
         welcomeChannel: config.welcomeChannelId ?? "by-name",
         levelUpChannel: config.levelUpChannelId ?? "by-name",

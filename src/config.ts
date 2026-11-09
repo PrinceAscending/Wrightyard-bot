@@ -22,6 +22,7 @@ export interface Config {
   readonly staffRoleIds: readonly string[];
   readonly ticketCategoryId: string | null;
   readonly autoRoleIds: readonly string[];
+  readonly botAutoRoleIds: readonly string[];
   readonly levelRoles: readonly LevelRole[];
   readonly welcomeChannelId: string | null;
   readonly levelUpChannelId: string | null;
@@ -279,6 +280,12 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): LoadedConfig {
     warnings,
     "AUTO_ROLE_IDS is empty; new members will not receive a base role.",
   );
+  const botAutoRoleIds = parseIdList(
+    env,
+    "BOT_AUTO_ROLE_IDS",
+    warnings,
+    "BOT_AUTO_ROLE_IDS is empty; new bots will not receive a marker role.",
+  );
   const levelRoles = parseLevelRoles(env, warnings);
   const welcomeChannelId = snowflake(env, "WELCOME_CHANNEL_ID", false);
   const levelUpChannelId = snowflake(env, "LEVEL_UP_CHANNEL_ID", false);
@@ -301,6 +308,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): LoadedConfig {
       staffRoleIds,
       ticketCategoryId,
       autoRoleIds,
+      botAutoRoleIds,
       levelRoles,
       welcomeChannelId,
       levelUpChannelId,

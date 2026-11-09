@@ -3,6 +3,14 @@
 Notable changes to the Wrightyard bot. The release line is shared with the
 website so both can be deployed together.
 
+## [Unreleased]
+
+### Added
+
+- Bots now receive the roles in `BOT_AUTO_ROLE_IDS` on join (currently
+  **TrueForce**), while humans continue to receive `AUTO_ROLE_IDS`
+  (**Crew**) and the welcome notice.
+
 ## [1.1.0] - 2026-11-09
 
 ### Added

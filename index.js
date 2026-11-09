@@ -109814,6 +109814,12 @@ function loadConfig(env = process.env) {
     warnings,
     "AUTO_ROLE_IDS is empty; new members will not receive a base role."
   );
+  const botAutoRoleIds = parseIdList(
+    env,
+    "BOT_AUTO_ROLE_IDS",
+    warnings,
+    "BOT_AUTO_ROLE_IDS is empty; new bots will not receive a marker role."
+  );
   const levelRoles = parseLevelRoles(env, warnings);
   const welcomeChannelId = snowflake(env, "WELCOME_CHANNEL_ID", false);
   const levelUpChannelId = snowflake(env, "LEVEL_UP_CHANNEL_ID", false);
@@ -109835,6 +109841,7 @@ function loadConfig(env = process.env) {
       staffRoleIds,
       ticketCategoryId,
       autoRoleIds,
+      botAutoRoleIds,
       levelRoles,
       welcomeChannelId,
       levelUpChannelId,
@@ -111802,23 +111809,14 @@ var CommunityService = class {
   levels;
   logger;
   async onMemberJoin(member) {
-    if (member.guild.id !== this.config.guildId || member.user.bot) {
+    if (member.guild.id !== this.config.guildId) {
       return;
     }
-    if (this.config.autoRoleIds.length > 0) {
-      const roles2 = this.config.autoRoleIds.filter((id) => member.guild.roles.cache.has(id));
-      if (roles2.length > 0) {
-        try {
-          await member.roles.add(roles2, "Wrightyard auto-role");
-        } catch (error) {
-          this.logger.warn("Auto-role failed", {
-            userId: member.id,
-            roles: roles2,
-            error: serializeError(error)
-          });
-        }
-      }
+    if (member.user.bot) {
+      await this.applyAutoRoles(member, this.config.botAutoRoleIds, "Wrightyard bot auto-role");
+      return;
     }
+    await this.applyAutoRoles(member, this.config.autoRoleIds, "Wrightyard auto-role");
     const channel = await this.findChannel(member.guild, this.config.welcomeChannelId, "welcome");
     if (!channel) {
       return;
@@ -111872,6 +111870,24 @@ var CommunityService = class {
       this.logger.warn("Welcome notice failed", {
         userId: member.id,
         channelId: channel.id,
+        error: serializeError(error)
+      });
+    }
+  }
+  async applyAutoRoles(member, roleIds, reason) {
+    if (roleIds.length === 0) {
+      return;
+    }
+    const roles = roleIds.filter((id) => member.guild.roles.cache.has(id));
+    if (roles.length === 0) {
+      return;
+    }
+    try {
+      await member.roles.add(roles, reason);
+    } catch (error) {
+      this.logger.warn("Auto-role failed", {
+        userId: member.id,
+        roles,
         error: serializeError(error)
       });
     }
@@ -113733,6 +113749,11 @@ async function validateGuildConfiguration(client, config, logger) {
       logger.warn("Configured auto-role is not present in the guild.", { roleId });
     }
   }
+  for (const roleId of config.botAutoRoleIds) {
+    if (!guild.roles.cache.has(roleId)) {
+      logger.warn("Configured bot auto-role is not present in the guild.", { roleId });
+    }
+  }
   for (const entry of config.levelRoles) {
     if (!guild.roles.cache.has(entry.roleId)) {
       logger.warn("Configured level role is not present in the guild.", {
@@ -113992,6 +114013,7 @@ async function main() {
       });
       logger.info("Community systems ready", {
         autoRoles: config.autoRoleIds.length,
+        botAutoRoles: config.botAutoRoleIds.length,
         levelRoles: config.levelRoles.length,
         welcomeChannel: config.welcomeChannelId ?? "by-name",
         levelUpChannel: config.levelUpChannelId ?? "by-name",

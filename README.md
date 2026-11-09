@@ -181,6 +181,7 @@ Copy `.env.example` and fill every required value. Never commit real values.
 | `TICKET_CATEGORY_ID` | Optional | Existing private category. When empty, the bot uses or creates `Tickets`. |
 | `STAFF_ROLE_IDS` | Recommended | Comma-separated role IDs that can see and claim tickets. Ticket opening refuses while empty. |
 | `AUTO_ROLE_IDS` | Recommended | Comma-separated roles applied to every new human. |
+| `BOT_AUTO_ROLE_IDS` | Recommended | Comma-separated roles applied to every new bot. |
 | `LEVEL_ROLE_IDS` | Recommended | `level:roleId` pairs. The highest reached role is kept. |
 | `WELCOME_CHANNEL_ID` | Optional | Join notice destination. |
 | `LEVEL_UP_CHANNEL_ID` | Optional | Level-up notice destination. |
@@ -250,10 +251,11 @@ Presence precedence, highest first:
 
 ### Auto-role and welcome
 
-On `GuildMemberAdd`, the bot adds every role in `AUTO_ROLE_IDS` (currently
-**Crew**) and posts a welcome embed in `WELCOME_CHANNEL_ID` with link buttons to
-the rules, role picker, and ticket desk. Bots are ignored. A missing role or
-channel is logged and never blocks the rest of the join flow.
+On `GuildMemberAdd`, humans receive every role in `AUTO_ROLE_IDS` (currently
+**Crew**) and a welcome embed in `WELCOME_CHANNEL_ID` with link buttons to the
+rules, role picker, and ticket desk. Bots receive every role in
+`BOT_AUTO_ROLE_IDS` (currently **TrueForce**) and skip the welcome notice. A
+missing role or channel is logged and never blocks the rest of the join flow.
 
 ### XP and levels
 

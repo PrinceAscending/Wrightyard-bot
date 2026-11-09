@@ -25,24 +25,16 @@ export class CommunityService {
   ) {}
 
   public async onMemberJoin(member: GuildMember): Promise<void> {
-    if (member.guild.id !== this.config.guildId || member.user.bot) {
+    if (member.guild.id !== this.config.guildId) {
       return;
     }
 
-    if (this.config.autoRoleIds.length > 0) {
-      const roles = this.config.autoRoleIds.filter((id) => member.guild.roles.cache.has(id));
-      if (roles.length > 0) {
-        try {
-          await member.roles.add(roles, "Wrightyard auto-role");
-        } catch (error) {
-          this.logger.warn("Auto-role failed", {
-            userId: member.id,
-            roles,
-            error: serializeError(error),
-          });
-        }
-      }
+    if (member.user.bot) {
+      await this.applyAutoRoles(member, this.config.botAutoRoleIds, "Wrightyard bot auto-role");
+      return;
     }
+
+    await this.applyAutoRoles(member, this.config.autoRoleIds, "Wrightyard auto-role");
 
     const channel = await this.findChannel(member.guild, this.config.welcomeChannelId, "welcome");
     if (!channel) {
@@ -121,6 +113,31 @@ export class CommunityService {
       this.logger.warn("Welcome notice failed", {
         userId: member.id,
         channelId: channel.id,
+        error: serializeError(error),
+      });
+    }
+  }
+
+  private async applyAutoRoles(
+    member: GuildMember,
+    roleIds: readonly string[],
+    reason: string,
+  ): Promise<void> {
+    if (roleIds.length === 0) {
+      return;
+    }
+
+    const roles = roleIds.filter((id) => member.guild.roles.cache.has(id));
+    if (roles.length === 0) {
+      return;
+    }
+
+    try {
+      await member.roles.add(roles, reason);
+    } catch (error) {
+      this.logger.warn("Auto-role failed", {
+        userId: member.id,
+        roles,
         error: serializeError(error),
       });
     }

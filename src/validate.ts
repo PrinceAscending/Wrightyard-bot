@@ -65,6 +65,12 @@ export async function validateGuildConfiguration(
     }
   }
 
+  for (const roleId of config.botAutoRoleIds) {
+    if (!guild.roles.cache.has(roleId)) {
+      logger.warn("Configured bot auto-role is not present in the guild.", { roleId });
+    }
+  }
+
   for (const entry of config.levelRoles) {
     if (!guild.roles.cache.has(entry.roleId)) {
       logger.warn("Configured level role is not present in the guild.", {
