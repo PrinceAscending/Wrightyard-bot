@@ -5,6 +5,7 @@ import type { StaffActions } from "./staff/actions.js";
 import type { CaseStore } from "./staff/cases.js";
 import type { StaffChannelActions } from "./staff/channels.js";
 import type { DutyStore } from "./staff/duty.js";
+import type { RaidGuard } from "./security/raid.js";
 import type { SecurityService } from "./security/service.js";
 
 /**
@@ -19,6 +20,7 @@ export interface Runtime {
   readonly staff: StaffActions;
   readonly staffChannels: StaffChannelActions;
   readonly security: SecurityService;
+  readonly raid: RaidGuard;
   initialize(guild: Guild): Promise<void>;
   shutdown(): Promise<void>;
 }

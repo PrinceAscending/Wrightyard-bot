@@ -94,21 +94,34 @@ export interface FakeMemberOptions {
   readonly joinedTimestamp?: number | null;
   readonly displayName?: string;
   readonly tag?: string;
+  readonly accountAgeDays?: number;
+  readonly createdAt?: Date;
 }
 
-export function makeMember(options: FakeMemberOptions = {}): GuildMember {
+export type FakeMember = GuildMember & { kicked: boolean };
+
+export function makeMember(options: FakeMemberOptions = {}): FakeMember {
   const id = options.id ?? USER_ID;
   const tag = options.tag ?? "user#0001";
   const username = tag.split("#")[0] ?? "user";
-  return {
+  const createdTimestamp =
+    options.createdAt?.getTime() ??
+    Date.now() - (options.accountAgeDays ?? 100) * 86_400_000;
+  const member = {
     id,
-    user: { id, bot: options.bot ?? false, tag, username },
+    user: { id, bot: options.bot ?? false, tag, username, createdTimestamp },
     displayName: options.displayName ?? username,
     joinedTimestamp: options.joinedTimestamp ?? Date.now(),
+    kicked: false,
+    kick: async () => {
+      member.kicked = true;
+      return member;
+    },
     roles: {
       cache: new Map((options.roles ?? []).map((roleId) => [roleId, { id: roleId }])),
     },
-  } as unknown as GuildMember;
+  } as unknown as FakeMember;
+  return member;
 }
 
 export function fakeClient(guilds: Guild[] = []): Client {
