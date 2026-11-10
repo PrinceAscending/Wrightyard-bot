@@ -16,6 +16,7 @@ import type { HeartbeatService } from "./services/heartbeat.js";
 import type { LevelStore } from "./services/levels.js";
 import type { PresenceService } from "./services/presence.js";
 import type { TicketService } from "./tickets/service.js";
+import type { Runtime } from "./runtime.js";
 
 export type SlashCommandData =
   | SlashCommandBuilder
@@ -47,4 +48,5 @@ export interface BotContext {
   readonly version: string;
   readonly startedAt: Date;
   readonly audit?: AuditService;
+  readonly runtime?: Runtime;
 }

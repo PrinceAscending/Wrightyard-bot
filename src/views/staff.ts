@@ -120,3 +120,63 @@ export function buildWarningsEmbed(
     .setColor(cases.length > 0 ? BRAND.colors.brass : BRAND.colors.blue)
     .setFooter({ text: `${cases.length} active warning${cases.length === 1 ? "" : "s"} · ${BRAND.footer}` });
 }
+
+export function buildNotesEmbed(
+  target: WarningTarget,
+  cases: readonly ModerationCase[],
+): EmbedBuilder {
+  const description =
+    cases.length === 0
+      ? "No notes on file. The ledger is quiet."
+      : cases
+          .map(
+            (record) =>
+              `**${caseNumber(record.caseId)}** · ${formatTimestamp(record.createdAt, "d")} · ${truncate(
+                record.reason || "No note text",
+                200,
+              )}`,
+          )
+          .join("\n");
+
+  return new EmbedBuilder()
+    .setAuthor({ name: "WRIGHTYARD / MODERATION" })
+    .setTitle(`Notes · ${target.tag ?? target.id}`)
+    .setDescription(description)
+    .setColor(BRAND.colors.ink)
+    .setFooter({ text: `${cases.length} note${cases.length === 1 ? "" : "s"} · ${BRAND.footer}` });
+}
+
+export interface StaffStatsView {
+  readonly moderatorId: string;
+  readonly moderatorTag?: string;
+  readonly days: number;
+  readonly actions: Record<string, number>;
+  readonly totalActions: number;
+  readonly dutyMinutes: number;
+  readonly activeDays: number;
+}
+
+export function buildStaffStatsEmbed(view: StaffStatsView): EmbedBuilder {
+  const breakdown =
+    Object.entries(view.actions)
+      .sort(([, left], [, right]) => right - left)
+      .map(([action, count]) => `**${action}** ${count}`)
+      .join(" · ") || "No recorded actions in this window.";
+
+  const hours = Math.floor(view.dutyMinutes / 60);
+  const minutes = view.dutyMinutes % 60;
+  const duty = hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+
+  return new EmbedBuilder()
+    .setAuthor({ name: "WRIGHTYARD / MODERATION" })
+    .setTitle(`Staff stats · ${view.moderatorTag ?? view.moderatorId}`)
+    .setDescription(breakdown)
+    .setColor(BRAND.colors.brass)
+    .addFields(
+      { name: "Window", value: `${view.days} days`, inline: true },
+      { name: "Actions", value: String(view.totalActions), inline: true },
+      { name: "Duty", value: duty, inline: true },
+      { name: "Active days", value: String(view.activeDays), inline: true },
+    )
+    .setFooter({ text: BRAND.footer });
+}

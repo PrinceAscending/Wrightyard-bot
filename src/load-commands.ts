@@ -5,7 +5,9 @@ import brief from "./commands/brief.js";
 import help from "./commands/help.js";
 import leaderboard from "./commands/leaderboard.js";
 import rank from "./commands/rank.js";
+import report from "./commands/report.js";
 import site from "./commands/site.js";
+import staff from "./commands/staff.js";
 import stats from "./commands/stats.js";
 import status from "./commands/status.js";
 import ticket from "./commands/ticket.js";
@@ -19,7 +21,9 @@ const COMMAND_MODULES: readonly Command[] = [
   help,
   leaderboard,
   rank,
+  report,
   site,
+  staff,
   stats,
   status,
   ticket,

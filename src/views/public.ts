@@ -105,7 +105,7 @@ export function buildStatsEmbed(view: StatsView): EmbedBuilder {
     .setTimestamp();
 }
 
-export function buildHelpEmbed(isOwner: boolean): EmbedBuilder {
+export function buildHelpEmbed(isOwner: boolean, isStaff = false): EmbedBuilder {
   const yard = [
     "**/status** — a live reading from the yard.",
     "**/stats** — the ledger: members, rooms, roles, boosts.",
@@ -143,6 +143,19 @@ export function buildHelpEmbed(isOwner: boolean): EmbedBuilder {
     )
     .setFooter({ text: BRAND.footer })
     .setTimestamp();
+
+  if (isStaff) {
+    embed.addFields({
+      name: "Staff",
+      value: [
+        "**/staff warn · warnings · timeout · untimeout · kick** — the day-to-day ledger.",
+        "**/staff ban · unban · clearwarnings** — steward actions.",
+        "**/staff purge · lock · unlock · slowmode** — channel control.",
+        "**/staff note · notes · case · history · stats · duty** — the written record.",
+        "**/report** — any member can open a report case.",
+      ].join("\n"),
+    });
+  }
 
   if (isOwner) {
     embed.addFields({
