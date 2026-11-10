@@ -6,6 +6,7 @@ import help from "./commands/help.js";
 import leaderboard from "./commands/leaderboard.js";
 import rank from "./commands/rank.js";
 import report from "./commands/report.js";
+import security from "./commands/security.js";
 import site from "./commands/site.js";
 import staff from "./commands/staff.js";
 import stats from "./commands/stats.js";
@@ -22,6 +23,7 @@ const COMMAND_MODULES: readonly Command[] = [
   leaderboard,
   rank,
   report,
+  security,
   site,
   staff,
   stats,
