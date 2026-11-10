@@ -1,5 +1,5 @@
 import type { Config } from "../config.js";
-import type { Client, Guild } from "discord.js";
+import type { Client, Guild, GuildMember } from "discord.js";
 import type { Logger } from "../logger.js";
 
 export const GUILD_ID = "1566778873985892442";
@@ -82,6 +82,30 @@ export function makeConfig(overrides: Partial<Config> = {}): Config {
     snapshotIntervalMinutes: 360,
     ...overrides,
   };
+}
+
+export interface FakeMemberOptions {
+  readonly id?: string;
+  readonly roles?: readonly string[];
+  readonly bot?: boolean;
+  readonly joinedTimestamp?: number | null;
+  readonly displayName?: string;
+  readonly tag?: string;
+}
+
+export function makeMember(options: FakeMemberOptions = {}): GuildMember {
+  const id = options.id ?? USER_ID;
+  const tag = options.tag ?? "user#0001";
+  const username = tag.split("#")[0] ?? "user";
+  return {
+    id,
+    user: { id, bot: options.bot ?? false, tag, username },
+    displayName: options.displayName ?? username,
+    joinedTimestamp: options.joinedTimestamp ?? Date.now(),
+    roles: {
+      cache: new Map((options.roles ?? []).map((roleId) => [roleId, { id: roleId }])),
+    },
+  } as unknown as GuildMember;
 }
 
 export function fakeClient(guilds: Guild[] = []): Client {
