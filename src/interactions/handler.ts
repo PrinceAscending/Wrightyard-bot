@@ -7,6 +7,7 @@ import {
 import { serializeError } from "../logger.js";
 import { isOwner } from "../permissions.js";
 import type { BotContext } from "../types.js";
+import { commandAuditEvent } from "../audit/command.js";
 import { handleButton } from "./buttons.js";
 
 const GENERIC_FAILURE = "Something went wrong on our side. The error is logged; try again in a moment.";
@@ -91,20 +92,39 @@ async function handleCommand(
   const startedAt = Date.now();
   try {
     await command.execute(interaction, context);
+    const durationMs = Date.now() - startedAt;
     context.logger.info("Command served", {
       command: interaction.commandName,
       userId: interaction.user.id,
       guildId: interaction.guildId,
-      durationMs: Date.now() - startedAt,
+      durationMs,
     });
+    context.audit?.record(
+      commandAuditEvent({
+        command: interaction.commandName,
+        userId: interaction.user.id,
+        guildId: interaction.guildId,
+        durationMs,
+      }),
+    );
   } catch (error) {
+    const durationMs = Date.now() - startedAt;
     context.logger.error("Command failed", {
       command: interaction.commandName,
       userId: interaction.user.id,
       guildId: interaction.guildId,
-      durationMs: Date.now() - startedAt,
+      durationMs,
       error: serializeError(error),
     });
+    context.audit?.record(
+      commandAuditEvent({
+        command: interaction.commandName,
+        userId: interaction.user.id,
+        guildId: interaction.guildId,
+        durationMs,
+        error,
+      }),
+    );
     await respondWithFailure(interaction);
   }
 }

@@ -35,6 +35,8 @@ import {
 } from "../views/tickets.js";
 import { TICKET_IDS } from "./ids.js";
 import type { TicketLedger } from "./ledger.js";
+import type { AuditService } from "../audit/service.js";
+import { ticketAuditEvent } from "../audit/tickets.js";
 import {
   closedChannelName,
   parseTicketTopic,
@@ -57,6 +59,7 @@ interface TicketServiceOptions {
   readonly cooldowns: CooldownStore;
   readonly store?: TicketStore;
   readonly ledger?: TicketLedger;
+  readonly audit?: AuditService;
 }
 
 export class TicketService {
@@ -67,6 +70,7 @@ export class TicketService {
   private readonly cooldowns: CooldownStore;
   private readonly store: TicketStore;
   private readonly ledger: TicketLedger | null;
+  private readonly audit: AuditService | null;
   private categoryId: string | null;
   private queueTail: Promise<void> = Promise.resolve();
   private warnedMissingStaff = false;
@@ -80,6 +84,7 @@ export class TicketService {
     this.cooldowns = options.cooldowns;
     this.store = options.store ?? new TicketStore();
     this.ledger = options.ledger ?? null;
+    this.audit = options.audit ?? null;
     this.categoryId = options.config.ticketCategoryId;
   }
 
@@ -205,6 +210,15 @@ export class TicketService {
         channelId: record.channelId,
         openerId: record.openerId,
       });
+      this.audit?.record(
+        ticketAuditEvent({
+          action: "open",
+          ticketNumber: record.number,
+          channelId: record.channelId,
+          actorId: record.openerId,
+          openerId: record.openerId,
+        }),
+      );
     } catch (error) {
       if (error instanceof UserFacingError) {
         await interaction.editReply(error.message);
@@ -298,6 +312,15 @@ export class TicketService {
         channelId: record.channelId,
         staffId: interaction.user.id,
       });
+      this.audit?.record(
+        ticketAuditEvent({
+          action: "claim",
+          ticketNumber: record.number,
+          channelId: record.channelId,
+          actorId: interaction.user.id,
+          openerId: record.openerId,
+        }),
+      );
     } catch (error) {
       this.logger.error("Ticket claim failed", {
         ticketNumber: record.number,
@@ -440,6 +463,15 @@ export class TicketService {
         channelId: record.channelId,
         closedById: interaction.user.id,
       });
+      this.audit?.record(
+        ticketAuditEvent({
+          action: "close",
+          ticketNumber: record.number,
+          channelId: record.channelId,
+          actorId: interaction.user.id,
+          openerId: record.openerId,
+        }),
+      );
     } catch (error) {
       this.logger.error("Ticket close failed", {
         ticketNumber: record.number,
@@ -556,6 +588,15 @@ export class TicketService {
         channelId: record.channelId,
         deletedById: interaction.user.id,
       });
+      this.audit?.record(
+        ticketAuditEvent({
+          action: "delete",
+          ticketNumber: record.number,
+          channelId: record.channelId,
+          actorId: interaction.user.id,
+          openerId: record.openerId,
+        }),
+      );
     } catch (error) {
       this.logger.error("Ticket channel delete failed", {
         ticketNumber: record.number,

@@ -9,6 +9,7 @@ import type { Config } from "./config.js";
 import type { CooldownStore } from "./cooldowns.js";
 import type { Logger } from "./logger.js";
 import type { BotState } from "./state.js";
+import type { AuditService } from "./audit/service.js";
 import type { CommandSyncer } from "./services/command-sync.js";
 import type { AIService } from "./services/ai.js";
 import type { HeartbeatService } from "./services/heartbeat.js";
@@ -45,4 +46,5 @@ export interface BotContext {
   readonly commands: CommandRegistry;
   readonly version: string;
   readonly startedAt: Date;
+  readonly audit?: AuditService;
 }
