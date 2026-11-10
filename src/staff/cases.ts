@@ -300,6 +300,15 @@ export class CaseStore {
     ).length;
   }
 
+  public markExpired(guildId: string, now: Date): Promise<number> {
+    const run = this.queue.then(() => this.markExpiredNow(guildId, now));
+    this.queue = run.then(
+      () => undefined,
+      () => undefined,
+    );
+    return run;
+  }
+
   public async close(): Promise<void> {
     await this.queue;
   }
@@ -400,6 +409,47 @@ export class CaseStore {
       ...(note ? { statusNote: note } : {}),
     };
     await this.writeJson(all);
+  }
+
+  private async markExpiredNow(guildId: string, now: Date): Promise<number> {
+    if (!this.jsonMode && this.database) {
+      try {
+        const collection = await this.mongoCases();
+        const result = await collection.updateMany(
+          {
+            guildId,
+            status: "open",
+            expiresAt: { $ne: null, $lte: now },
+          },
+          { $set: { status: "expired", updatedAt: now } },
+        );
+        return result.modifiedCount;
+      } catch (error) {
+        this.failMongo(error);
+      }
+    }
+
+    const all = await this.readJson();
+    const state = all[guildId];
+    if (!state) {
+      return 0;
+    }
+    let expired = 0;
+    for (const record of state.cases) {
+      if (
+        record.status === "open" &&
+        record.expiresAt !== null &&
+        new Date(record.expiresAt).getTime() <= now.getTime()
+      ) {
+        record.status = "expired";
+        record.updatedAt = now.toISOString();
+        expired += 1;
+      }
+    }
+    if (expired > 0) {
+      await this.writeJson(all);
+    }
+    return expired;
   }
 
   private async reserveMongoId(guildId: string): Promise<number> {

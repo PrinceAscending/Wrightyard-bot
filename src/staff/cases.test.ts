@@ -110,6 +110,33 @@ test("lists newest first and applies action, status, since, and limit filters", 
   }
 });
 
+test("markExpired closes only past-due open cases", async () => {
+  const dir = await tempDir();
+  try {
+    const store = new CaseStore({
+      database: null,
+      jsonPath: join(dir, "cases.json"),
+      logger: quietLogger,
+    });
+    await store.create(
+      makeCase({ action: "timeout", expiresAt: new Date("2026-11-09T00:00:00Z") }),
+    );
+    await store.create(
+      makeCase({ action: "timeout", expiresAt: new Date("2026-11-10T00:00:00Z") }),
+    );
+    const count = await store.markExpired(
+      GUILD_ID,
+      new Date("2026-11-09T12:00:00Z"),
+    );
+    assert.equal(count, 1);
+    assert.equal((await store.get(GUILD_ID, 1))?.status, "expired");
+    assert.equal((await store.get(GUILD_ID, 2))?.status, "open");
+    await store.close();
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
 test("persists cases across a reopen", async () => {
   const dir = await tempDir();
   try {
