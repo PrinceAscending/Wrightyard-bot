@@ -61,12 +61,17 @@ export class AuditLogResolver {
   ): Promise<AuditActor | null> {
     for (let attempt = 1; attempt <= this.maxAttempts; attempt += 1) {
       const entries = await this.fetch(guild, type);
-      const match = entries.find((entry) => this.matches(entry, targetId, since));
-      if (match?.executor) {
-        if (this.seen) {
-          await this.seen.add(match.id);
+      for (const entry of entries) {
+        if (!this.matches(entry, targetId, since) || !entry.executor) {
+          continue;
         }
-        return { id: match.executor.id, tag: match.executor.tag };
+        if (this.seen && (await this.seen.has(entry.id))) {
+          continue;
+        }
+        if (this.seen) {
+          await this.seen.add(entry.id);
+        }
+        return { id: entry.executor.id, tag: entry.executor.tag };
       }
       if (attempt < this.maxAttempts) {
         await this.delay(this.retryDelayMs);
@@ -92,6 +97,9 @@ export class AuditLogResolver {
           continue;
         }
         if (!this.matches(entry, entry.targetId, since) || !entry.executor) {
+          continue;
+        }
+        if (this.seen && (await this.seen.has(entry.id))) {
           continue;
         }
         seenEntries.add(entry.id);

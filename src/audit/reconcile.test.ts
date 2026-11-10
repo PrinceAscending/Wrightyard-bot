@@ -130,6 +130,53 @@ test("second poll records new entries once", async () => {
   }
 });
 
+test("seen entries are skipped so they are not recorded twice", async () => {
+  const dir = await tempDir();
+  try {
+    const recorded: AuditEventInput[] = [];
+    const entries = new Collection<string, ReturnType<typeof makeEntry>>();
+    const seenIds = new Set<string>();
+    const seen = {
+      ids: seenIds,
+      async has(id: string) {
+        return seenIds.has(id);
+      },
+      async add(id: string) {
+        seenIds.add(id);
+      },
+    };
+    const cursors = new AuditCursorStore({
+      database: null,
+      jsonPath: join(dir, "cursors-seen.json"),
+      logger: quietLogger,
+    });
+    const reconciler = new AuditReconciler({
+      client: fakeClient([makeGuild(entries)]) as unknown as Client,
+      config: makeConfig(),
+      audit: recording(recorded),
+      logger: quietLogger,
+      cursors,
+      seen,
+      intervalMs: 60_000,
+      staggerMs: 0,
+    });
+    entries.set("100", makeEntry({ id: "100", action: AuditLogEvent.ChannelDelete }));
+    await reconciler.pollOnce();
+    entries.set("101", makeEntry({ id: "101", action: AuditLogEvent.ChannelDelete }));
+    entries.set("102", makeEntry({ id: "102", action: AuditLogEvent.ChannelDelete }));
+    seen.ids.add("101");
+    await reconciler.pollOnce();
+    assert.equal(recorded.filter((event) => event.type === "channel.delete").length, 1);
+    assert.equal(
+      (recorded[0]?.payload as { entryId?: string } | undefined)?.entryId,
+      "102",
+    );
+    assert.equal(await cursors.get(String(AuditLogEvent.ChannelDelete)), "102");
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
 test("new entries are archive-only and carry the actor", async () => {
   const dir = await tempDir();
   try {

@@ -47,6 +47,18 @@ function makeGuild(pages: ReturnType<typeof page>[]): Guild {
 
 const noDelay = async () => undefined;
 
+class FakeSeen {
+  public readonly ids = new Set<string>();
+
+  public async has(id: string): Promise<boolean> {
+    return this.ids.has(id);
+  }
+
+  public async add(id: string): Promise<void> {
+    this.ids.add(id);
+  }
+}
+
 test("matches target, time, and ignores the bot", async () => {
   const entry = makeEntry({ targetId: TARGET_ID, executorId: ACTOR_ID, ageMs: 1_000 });
   const resolver = new AuditLogResolver({ logger: quietLogger, delay: noDelay });
@@ -96,6 +108,31 @@ test("ignores stale entries and the bot itself", async () => {
     new Date(Date.now() - 5_000),
   );
   assert.equal(actor, null);
+});
+
+test("marks matched entries and does not return a seen entry twice", async () => {
+  const entry = makeEntry({ id: "777", targetId: TARGET_ID, ageMs: 500 });
+  const seen = new FakeSeen();
+  const resolver = new AuditLogResolver({ logger: quietLogger, delay: noDelay, seen });
+  const guild = makeGuild([page([entry])]);
+  const since = new Date(Date.now() - 5_000);
+
+  const first = await resolver.resolve(
+    guild,
+    AuditLogEvent.ChannelDelete,
+    TARGET_ID,
+    since,
+  );
+  assert.equal(first?.id, ACTOR_ID);
+  assert.equal(seen.ids.has("777"), true);
+
+  const second = await resolver.resolve(
+    guild,
+    AuditLogEvent.ChannelDelete,
+    TARGET_ID,
+    since,
+  );
+  assert.equal(second, null);
 });
 
 test("resolveMany maps targets", async () => {

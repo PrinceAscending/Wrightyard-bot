@@ -279,12 +279,12 @@ export class AuditReconciler {
     if (!this.seen) {
       return false;
     }
-    return this.seen.has(`audit:${entryId}`);
+    return this.seen.has(entryId);
   }
 
   private async markSeen(entryId: string): Promise<void> {
     if (this.seen) {
-      await this.seen.add(`audit:${entryId}`);
+      await this.seen.add(entryId);
     }
   }
 }
