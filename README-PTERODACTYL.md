@@ -67,6 +67,53 @@ WELCOME_CHANNEL_ID=...
 LEVEL_UP_CHANNEL_ID=...
 ```
 
+Staff, audit, and security:
+
+```dotenv
+# Staff tiers. Highest matching tier wins; OWNER_ID is always founder.
+STAFF_FOUNDER_ROLE_IDS=1566787080439337103
+STAFF_ADMIN_ROLE_IDS=1566787076458815621
+STAFF_STEWARD_ROLE_IDS=1567499945492353064
+STAFF_MODERATOR_ROLE_IDS=1567499947526459486
+
+# Audit routing. Leave blank on the first boot so the bot creates the
+# staff-only "audit" category and six log channels, then copy the IDs back
+# here and restart once.
+LOG_CATEGORY_ID=
+LOG_CHANNEL_ID=
+MESSAGE_LOG_CHANNEL_ID=
+MEMBER_LOG_CHANNEL_ID=
+SERVER_LOG_CHANNEL_ID=
+VOICE_LOG_CHANNEL_ID=
+SECURITY_LOG_CHANNEL_ID=
+MOD_LOG_CHANNEL_ID=
+LOG_MESSAGE_CONTENT=true
+AUDIT_RETENTION_DAYS=0
+
+# Anti-nuke. Start with alert for the first boot, then quarantine.
+ANTINUKE_ENABLED=true
+ANTINUKE_MODE=quarantine
+ANTINUKE_TRUSTED_USER_IDS=
+ANTINUKE_QUARANTINE_ROLE_ID=
+ANTINUKE_RESTORE=true
+
+# Raid guard.
+RAID_GUARD_ENABLED=true
+RAID_JOIN_THRESHOLD=8
+RAID_WINDOW_SECONDS=60
+RAID_MIN_ACCOUNT_AGE_DAYS=7
+RAID_MODE_MINUTES=10
+
+# Snapshot cadence in minutes.
+SNAPSHOT_INTERVAL_MINUTES=360
+```
+
+Message Content is a **privileged intent**. Enable it in the Discord Developer
+Portal under **Bot → Privileged Gateway Intents**. Server Members must also be
+enabled. Presence must stay off. If Message Content is disabled, set
+`LOG_MESSAGE_CONTENT=false`; message edit/delete events will then store metadata
+without text.
+
 The current production values are documented in `.env.example`. Copy them, not
 the file itself, and keep the secrets out of the repository.
 
@@ -131,7 +178,9 @@ owner can also run `/admin sync` in the server.
 
 A Discord gateway bot must run once. Before starting the Pterodactyl server,
 stop the bot on the old machine. Two copies will fight over presence and
-heartbeats, and Discord may disconnect both.
+heartbeats, and Discord may disconnect both. The audit reconciler, raid guard,
+and security state assume a single writer; a second process can duplicate
+alerts and quarantine decisions.
 
 If the panel has a "restart on crash" or "auto restart" setting, leave it on.
 Do not run a second copy as a backup.
@@ -141,7 +190,7 @@ Do not run a second copy as a backup.
 | Symptom | Check |
 | --- | --- |
 | `DISCORD_TOKEN is missing` | The `.env` file is not in the server root, or the panel environment is empty. |
-| `Gateway ready` never appears | The token is wrong, the bot is not invited, or `Guilds` / `GuildMembers` / `GuildMessages` is off in the Discord Developer Portal. |
+| `Gateway ready` never appears | The token is wrong, the bot is not invited, or one of the required intents is off in the Discord Developer Portal. Server Members and Message Content are both required. |
 | Commands missing | Run `node index.js --deploy-commands` and confirm `DISCORD_GUILD_ID` is the Wrightyard guild. |
 | Website says bot offline | `SITE_URL` must be `https://wrightyard.vercel.app`; `BOT_HEARTBEAT_SECRET` must match Vercel exactly. Check the console for `Website heartbeat accepted`. |
 | `/ask` says AI is not wired | `GROQ_API_KEY` is missing or still the placeholder. |
