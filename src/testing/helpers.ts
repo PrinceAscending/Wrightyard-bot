@@ -1,6 +1,9 @@
 import type { Config } from "../config.js";
 import type { Client, Guild, GuildMember } from "discord.js";
 import type { Logger } from "../logger.js";
+import type { AuditService } from "../audit/service.js";
+import type { AuditEventInput } from "../audit/types.js";
+import type { CaseFilter, CaseStatus, ModerationCase, NewCase } from "../staff/cases.js";
 
 export const GUILD_ID = "1566778873985892442";
 export const BOT_ID = "1566784935342252032";
@@ -117,4 +120,146 @@ export function fakeClient(guilds: Guild[] = []): Client {
     isReady: () => true,
   };
   return stub as unknown as Client;
+}
+
+export class FakeAudit {
+  public readonly events: AuditEventInput[] = [];
+
+  public record(event: AuditEventInput): void {
+    this.events.push(event);
+  }
+
+  public recordNow(event: AuditEventInput): AuditEventInput {
+    this.events.push(event);
+    return event;
+  }
+
+  public async flush(): Promise<void> {
+    return undefined;
+  }
+
+  public async close(): Promise<void> {
+    return undefined;
+  }
+}
+
+export function asAuditService(fake: FakeAudit): AuditService {
+  return fake as unknown as AuditService;
+}
+
+type MutableCase = { -readonly [Key in keyof ModerationCase]: ModerationCase[Key] };
+
+const CLOSED_CASE_ACTIONS = new Set<NewCase["action"]>([
+  "kick",
+  "purge",
+  "lock",
+  "unlock",
+  "slowmode",
+  "note",
+  "unban",
+  "untimeout",
+  "warnClear",
+  "caseResolve",
+]);
+
+/**
+ * In-memory CaseStore stand-in. Mirrors the real defaults so task tests can
+ * assert status transitions without a filesystem.
+ */
+export class FakeCaseStore {
+  public readonly records: MutableCase[] = [];
+  private next = 1;
+
+  public get durable(): boolean {
+    return false;
+  }
+
+  public async create(input: NewCase): Promise<ModerationCase> {
+    const now = new Date();
+    const status: CaseStatus =
+      input.status ?? (CLOSED_CASE_ACTIONS.has(input.action) ? "closed" : "open");
+    const record: MutableCase = {
+      caseId: this.next++,
+      guildId: input.guildId,
+      action: input.action,
+      targetId: input.targetId ?? null,
+      targetTag: input.targetTag ?? null,
+      moderatorId: input.moderatorId,
+      moderatorTag: input.moderatorTag ?? input.moderatorId,
+      reason: input.reason ?? "",
+      durationMs: input.durationMs ?? null,
+      expiresAt: input.expiresAt ?? null,
+      channelId: input.channelId ?? null,
+      messageId: input.messageId ?? null,
+      status,
+      metadata: input.metadata ?? {},
+      createdAt: now,
+      updatedAt: now,
+    };
+    this.records.push(record);
+    return record;
+  }
+
+  public async get(guildId: string, caseId: number): Promise<ModerationCase | null> {
+    return (
+      this.records.find(
+        (record) => record.guildId === guildId && record.caseId === caseId,
+      ) ?? null
+    );
+  }
+
+  public async list(guildId: string, filter: CaseFilter = {}): Promise<ModerationCase[]> {
+    return this.records
+      .filter((record) => record.guildId === guildId)
+      .filter((record) => !filter.targetId || record.targetId === filter.targetId)
+      .filter((record) => !filter.moderatorId || record.moderatorId === filter.moderatorId)
+      .filter((record) => !filter.action || record.action === filter.action)
+      .filter((record) => !filter.status || record.status === filter.status)
+      .filter((record) => !filter.since || record.createdAt.getTime() >= filter.since.getTime())
+      .sort((a, b) => b.caseId - a.caseId)
+      .slice(0, filter.limit ?? 100);
+  }
+
+  public async updateStatus(
+    guildId: string,
+    caseId: number,
+    status: CaseStatus,
+    actorId: string,
+    note?: string,
+  ): Promise<void> {
+    const record = this.records.find(
+      (entry) => entry.guildId === guildId && entry.caseId === caseId,
+    );
+    if (!record) {
+      return;
+    }
+    record.status = status;
+    record.updatedAt = new Date();
+    record.metadata = {
+      ...record.metadata,
+      statusActorId: actorId,
+      ...(note ? { statusNote: note } : {}),
+    };
+  }
+
+  public async countByModerator(
+    guildId: string,
+    moderatorId: string,
+    since: Date,
+  ): Promise<number> {
+    return this.records.filter(
+      (record) =>
+        record.guildId === guildId &&
+        record.moderatorId === moderatorId &&
+        record.createdAt.getTime() >= since.getTime(),
+    ).length;
+  }
+
+  public async close(): Promise<void> {
+    return undefined;
+  }
+}
+
+export function asCaseStore(fake: FakeCaseStore): import("../staff/cases.js").CaseStore {
+  return fake as unknown as import("../staff/cases.js").CaseStore;
 }
