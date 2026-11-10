@@ -7,6 +7,7 @@ import type { StaffChannelActions } from "./staff/channels.js";
 import type { DutyStore } from "./staff/duty.js";
 import type { RaidGuard } from "./security/raid.js";
 import type { SecurityService } from "./security/service.js";
+import type { SnapshotService } from "./security/snapshot-service.js";
 
 /**
  * The process-wide service graph. Task 32 completes the implementation; later
@@ -21,6 +22,7 @@ export interface Runtime {
   readonly staffChannels: StaffChannelActions;
   readonly security: SecurityService;
   readonly raid: RaidGuard;
+  readonly snapshots: SnapshotService;
   initialize(guild: Guild): Promise<void>;
   shutdown(): Promise<void>;
 }
