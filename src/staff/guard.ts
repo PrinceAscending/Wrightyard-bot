@@ -21,6 +21,8 @@ export interface ModerationGuardInput {
   readonly config?: Config;
   readonly minimumRank: StaffRank;
   readonly requiredPermission?: bigint;
+  /** Unban targets are not members, so hierarchy checks do not apply. */
+  readonly skipHierarchy?: boolean;
 }
 
 function holdsPermission(
@@ -46,6 +48,16 @@ export function canModerate(input: ModerationGuardInput): GuardResult {
       ok: false,
       reason: `You need ${input.minimumRank} rank or higher for this action.`,
     };
+  }
+
+  if (input.skipHierarchy) {
+    if (
+      input.requiredPermission !== undefined &&
+      !holdsPermission(input.botPermissions, input.requiredPermission)
+    ) {
+      return { ok: false, reason: "I do not have the permission required for this action." };
+    }
+    return { ok: true };
   }
 
   if (input.actorId === input.targetId) {
