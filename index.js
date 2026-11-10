@@ -2123,7 +2123,7 @@ var require_util = __commonJS({
             }
             return controller.desiredSize > 0;
           },
-          async cancel(reason) {
+          async cancel(reason2) {
             await iterator.return();
           },
           type: "bytes"
@@ -2451,12 +2451,12 @@ var require_diagnostics = __commonJS({
         websocketDebuglog("connection opened %s%s", address, port ? `:${port}` : "");
       });
       diagnosticsChannel.channel("undici:websocket:close").subscribe((evt) => {
-        const { websocket, code, reason } = evt;
+        const { websocket, code, reason: reason2 } = evt;
         websocketDebuglog(
           "closed connection to %s - %s %s",
           websocket.url,
           code,
-          reason
+          reason2
         );
       });
       diagnosticsChannel.channel("undici:websocket:socket_error").subscribe((err) => {
@@ -3206,9 +3206,9 @@ var require_timers = __commonJS({
        * before the specified function or code is executed.
        * @param {*} arg
        */
-      constructor(callback, delay2, arg) {
+      constructor(callback, delay3, arg) {
         this._onTimeout = callback;
-        this._idleTimeout = delay2;
+        this._idleTimeout = delay3;
         this._timerArg = arg;
         this.refresh();
       }
@@ -3253,8 +3253,8 @@ var require_timers = __commonJS({
        * when the timer expires.
        * @returns {NodeJS.Timeout|FastTimer}
        */
-      setTimeout(callback, delay2, arg) {
-        return delay2 <= RESOLUTION_MS ? setTimeout(callback, delay2, arg) : new FastTimer(callback, delay2, arg);
+      setTimeout(callback, delay3, arg) {
+        return delay3 <= RESOLUTION_MS ? setTimeout(callback, delay3, arg) : new FastTimer(callback, delay3, arg);
       },
       /**
        * The clearTimeout method cancels an instantiated Timer previously created
@@ -3280,8 +3280,8 @@ var require_timers = __commonJS({
        * when the timer expires.
        * @returns {FastTimer}
        */
-      setFastTimeout(callback, delay2, arg) {
-        return new FastTimer(callback, delay2, arg);
+      setFastTimeout(callback, delay3, arg) {
+        return new FastTimer(callback, delay3, arg);
       },
       /**
        * The clearTimeout method cancels an instantiated FastTimer previously
@@ -3307,8 +3307,8 @@ var require_timers = __commonJS({
        * @deprecated
        * @param {number} [delay=0] The delay in milliseconds to add to the now value.
        */
-      tick(delay2 = 0) {
-        fastNow += delay2 - RESOLUTION_MS + 1;
+      tick(delay3 = 0) {
+        fastNow += delay3 - RESOLUTION_MS + 1;
         onTick();
         onTick();
       },
@@ -5042,8 +5042,8 @@ var require_util2 = __commonJS({
         request.headersList.append("origin", serializedOrigin, true);
       }
     }
-    function coarsenTime(timestamp, crossOriginIsolatedCapability) {
-      return timestamp;
+    function coarsenTime(timestamp2, crossOriginIsolatedCapability) {
+      return timestamp2;
     }
     function clampAndCoarsenConnectionTimingInfo(connectionTimingInfo, defaultStartTime, crossOriginIsolatedCapability) {
       if (!connectionTimingInfo?.startTime || connectionTimingInfo.startTime < defaultStartTime) {
@@ -6414,7 +6414,7 @@ Content-Type: ${value.type || "application/octet-stream"}\r
             }
             return controller.desiredSize > 0;
           },
-          async cancel(reason) {
+          async cancel(reason2) {
             await iterator.return();
           },
           type: "bytes"
@@ -6707,21 +6707,21 @@ var require_client_h1 = __commonJS({
         this.connection = "";
         this.maxResponseSize = client[kMaxResponseSize];
       }
-      setTimeout(delay2, type) {
-        if (delay2 !== this.timeoutValue || type & USE_FAST_TIMER ^ this.timeoutType & USE_FAST_TIMER) {
+      setTimeout(delay3, type) {
+        if (delay3 !== this.timeoutValue || type & USE_FAST_TIMER ^ this.timeoutType & USE_FAST_TIMER) {
           if (this.timeout) {
             timers.clearTimeout(this.timeout);
             this.timeout = null;
           }
-          if (delay2) {
+          if (delay3) {
             if (type & USE_FAST_TIMER) {
-              this.timeout = timers.setFastTimeout(onParserTimeout, delay2, new WeakRef(this));
+              this.timeout = timers.setFastTimeout(onParserTimeout, delay3, new WeakRef(this));
             } else {
-              this.timeout = setTimeout(onParserTimeout, delay2, new WeakRef(this));
+              this.timeout = setTimeout(onParserTimeout, delay3, new WeakRef(this));
               this.timeout.unref();
             }
           }
-          this.timeoutValue = delay2;
+          this.timeoutValue = delay3;
         } else if (this.timeout) {
           if (this.timeout.refresh) {
             this.timeout.refresh();
@@ -9971,12 +9971,12 @@ var require_retry_handler = __commonJS({
         this.etag = null;
         this.resume = null;
         this.headersSent = false;
-        this.handler.onConnect((reason) => {
+        this.handler.onConnect((reason2) => {
           this.aborted = true;
           if (this.abort) {
-            this.abort(reason);
+            this.abort(reason2);
           } else {
-            this.reason = reason;
+            this.reason = reason2;
           }
         });
       }
@@ -11674,7 +11674,7 @@ var require_mock_utils = __commonJS({
       if (mockDispatch2.data.callback) {
         mockDispatch2.data = { ...mockDispatch2.data, ...mockDispatch2.data.callback(opts) };
       }
-      const { data: { statusCode, data: data2, headers, trailers, error }, delay: delay2, persist } = mockDispatch2;
+      const { data: { statusCode, data: data2, headers, trailers, error }, delay: delay3, persist } = mockDispatch2;
       const { timesInvoked, times } = mockDispatch2;
       mockDispatch2.consumed = !persist && timesInvoked >= times;
       mockDispatch2.pending = timesInvoked < times;
@@ -11683,10 +11683,10 @@ var require_mock_utils = __commonJS({
         handler.onError(error);
         return true;
       }
-      if (typeof delay2 === "number" && delay2 > 0) {
+      if (typeof delay3 === "number" && delay3 > 0) {
         setTimeout(() => {
           handleReply(this[kDispatches]);
-        }, delay2);
+        }, delay3);
       } else {
         handleReply(this[kDispatches]);
       }
@@ -12391,9 +12391,9 @@ var require_dump = __commonJS({
         this.#abort = abort;
         this.#handler.onConnect(this.#customAbort.bind(this));
       }
-      #customAbort(reason) {
+      #customAbort(reason2) {
         this.#aborted = true;
-        this.#reason = reason;
+        this.#reason = reason2;
       }
       // TODO: will require adjustment after new hooks are out
       onHeaders(statusCode, rawHeaders, resume, statusMessage) {
@@ -12618,10 +12618,10 @@ var require_dns = __commonJS({
         return ip;
       }
       setRecords(origin, addresses) {
-        const timestamp = Date.now();
+        const timestamp2 = Date.now();
         const records = { records: { 4: null, 6: null } };
         for (const record of addresses) {
-          record.timestamp = timestamp;
+          record.timestamp = timestamp2;
           if (typeof record.ttl === "number") {
             record.ttl = Math.min(record.ttl, this.#maxTTL);
           } else {
@@ -13420,13 +13420,13 @@ var require_response = __commonJS({
         urlList: init?.urlList ? [...init.urlList] : []
       };
     }
-    function makeNetworkError(reason) {
-      const isError = isErrorLike(reason);
+    function makeNetworkError(reason2) {
+      const isError = isErrorLike(reason2);
       return makeResponse({
         type: "error",
         status: 0,
-        error: isError ? reason : new Error(reason ? String(reason) : reason),
-        aborted: reason && reason.name === "AbortError"
+        error: isError ? reason2 : new Error(reason2 ? String(reason2) : reason2),
+        aborted: reason2 && reason2.name === "AbortError"
       });
     }
     function isNetworkError(response) {
@@ -14408,13 +14408,13 @@ var require_fetch = __commonJS({
         this.dump = false;
         this.state = "ongoing";
       }
-      terminate(reason) {
+      terminate(reason2) {
         if (this.state !== "ongoing") {
           return;
         }
         this.state = "terminated";
-        this.connection?.destroy(reason);
-        this.emit("terminated", reason);
+        this.connection?.destroy(reason2);
+        this.emit("terminated", reason2);
       }
       // https://fetch.spec.whatwg.org/#fetch-controller-abort
       abort(error) {
@@ -14693,7 +14693,7 @@ var require_fetch = __commonJS({
         fetchParams.controller.dump = true;
       }
       if (request.integrity) {
-        const processBodyError = (reason) => fetchFinale(fetchParams, makeNetworkError(reason));
+        const processBodyError = (reason2) => fetchFinale(fetchParams, makeNetworkError(reason2));
         if (request.responseTainting === "opaque" || response.body == null) {
           processBodyError(response.error);
           return;
@@ -15171,9 +15171,9 @@ var require_fetch = __commonJS({
       const pullAlgorithm = async () => {
         await fetchParams.controller.resume();
       };
-      const cancelAlgorithm = (reason) => {
+      const cancelAlgorithm = (reason2) => {
         if (!isCancelled(fetchParams)) {
-          fetchParams.controller.abort(reason);
+          fetchParams.controller.abort(reason2);
         }
       };
       const stream = new ReadableStream(
@@ -15184,8 +15184,8 @@ var require_fetch = __commonJS({
           async pull(controller) {
             await pullAlgorithm(controller);
           },
-          async cancel(reason) {
-            await cancelAlgorithm(reason);
+          async cancel(reason2) {
+            await cancelAlgorithm(reason2);
           },
           type: "bytes"
         }
@@ -15235,7 +15235,7 @@ var require_fetch = __commonJS({
           }
         }
       };
-      function onAborted(reason) {
+      function onAborted(reason2) {
         if (isAborted(fetchParams)) {
           response.aborted = true;
           if (isReadable(stream)) {
@@ -15246,7 +15246,7 @@ var require_fetch = __commonJS({
         } else {
           if (isReadable(stream)) {
             fetchParams.controller.controller.error(new TypeError("terminated", {
-              cause: isErrorLike(reason) ? reason : void 0
+              cause: isErrorLike(reason2) ? reason2 : void 0
             }));
           }
         }
@@ -15483,11 +15483,11 @@ var require_progressevent = __commonJS({
 var require_encoding = __commonJS({
   "node_modules/undici/lib/web/fileapi/encoding.js"(exports2, module2) {
     "use strict";
-    function getEncoding(label) {
-      if (!label) {
+    function getEncoding(label2) {
+      if (!label2) {
         return "failure";
       }
-      switch (label.trim().toLowerCase()) {
+      switch (label2.trim().toLowerCase()) {
         case "unicode-1-1-utf-8":
         case "unicode11utf8":
         case "unicode20utf8":
@@ -17822,16 +17822,16 @@ var require_util7 = __commonJS({
       }
       return code >= 3e3 && code <= 4999;
     }
-    function failWebsocketConnection(ws, reason) {
+    function failWebsocketConnection(ws, reason2) {
       const { [kController]: controller, [kResponse]: response } = ws;
       controller.abort();
       if (response?.socket && !response.socket.destroyed) {
         response.socket.destroy();
       }
-      if (reason) {
+      if (reason2) {
         fireEvent("error", ws, (type, init) => new ErrorEvent(type, init), {
-          error: new Error(reason),
-          message: reason
+          error: new Error(reason2),
+          message: reason2
         });
       }
     }
@@ -18089,7 +18089,7 @@ var require_connection = __commonJS({
       });
       return controller;
     }
-    function closeWebSocketConnection(ws, code, reason, reasonByteLength) {
+    function closeWebSocketConnection(ws, code, reason2, reasonByteLength) {
       if (isClosing(ws) || isClosed(ws)) {
       } else if (!isEstablished(ws)) {
         failWebsocketConnection(ws, "Connection was closed before it was established.");
@@ -18097,13 +18097,13 @@ var require_connection = __commonJS({
       } else if (ws[kSentClose] === sentCloseFrameState.NOT_SENT) {
         ws[kSentClose] = sentCloseFrameState.PROCESSING;
         const frame = new WebsocketFrameSend();
-        if (code !== void 0 && reason === void 0) {
+        if (code !== void 0 && reason2 === void 0) {
           frame.frameData = Buffer.allocUnsafe(2);
           frame.frameData.writeUInt16BE(code, 0);
-        } else if (code !== void 0 && reason !== void 0) {
+        } else if (code !== void 0 && reason2 !== void 0) {
           frame.frameData = Buffer.allocUnsafe(2 + reasonByteLength);
           frame.frameData.writeUInt16BE(code, 0);
-          frame.frameData.write(reason, 2, "utf-8");
+          frame.frameData.write(reason2, 2, "utf-8");
         } else {
           frame.frameData = emptyBuffer;
         }
@@ -18128,11 +18128,11 @@ var require_connection = __commonJS({
       response.socket.off("error", onSocketError);
       const wasClean = ws[kSentClose] === sentCloseFrameState.SENT && ws[kReceivedClose];
       let code = 1005;
-      let reason = "";
+      let reason2 = "";
       const result = ws[kByteParser].closingInfo;
       if (result && !result.error) {
         code = result.code ?? 1005;
-        reason = result.reason;
+        reason2 = result.reason;
       } else if (!ws[kReceivedClose]) {
         code = 1006;
       }
@@ -18140,13 +18140,13 @@ var require_connection = __commonJS({
       fireEvent("close", ws, (type, init) => new CloseEvent(type, init), {
         wasClean,
         code,
-        reason
+        reason: reason2
       });
       if (channels.close.hasSubscribers) {
         channels.close.publish({
           websocket: ws,
           code,
-          reason
+          reason: reason2
         });
       }
     }
@@ -18270,9 +18270,9 @@ var require_receiver = __commonJS({
     var { closeWebSocketConnection } = require_connection();
     var { PerMessageDeflate } = require_permessage_deflate();
     var { MessageSizeExceededError } = require_errors();
-    function failWebsocketConnectionWithCode(ws, code, reason) {
-      closeWebSocketConnection(ws, code, reason, Buffer.byteLength(reason));
-      failWebsocketConnection(ws, reason);
+    function failWebsocketConnectionWithCode(ws, code, reason2) {
+      closeWebSocketConnection(ws, code, reason2, Buffer.byteLength(reason2));
+      failWebsocketConnection(ws, reason2);
     }
     var ByteParser = class extends Writable {
       #buffers = [];
@@ -18552,16 +18552,16 @@ var require_receiver = __commonJS({
         if (code !== void 0 && !isValidStatusCode(code)) {
           return { code: 1002, reason: "Invalid status code", error: true };
         }
-        let reason = data2.subarray(2);
-        if (reason[0] === 239 && reason[1] === 187 && reason[2] === 191) {
-          reason = reason.subarray(3);
+        let reason2 = data2.subarray(2);
+        if (reason2[0] === 239 && reason2[1] === 187 && reason2[2] === 191) {
+          reason2 = reason2.subarray(3);
         }
         try {
-          reason = utf8Decode(reason);
+          reason2 = utf8Decode(reason2);
         } catch {
           return { code: 1007, reason: "Invalid UTF-8", error: true };
         }
-        return { code, reason, error: false };
+        return { code, reason: reason2, error: false };
       }
       /**
        * Parses control frames.
@@ -18576,9 +18576,9 @@ var require_receiver = __commonJS({
           }
           this.#info.closeInfo = this.parseCloseBody(body);
           if (this.#info.closeInfo.error) {
-            const { code, reason } = this.#info.closeInfo;
-            closeWebSocketConnection(this.ws, code, reason, reason.length);
-            failWebsocketConnection(this.ws, reason);
+            const { code, reason: reason2 } = this.#info.closeInfo;
+            closeWebSocketConnection(this.ws, code, reason2, reason2.length);
+            failWebsocketConnection(this.ws, reason2);
             return false;
           }
           if (this.ws[kSentClose] !== sentCloseFrameState.SENT) {
@@ -18815,14 +18815,14 @@ var require_websocket = __commonJS({
        * @param {number|undefined} code
        * @param {string|undefined} reason
        */
-      close(code = void 0, reason = void 0) {
+      close(code = void 0, reason2 = void 0) {
         webidl.brandCheck(this, _WebSocket);
         const prefix = "WebSocket.close";
         if (code !== void 0) {
           code = webidl.converters["unsigned short"](code, prefix, "code", { clamp: true });
         }
-        if (reason !== void 0) {
-          reason = webidl.converters.USVString(reason, prefix, "reason");
+        if (reason2 !== void 0) {
+          reason2 = webidl.converters.USVString(reason2, prefix, "reason");
         }
         if (code !== void 0) {
           if (code !== 1e3 && (code < 3e3 || code > 4999)) {
@@ -18830,8 +18830,8 @@ var require_websocket = __commonJS({
           }
         }
         let reasonByteLength = 0;
-        if (reason !== void 0) {
-          reasonByteLength = Buffer.byteLength(reason);
+        if (reason2 !== void 0) {
+          reasonByteLength = Buffer.byteLength(reason2);
           if (reasonByteLength > 123) {
             throw new DOMException(
               `Reason must be less than 123 bytes; received ${reasonByteLength}`,
@@ -18839,7 +18839,7 @@ var require_websocket = __commonJS({
             );
           }
         }
-        closeWebSocketConnection(this, code, reason, reasonByteLength);
+        closeWebSocketConnection(this, code, reason2, reasonByteLength);
       }
       /**
        * @see https://websockets.spec.whatwg.org/#dom-websocket-send
@@ -19115,7 +19115,7 @@ var require_util8 = __commonJS({
       }
       return true;
     }
-    function delay2(ms) {
+    function delay3(ms) {
       return new Promise((resolve3) => {
         setTimeout(resolve3, ms).unref();
       });
@@ -19123,7 +19123,7 @@ var require_util8 = __commonJS({
     module2.exports = {
       isValidLastEventId,
       isASCIINumber,
-      delay: delay2
+      delay: delay3
     };
   }
 });
@@ -19545,7 +19545,7 @@ var require_eventsource = __commonJS({
     var { parseMIMEType } = require_data_url();
     var { createFastMessageEvent } = require_events();
     var { isNetworkError } = require_response();
-    var { delay: delay2 } = require_util8();
+    var { delay: delay3 } = require_util8();
     var { kEnumerableProperty } = require_util();
     var { environmentSettingsObject } = require_util2();
     var { getGlobalDispatcher } = require_global2();
@@ -19718,7 +19718,7 @@ var require_eventsource = __commonJS({
         if (this.#readyState === CLOSED) return;
         this.#readyState = CONNECTING;
         this.dispatchEvent(new Event("error"));
-        await delay2(this.#state.reconnectionTime);
+        await delay3(this.#state.reconnectionTime);
         if (this.#readyState !== CONNECTING) return;
         if (this.#state.lastEventId.length) {
           this.#request.headersList.set("last-event-id", this.#state.lastEventId, true);
@@ -20015,32 +20015,32 @@ var require_v10 = __commonJS({
       GatewayCloseCodes2[GatewayCloseCodes2["InvalidIntents"] = 4013] = "InvalidIntents";
       GatewayCloseCodes2[GatewayCloseCodes2["DisallowedIntents"] = 4014] = "DisallowedIntents";
     })(GatewayCloseCodes || (exports2.GatewayCloseCodes = GatewayCloseCodes = {}));
-    var GatewayIntentBits2;
-    (function(GatewayIntentBits3) {
-      GatewayIntentBits3[GatewayIntentBits3["Guilds"] = 1] = "Guilds";
-      GatewayIntentBits3[GatewayIntentBits3["GuildMembers"] = 2] = "GuildMembers";
-      GatewayIntentBits3[GatewayIntentBits3["GuildModeration"] = 4] = "GuildModeration";
-      GatewayIntentBits3[GatewayIntentBits3["GuildBans"] = 4] = "GuildBans";
-      GatewayIntentBits3[GatewayIntentBits3["GuildExpressions"] = 8] = "GuildExpressions";
-      GatewayIntentBits3[GatewayIntentBits3["GuildEmojisAndStickers"] = 8] = "GuildEmojisAndStickers";
-      GatewayIntentBits3[GatewayIntentBits3["GuildIntegrations"] = 16] = "GuildIntegrations";
-      GatewayIntentBits3[GatewayIntentBits3["GuildWebhooks"] = 32] = "GuildWebhooks";
-      GatewayIntentBits3[GatewayIntentBits3["GuildInvites"] = 64] = "GuildInvites";
-      GatewayIntentBits3[GatewayIntentBits3["GuildVoiceStates"] = 128] = "GuildVoiceStates";
-      GatewayIntentBits3[GatewayIntentBits3["GuildPresences"] = 256] = "GuildPresences";
-      GatewayIntentBits3[GatewayIntentBits3["GuildMessages"] = 512] = "GuildMessages";
-      GatewayIntentBits3[GatewayIntentBits3["GuildMessageReactions"] = 1024] = "GuildMessageReactions";
-      GatewayIntentBits3[GatewayIntentBits3["GuildMessageTyping"] = 2048] = "GuildMessageTyping";
-      GatewayIntentBits3[GatewayIntentBits3["DirectMessages"] = 4096] = "DirectMessages";
-      GatewayIntentBits3[GatewayIntentBits3["DirectMessageReactions"] = 8192] = "DirectMessageReactions";
-      GatewayIntentBits3[GatewayIntentBits3["DirectMessageTyping"] = 16384] = "DirectMessageTyping";
-      GatewayIntentBits3[GatewayIntentBits3["MessageContent"] = 32768] = "MessageContent";
-      GatewayIntentBits3[GatewayIntentBits3["GuildScheduledEvents"] = 65536] = "GuildScheduledEvents";
-      GatewayIntentBits3[GatewayIntentBits3["AutoModerationConfiguration"] = 1048576] = "AutoModerationConfiguration";
-      GatewayIntentBits3[GatewayIntentBits3["AutoModerationExecution"] = 2097152] = "AutoModerationExecution";
-      GatewayIntentBits3[GatewayIntentBits3["GuildMessagePolls"] = 16777216] = "GuildMessagePolls";
-      GatewayIntentBits3[GatewayIntentBits3["DirectMessagePolls"] = 33554432] = "DirectMessagePolls";
-    })(GatewayIntentBits2 || (exports2.GatewayIntentBits = GatewayIntentBits2 = {}));
+    var GatewayIntentBits3;
+    (function(GatewayIntentBits4) {
+      GatewayIntentBits4[GatewayIntentBits4["Guilds"] = 1] = "Guilds";
+      GatewayIntentBits4[GatewayIntentBits4["GuildMembers"] = 2] = "GuildMembers";
+      GatewayIntentBits4[GatewayIntentBits4["GuildModeration"] = 4] = "GuildModeration";
+      GatewayIntentBits4[GatewayIntentBits4["GuildBans"] = 4] = "GuildBans";
+      GatewayIntentBits4[GatewayIntentBits4["GuildExpressions"] = 8] = "GuildExpressions";
+      GatewayIntentBits4[GatewayIntentBits4["GuildEmojisAndStickers"] = 8] = "GuildEmojisAndStickers";
+      GatewayIntentBits4[GatewayIntentBits4["GuildIntegrations"] = 16] = "GuildIntegrations";
+      GatewayIntentBits4[GatewayIntentBits4["GuildWebhooks"] = 32] = "GuildWebhooks";
+      GatewayIntentBits4[GatewayIntentBits4["GuildInvites"] = 64] = "GuildInvites";
+      GatewayIntentBits4[GatewayIntentBits4["GuildVoiceStates"] = 128] = "GuildVoiceStates";
+      GatewayIntentBits4[GatewayIntentBits4["GuildPresences"] = 256] = "GuildPresences";
+      GatewayIntentBits4[GatewayIntentBits4["GuildMessages"] = 512] = "GuildMessages";
+      GatewayIntentBits4[GatewayIntentBits4["GuildMessageReactions"] = 1024] = "GuildMessageReactions";
+      GatewayIntentBits4[GatewayIntentBits4["GuildMessageTyping"] = 2048] = "GuildMessageTyping";
+      GatewayIntentBits4[GatewayIntentBits4["DirectMessages"] = 4096] = "DirectMessages";
+      GatewayIntentBits4[GatewayIntentBits4["DirectMessageReactions"] = 8192] = "DirectMessageReactions";
+      GatewayIntentBits4[GatewayIntentBits4["DirectMessageTyping"] = 16384] = "DirectMessageTyping";
+      GatewayIntentBits4[GatewayIntentBits4["MessageContent"] = 32768] = "MessageContent";
+      GatewayIntentBits4[GatewayIntentBits4["GuildScheduledEvents"] = 65536] = "GuildScheduledEvents";
+      GatewayIntentBits4[GatewayIntentBits4["AutoModerationConfiguration"] = 1048576] = "AutoModerationConfiguration";
+      GatewayIntentBits4[GatewayIntentBits4["AutoModerationExecution"] = 2097152] = "AutoModerationExecution";
+      GatewayIntentBits4[GatewayIntentBits4["GuildMessagePolls"] = 16777216] = "GuildMessagePolls";
+      GatewayIntentBits4[GatewayIntentBits4["DirectMessagePolls"] = 33554432] = "DirectMessagePolls";
+    })(GatewayIntentBits3 || (exports2.GatewayIntentBits = GatewayIntentBits3 = {}));
     var GatewayCapabilityBits;
     (function(GatewayCapabilityBits2) {
       GatewayCapabilityBits2[GatewayCapabilityBits2["ChannelObfuscation"] = 32768] = "ChannelObfuscation";
@@ -20628,78 +20628,78 @@ var require_auditLog = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.AuditLogOptionsType = exports2.AuditLogEvent = void 0;
-    var AuditLogEvent;
-    (function(AuditLogEvent2) {
-      AuditLogEvent2[AuditLogEvent2["GuildUpdate"] = 1] = "GuildUpdate";
-      AuditLogEvent2[AuditLogEvent2["ChannelCreate"] = 10] = "ChannelCreate";
-      AuditLogEvent2[AuditLogEvent2["ChannelUpdate"] = 11] = "ChannelUpdate";
-      AuditLogEvent2[AuditLogEvent2["ChannelDelete"] = 12] = "ChannelDelete";
-      AuditLogEvent2[AuditLogEvent2["ChannelOverwriteCreate"] = 13] = "ChannelOverwriteCreate";
-      AuditLogEvent2[AuditLogEvent2["ChannelOverwriteUpdate"] = 14] = "ChannelOverwriteUpdate";
-      AuditLogEvent2[AuditLogEvent2["ChannelOverwriteDelete"] = 15] = "ChannelOverwriteDelete";
-      AuditLogEvent2[AuditLogEvent2["MemberKick"] = 20] = "MemberKick";
-      AuditLogEvent2[AuditLogEvent2["MemberPrune"] = 21] = "MemberPrune";
-      AuditLogEvent2[AuditLogEvent2["MemberBanAdd"] = 22] = "MemberBanAdd";
-      AuditLogEvent2[AuditLogEvent2["MemberBanRemove"] = 23] = "MemberBanRemove";
-      AuditLogEvent2[AuditLogEvent2["MemberUpdate"] = 24] = "MemberUpdate";
-      AuditLogEvent2[AuditLogEvent2["MemberRoleUpdate"] = 25] = "MemberRoleUpdate";
-      AuditLogEvent2[AuditLogEvent2["MemberMove"] = 26] = "MemberMove";
-      AuditLogEvent2[AuditLogEvent2["MemberDisconnect"] = 27] = "MemberDisconnect";
-      AuditLogEvent2[AuditLogEvent2["BotAdd"] = 28] = "BotAdd";
-      AuditLogEvent2[AuditLogEvent2["RoleCreate"] = 30] = "RoleCreate";
-      AuditLogEvent2[AuditLogEvent2["RoleUpdate"] = 31] = "RoleUpdate";
-      AuditLogEvent2[AuditLogEvent2["RoleDelete"] = 32] = "RoleDelete";
-      AuditLogEvent2[AuditLogEvent2["InviteCreate"] = 40] = "InviteCreate";
-      AuditLogEvent2[AuditLogEvent2["InviteUpdate"] = 41] = "InviteUpdate";
-      AuditLogEvent2[AuditLogEvent2["InviteDelete"] = 42] = "InviteDelete";
-      AuditLogEvent2[AuditLogEvent2["WebhookCreate"] = 50] = "WebhookCreate";
-      AuditLogEvent2[AuditLogEvent2["WebhookUpdate"] = 51] = "WebhookUpdate";
-      AuditLogEvent2[AuditLogEvent2["WebhookDelete"] = 52] = "WebhookDelete";
-      AuditLogEvent2[AuditLogEvent2["EmojiCreate"] = 60] = "EmojiCreate";
-      AuditLogEvent2[AuditLogEvent2["EmojiUpdate"] = 61] = "EmojiUpdate";
-      AuditLogEvent2[AuditLogEvent2["EmojiDelete"] = 62] = "EmojiDelete";
-      AuditLogEvent2[AuditLogEvent2["MessageDelete"] = 72] = "MessageDelete";
-      AuditLogEvent2[AuditLogEvent2["MessageBulkDelete"] = 73] = "MessageBulkDelete";
-      AuditLogEvent2[AuditLogEvent2["MessagePin"] = 74] = "MessagePin";
-      AuditLogEvent2[AuditLogEvent2["MessageUnpin"] = 75] = "MessageUnpin";
-      AuditLogEvent2[AuditLogEvent2["IntegrationCreate"] = 80] = "IntegrationCreate";
-      AuditLogEvent2[AuditLogEvent2["IntegrationUpdate"] = 81] = "IntegrationUpdate";
-      AuditLogEvent2[AuditLogEvent2["IntegrationDelete"] = 82] = "IntegrationDelete";
-      AuditLogEvent2[AuditLogEvent2["StageInstanceCreate"] = 83] = "StageInstanceCreate";
-      AuditLogEvent2[AuditLogEvent2["StageInstanceUpdate"] = 84] = "StageInstanceUpdate";
-      AuditLogEvent2[AuditLogEvent2["StageInstanceDelete"] = 85] = "StageInstanceDelete";
-      AuditLogEvent2[AuditLogEvent2["StickerCreate"] = 90] = "StickerCreate";
-      AuditLogEvent2[AuditLogEvent2["StickerUpdate"] = 91] = "StickerUpdate";
-      AuditLogEvent2[AuditLogEvent2["StickerDelete"] = 92] = "StickerDelete";
-      AuditLogEvent2[AuditLogEvent2["GuildScheduledEventCreate"] = 100] = "GuildScheduledEventCreate";
-      AuditLogEvent2[AuditLogEvent2["GuildScheduledEventUpdate"] = 101] = "GuildScheduledEventUpdate";
-      AuditLogEvent2[AuditLogEvent2["GuildScheduledEventDelete"] = 102] = "GuildScheduledEventDelete";
-      AuditLogEvent2[AuditLogEvent2["ThreadCreate"] = 110] = "ThreadCreate";
-      AuditLogEvent2[AuditLogEvent2["ThreadUpdate"] = 111] = "ThreadUpdate";
-      AuditLogEvent2[AuditLogEvent2["ThreadDelete"] = 112] = "ThreadDelete";
-      AuditLogEvent2[AuditLogEvent2["ApplicationCommandPermissionUpdate"] = 121] = "ApplicationCommandPermissionUpdate";
-      AuditLogEvent2[AuditLogEvent2["SoundboardSoundCreate"] = 130] = "SoundboardSoundCreate";
-      AuditLogEvent2[AuditLogEvent2["SoundboardSoundUpdate"] = 131] = "SoundboardSoundUpdate";
-      AuditLogEvent2[AuditLogEvent2["SoundboardSoundDelete"] = 132] = "SoundboardSoundDelete";
-      AuditLogEvent2[AuditLogEvent2["AutoModerationRuleCreate"] = 140] = "AutoModerationRuleCreate";
-      AuditLogEvent2[AuditLogEvent2["AutoModerationRuleUpdate"] = 141] = "AutoModerationRuleUpdate";
-      AuditLogEvent2[AuditLogEvent2["AutoModerationRuleDelete"] = 142] = "AutoModerationRuleDelete";
-      AuditLogEvent2[AuditLogEvent2["AutoModerationBlockMessage"] = 143] = "AutoModerationBlockMessage";
-      AuditLogEvent2[AuditLogEvent2["AutoModerationFlagToChannel"] = 144] = "AutoModerationFlagToChannel";
-      AuditLogEvent2[AuditLogEvent2["AutoModerationUserCommunicationDisabled"] = 145] = "AutoModerationUserCommunicationDisabled";
-      AuditLogEvent2[AuditLogEvent2["AutoModerationQuarantineUser"] = 146] = "AutoModerationQuarantineUser";
-      AuditLogEvent2[AuditLogEvent2["CreatorMonetizationRequestCreated"] = 150] = "CreatorMonetizationRequestCreated";
-      AuditLogEvent2[AuditLogEvent2["CreatorMonetizationTermsAccepted"] = 151] = "CreatorMonetizationTermsAccepted";
-      AuditLogEvent2[AuditLogEvent2["OnboardingPromptCreate"] = 163] = "OnboardingPromptCreate";
-      AuditLogEvent2[AuditLogEvent2["OnboardingPromptUpdate"] = 164] = "OnboardingPromptUpdate";
-      AuditLogEvent2[AuditLogEvent2["OnboardingPromptDelete"] = 165] = "OnboardingPromptDelete";
-      AuditLogEvent2[AuditLogEvent2["OnboardingCreate"] = 166] = "OnboardingCreate";
-      AuditLogEvent2[AuditLogEvent2["OnboardingUpdate"] = 167] = "OnboardingUpdate";
-      AuditLogEvent2[AuditLogEvent2["HomeSettingsCreate"] = 190] = "HomeSettingsCreate";
-      AuditLogEvent2[AuditLogEvent2["HomeSettingsUpdate"] = 191] = "HomeSettingsUpdate";
-      AuditLogEvent2[AuditLogEvent2["VoiceChannelStatusCreate"] = 192] = "VoiceChannelStatusCreate";
-      AuditLogEvent2[AuditLogEvent2["VoiceChannelStatusDelete"] = 193] = "VoiceChannelStatusDelete";
-    })(AuditLogEvent || (exports2.AuditLogEvent = AuditLogEvent = {}));
+    var AuditLogEvent9;
+    (function(AuditLogEvent10) {
+      AuditLogEvent10[AuditLogEvent10["GuildUpdate"] = 1] = "GuildUpdate";
+      AuditLogEvent10[AuditLogEvent10["ChannelCreate"] = 10] = "ChannelCreate";
+      AuditLogEvent10[AuditLogEvent10["ChannelUpdate"] = 11] = "ChannelUpdate";
+      AuditLogEvent10[AuditLogEvent10["ChannelDelete"] = 12] = "ChannelDelete";
+      AuditLogEvent10[AuditLogEvent10["ChannelOverwriteCreate"] = 13] = "ChannelOverwriteCreate";
+      AuditLogEvent10[AuditLogEvent10["ChannelOverwriteUpdate"] = 14] = "ChannelOverwriteUpdate";
+      AuditLogEvent10[AuditLogEvent10["ChannelOverwriteDelete"] = 15] = "ChannelOverwriteDelete";
+      AuditLogEvent10[AuditLogEvent10["MemberKick"] = 20] = "MemberKick";
+      AuditLogEvent10[AuditLogEvent10["MemberPrune"] = 21] = "MemberPrune";
+      AuditLogEvent10[AuditLogEvent10["MemberBanAdd"] = 22] = "MemberBanAdd";
+      AuditLogEvent10[AuditLogEvent10["MemberBanRemove"] = 23] = "MemberBanRemove";
+      AuditLogEvent10[AuditLogEvent10["MemberUpdate"] = 24] = "MemberUpdate";
+      AuditLogEvent10[AuditLogEvent10["MemberRoleUpdate"] = 25] = "MemberRoleUpdate";
+      AuditLogEvent10[AuditLogEvent10["MemberMove"] = 26] = "MemberMove";
+      AuditLogEvent10[AuditLogEvent10["MemberDisconnect"] = 27] = "MemberDisconnect";
+      AuditLogEvent10[AuditLogEvent10["BotAdd"] = 28] = "BotAdd";
+      AuditLogEvent10[AuditLogEvent10["RoleCreate"] = 30] = "RoleCreate";
+      AuditLogEvent10[AuditLogEvent10["RoleUpdate"] = 31] = "RoleUpdate";
+      AuditLogEvent10[AuditLogEvent10["RoleDelete"] = 32] = "RoleDelete";
+      AuditLogEvent10[AuditLogEvent10["InviteCreate"] = 40] = "InviteCreate";
+      AuditLogEvent10[AuditLogEvent10["InviteUpdate"] = 41] = "InviteUpdate";
+      AuditLogEvent10[AuditLogEvent10["InviteDelete"] = 42] = "InviteDelete";
+      AuditLogEvent10[AuditLogEvent10["WebhookCreate"] = 50] = "WebhookCreate";
+      AuditLogEvent10[AuditLogEvent10["WebhookUpdate"] = 51] = "WebhookUpdate";
+      AuditLogEvent10[AuditLogEvent10["WebhookDelete"] = 52] = "WebhookDelete";
+      AuditLogEvent10[AuditLogEvent10["EmojiCreate"] = 60] = "EmojiCreate";
+      AuditLogEvent10[AuditLogEvent10["EmojiUpdate"] = 61] = "EmojiUpdate";
+      AuditLogEvent10[AuditLogEvent10["EmojiDelete"] = 62] = "EmojiDelete";
+      AuditLogEvent10[AuditLogEvent10["MessageDelete"] = 72] = "MessageDelete";
+      AuditLogEvent10[AuditLogEvent10["MessageBulkDelete"] = 73] = "MessageBulkDelete";
+      AuditLogEvent10[AuditLogEvent10["MessagePin"] = 74] = "MessagePin";
+      AuditLogEvent10[AuditLogEvent10["MessageUnpin"] = 75] = "MessageUnpin";
+      AuditLogEvent10[AuditLogEvent10["IntegrationCreate"] = 80] = "IntegrationCreate";
+      AuditLogEvent10[AuditLogEvent10["IntegrationUpdate"] = 81] = "IntegrationUpdate";
+      AuditLogEvent10[AuditLogEvent10["IntegrationDelete"] = 82] = "IntegrationDelete";
+      AuditLogEvent10[AuditLogEvent10["StageInstanceCreate"] = 83] = "StageInstanceCreate";
+      AuditLogEvent10[AuditLogEvent10["StageInstanceUpdate"] = 84] = "StageInstanceUpdate";
+      AuditLogEvent10[AuditLogEvent10["StageInstanceDelete"] = 85] = "StageInstanceDelete";
+      AuditLogEvent10[AuditLogEvent10["StickerCreate"] = 90] = "StickerCreate";
+      AuditLogEvent10[AuditLogEvent10["StickerUpdate"] = 91] = "StickerUpdate";
+      AuditLogEvent10[AuditLogEvent10["StickerDelete"] = 92] = "StickerDelete";
+      AuditLogEvent10[AuditLogEvent10["GuildScheduledEventCreate"] = 100] = "GuildScheduledEventCreate";
+      AuditLogEvent10[AuditLogEvent10["GuildScheduledEventUpdate"] = 101] = "GuildScheduledEventUpdate";
+      AuditLogEvent10[AuditLogEvent10["GuildScheduledEventDelete"] = 102] = "GuildScheduledEventDelete";
+      AuditLogEvent10[AuditLogEvent10["ThreadCreate"] = 110] = "ThreadCreate";
+      AuditLogEvent10[AuditLogEvent10["ThreadUpdate"] = 111] = "ThreadUpdate";
+      AuditLogEvent10[AuditLogEvent10["ThreadDelete"] = 112] = "ThreadDelete";
+      AuditLogEvent10[AuditLogEvent10["ApplicationCommandPermissionUpdate"] = 121] = "ApplicationCommandPermissionUpdate";
+      AuditLogEvent10[AuditLogEvent10["SoundboardSoundCreate"] = 130] = "SoundboardSoundCreate";
+      AuditLogEvent10[AuditLogEvent10["SoundboardSoundUpdate"] = 131] = "SoundboardSoundUpdate";
+      AuditLogEvent10[AuditLogEvent10["SoundboardSoundDelete"] = 132] = "SoundboardSoundDelete";
+      AuditLogEvent10[AuditLogEvent10["AutoModerationRuleCreate"] = 140] = "AutoModerationRuleCreate";
+      AuditLogEvent10[AuditLogEvent10["AutoModerationRuleUpdate"] = 141] = "AutoModerationRuleUpdate";
+      AuditLogEvent10[AuditLogEvent10["AutoModerationRuleDelete"] = 142] = "AutoModerationRuleDelete";
+      AuditLogEvent10[AuditLogEvent10["AutoModerationBlockMessage"] = 143] = "AutoModerationBlockMessage";
+      AuditLogEvent10[AuditLogEvent10["AutoModerationFlagToChannel"] = 144] = "AutoModerationFlagToChannel";
+      AuditLogEvent10[AuditLogEvent10["AutoModerationUserCommunicationDisabled"] = 145] = "AutoModerationUserCommunicationDisabled";
+      AuditLogEvent10[AuditLogEvent10["AutoModerationQuarantineUser"] = 146] = "AutoModerationQuarantineUser";
+      AuditLogEvent10[AuditLogEvent10["CreatorMonetizationRequestCreated"] = 150] = "CreatorMonetizationRequestCreated";
+      AuditLogEvent10[AuditLogEvent10["CreatorMonetizationTermsAccepted"] = 151] = "CreatorMonetizationTermsAccepted";
+      AuditLogEvent10[AuditLogEvent10["OnboardingPromptCreate"] = 163] = "OnboardingPromptCreate";
+      AuditLogEvent10[AuditLogEvent10["OnboardingPromptUpdate"] = 164] = "OnboardingPromptUpdate";
+      AuditLogEvent10[AuditLogEvent10["OnboardingPromptDelete"] = 165] = "OnboardingPromptDelete";
+      AuditLogEvent10[AuditLogEvent10["OnboardingCreate"] = 166] = "OnboardingCreate";
+      AuditLogEvent10[AuditLogEvent10["OnboardingUpdate"] = 167] = "OnboardingUpdate";
+      AuditLogEvent10[AuditLogEvent10["HomeSettingsCreate"] = 190] = "HomeSettingsCreate";
+      AuditLogEvent10[AuditLogEvent10["HomeSettingsUpdate"] = 191] = "HomeSettingsUpdate";
+      AuditLogEvent10[AuditLogEvent10["VoiceChannelStatusCreate"] = 192] = "VoiceChannelStatusCreate";
+      AuditLogEvent10[AuditLogEvent10["VoiceChannelStatusDelete"] = 193] = "VoiceChannelStatusDelete";
+    })(AuditLogEvent9 || (exports2.AuditLogEvent = AuditLogEvent9 = {}));
     var AuditLogOptionsType;
     (function(AuditLogOptionsType2) {
       AuditLogOptionsType2["Role"] = "0";
@@ -20760,36 +20760,36 @@ var require_channel = __commonJS({
       ForumLayoutType2[ForumLayoutType2["ListView"] = 1] = "ListView";
       ForumLayoutType2[ForumLayoutType2["GalleryView"] = 2] = "GalleryView";
     })(ForumLayoutType || (exports2.ForumLayoutType = ForumLayoutType = {}));
-    var ChannelType5;
-    (function(ChannelType6) {
-      ChannelType6[ChannelType6["GuildText"] = 0] = "GuildText";
-      ChannelType6[ChannelType6["DM"] = 1] = "DM";
-      ChannelType6[ChannelType6["GuildVoice"] = 2] = "GuildVoice";
-      ChannelType6[ChannelType6["GroupDM"] = 3] = "GroupDM";
-      ChannelType6[ChannelType6["GuildCategory"] = 4] = "GuildCategory";
-      ChannelType6[ChannelType6["GuildAnnouncement"] = 5] = "GuildAnnouncement";
-      ChannelType6[ChannelType6["AnnouncementThread"] = 10] = "AnnouncementThread";
-      ChannelType6[ChannelType6["PublicThread"] = 11] = "PublicThread";
-      ChannelType6[ChannelType6["PrivateThread"] = 12] = "PrivateThread";
-      ChannelType6[ChannelType6["GuildStageVoice"] = 13] = "GuildStageVoice";
-      ChannelType6[ChannelType6["GuildDirectory"] = 14] = "GuildDirectory";
-      ChannelType6[ChannelType6["GuildForum"] = 15] = "GuildForum";
-      ChannelType6[ChannelType6["GuildMedia"] = 16] = "GuildMedia";
-      ChannelType6[ChannelType6["GuildNews"] = 5] = "GuildNews";
-      ChannelType6[ChannelType6["GuildNewsThread"] = 10] = "GuildNewsThread";
-      ChannelType6[ChannelType6["GuildPublicThread"] = 11] = "GuildPublicThread";
-      ChannelType6[ChannelType6["GuildPrivateThread"] = 12] = "GuildPrivateThread";
-    })(ChannelType5 || (exports2.ChannelType = ChannelType5 = {}));
+    var ChannelType8;
+    (function(ChannelType9) {
+      ChannelType9[ChannelType9["GuildText"] = 0] = "GuildText";
+      ChannelType9[ChannelType9["DM"] = 1] = "DM";
+      ChannelType9[ChannelType9["GuildVoice"] = 2] = "GuildVoice";
+      ChannelType9[ChannelType9["GroupDM"] = 3] = "GroupDM";
+      ChannelType9[ChannelType9["GuildCategory"] = 4] = "GuildCategory";
+      ChannelType9[ChannelType9["GuildAnnouncement"] = 5] = "GuildAnnouncement";
+      ChannelType9[ChannelType9["AnnouncementThread"] = 10] = "AnnouncementThread";
+      ChannelType9[ChannelType9["PublicThread"] = 11] = "PublicThread";
+      ChannelType9[ChannelType9["PrivateThread"] = 12] = "PrivateThread";
+      ChannelType9[ChannelType9["GuildStageVoice"] = 13] = "GuildStageVoice";
+      ChannelType9[ChannelType9["GuildDirectory"] = 14] = "GuildDirectory";
+      ChannelType9[ChannelType9["GuildForum"] = 15] = "GuildForum";
+      ChannelType9[ChannelType9["GuildMedia"] = 16] = "GuildMedia";
+      ChannelType9[ChannelType9["GuildNews"] = 5] = "GuildNews";
+      ChannelType9[ChannelType9["GuildNewsThread"] = 10] = "GuildNewsThread";
+      ChannelType9[ChannelType9["GuildPublicThread"] = 11] = "GuildPublicThread";
+      ChannelType9[ChannelType9["GuildPrivateThread"] = 12] = "GuildPrivateThread";
+    })(ChannelType8 || (exports2.ChannelType = ChannelType8 = {}));
     var VideoQualityMode;
     (function(VideoQualityMode2) {
       VideoQualityMode2[VideoQualityMode2["Auto"] = 1] = "Auto";
       VideoQualityMode2[VideoQualityMode2["Full"] = 2] = "Full";
     })(VideoQualityMode || (exports2.VideoQualityMode = VideoQualityMode = {}));
-    var OverwriteType;
-    (function(OverwriteType2) {
-      OverwriteType2[OverwriteType2["Role"] = 0] = "Role";
-      OverwriteType2[OverwriteType2["Member"] = 1] = "Member";
-    })(OverwriteType || (exports2.OverwriteType = OverwriteType = {}));
+    var OverwriteType2;
+    (function(OverwriteType3) {
+      OverwriteType3[OverwriteType3["Role"] = 0] = "Role";
+      OverwriteType3[OverwriteType3["Member"] = 1] = "Member";
+    })(OverwriteType2 || (exports2.OverwriteType = OverwriteType2 = {}));
     var ThreadAutoArchiveDuration;
     (function(ThreadAutoArchiveDuration2) {
       ThreadAutoArchiveDuration2[ThreadAutoArchiveDuration2["OneHour"] = 60] = "OneHour";
@@ -21184,12 +21184,12 @@ var require_applicationCommands = __commonJS({
       ApplicationIntegrationType2[ApplicationIntegrationType2["GuildInstall"] = 0] = "GuildInstall";
       ApplicationIntegrationType2[ApplicationIntegrationType2["UserInstall"] = 1] = "UserInstall";
     })(ApplicationIntegrationType || (exports2.ApplicationIntegrationType = ApplicationIntegrationType = {}));
-    var InteractionContextType11;
-    (function(InteractionContextType12) {
-      InteractionContextType12[InteractionContextType12["Guild"] = 0] = "Guild";
-      InteractionContextType12[InteractionContextType12["BotDM"] = 1] = "BotDM";
-      InteractionContextType12[InteractionContextType12["PrivateChannel"] = 2] = "PrivateChannel";
-    })(InteractionContextType11 || (exports2.InteractionContextType = InteractionContextType11 = {}));
+    var InteractionContextType14;
+    (function(InteractionContextType15) {
+      InteractionContextType15[InteractionContextType15["Guild"] = 0] = "Guild";
+      InteractionContextType15[InteractionContextType15["BotDM"] = 1] = "BotDM";
+      InteractionContextType15[InteractionContextType15["PrivateChannel"] = 2] = "PrivateChannel";
+    })(InteractionContextType14 || (exports2.InteractionContextType = InteractionContextType14 = {}));
     var EntryPointCommandHandlerType;
     (function(EntryPointCommandHandlerType2) {
       EntryPointCommandHandlerType2[EntryPointCommandHandlerType2["AppHandler"] = 1] = "AppHandler";
@@ -21337,23 +21337,23 @@ var require_message = __commonJS({
       MessageReferenceType2[MessageReferenceType2["Default"] = 0] = "Default";
       MessageReferenceType2[MessageReferenceType2["Forward"] = 1] = "Forward";
     })(MessageReferenceType || (exports2.MessageReferenceType = MessageReferenceType = {}));
-    var MessageFlags15;
-    (function(MessageFlags16) {
-      MessageFlags16[MessageFlags16["Crossposted"] = 1] = "Crossposted";
-      MessageFlags16[MessageFlags16["IsCrosspost"] = 2] = "IsCrosspost";
-      MessageFlags16[MessageFlags16["SuppressEmbeds"] = 4] = "SuppressEmbeds";
-      MessageFlags16[MessageFlags16["SourceMessageDeleted"] = 8] = "SourceMessageDeleted";
-      MessageFlags16[MessageFlags16["Urgent"] = 16] = "Urgent";
-      MessageFlags16[MessageFlags16["HasThread"] = 32] = "HasThread";
-      MessageFlags16[MessageFlags16["Ephemeral"] = 64] = "Ephemeral";
-      MessageFlags16[MessageFlags16["Loading"] = 128] = "Loading";
-      MessageFlags16[MessageFlags16["FailedToMentionSomeRolesInThread"] = 256] = "FailedToMentionSomeRolesInThread";
-      MessageFlags16[MessageFlags16["ShouldShowLinkNotDiscordWarning"] = 1024] = "ShouldShowLinkNotDiscordWarning";
-      MessageFlags16[MessageFlags16["SuppressNotifications"] = 4096] = "SuppressNotifications";
-      MessageFlags16[MessageFlags16["IsVoiceMessage"] = 8192] = "IsVoiceMessage";
-      MessageFlags16[MessageFlags16["HasSnapshot"] = 16384] = "HasSnapshot";
-      MessageFlags16[MessageFlags16["IsComponentsV2"] = 32768] = "IsComponentsV2";
-    })(MessageFlags15 || (exports2.MessageFlags = MessageFlags15 = {}));
+    var MessageFlags18;
+    (function(MessageFlags19) {
+      MessageFlags19[MessageFlags19["Crossposted"] = 1] = "Crossposted";
+      MessageFlags19[MessageFlags19["IsCrosspost"] = 2] = "IsCrosspost";
+      MessageFlags19[MessageFlags19["SuppressEmbeds"] = 4] = "SuppressEmbeds";
+      MessageFlags19[MessageFlags19["SourceMessageDeleted"] = 8] = "SourceMessageDeleted";
+      MessageFlags19[MessageFlags19["Urgent"] = 16] = "Urgent";
+      MessageFlags19[MessageFlags19["HasThread"] = 32] = "HasThread";
+      MessageFlags19[MessageFlags19["Ephemeral"] = 64] = "Ephemeral";
+      MessageFlags19[MessageFlags19["Loading"] = 128] = "Loading";
+      MessageFlags19[MessageFlags19["FailedToMentionSomeRolesInThread"] = 256] = "FailedToMentionSomeRolesInThread";
+      MessageFlags19[MessageFlags19["ShouldShowLinkNotDiscordWarning"] = 1024] = "ShouldShowLinkNotDiscordWarning";
+      MessageFlags19[MessageFlags19["SuppressNotifications"] = 4096] = "SuppressNotifications";
+      MessageFlags19[MessageFlags19["IsVoiceMessage"] = 8192] = "IsVoiceMessage";
+      MessageFlags19[MessageFlags19["HasSnapshot"] = 16384] = "HasSnapshot";
+      MessageFlags19[MessageFlags19["IsComponentsV2"] = 32768] = "IsComponentsV2";
+    })(MessageFlags18 || (exports2.MessageFlags = MessageFlags18 = {}));
     var BaseThemeType;
     (function(BaseThemeType2) {
       BaseThemeType2[BaseThemeType2["Unset"] = 0] = "Unset";
@@ -22500,8 +22500,8 @@ var require_v103 = __commonJS({
        * - PUT    `/guilds/{guild.id}/members/{user.id}/roles/{role.id}`
        * - DELETE `/guilds/{guild.id}/members/{user.id}/roles/{role.id}`
        */
-      guildMemberRole(guildId, memberId, roleId) {
-        return `/guilds/${guildId}/members/${memberId}/roles/${roleId}`;
+      guildMemberRole(guildId, memberId2, roleId) {
+        return `/guilds/${guildId}/members/${memberId2}/roles/${roleId}`;
       },
       /**
        * Route for:
@@ -24514,20 +24514,20 @@ var require_cjs = __commonJS({
        */
       generate({
         increment,
-        timestamp = Date.now(),
+        timestamp: timestamp2 = Date.now(),
         workerId = this[WorkerIdSymbol],
         processId = this[ProcessIdSymbol]
       } = {}) {
-        if (timestamp instanceof Date) timestamp = BigInt(timestamp.getTime());
-        else if (typeof timestamp === "number") timestamp = BigInt(timestamp);
-        else if (typeof timestamp !== "bigint") {
-          throw new TypeError(`"timestamp" argument must be a number, bigint, or Date (received ${typeof timestamp})`);
+        if (timestamp2 instanceof Date) timestamp2 = BigInt(timestamp2.getTime());
+        else if (typeof timestamp2 === "number") timestamp2 = BigInt(timestamp2);
+        else if (typeof timestamp2 !== "bigint") {
+          throw new TypeError(`"timestamp" argument must be a number, bigint, or Date (received ${typeof timestamp2})`);
         }
         if (typeof increment !== "bigint") {
           increment = this[IncrementSymbol];
           this[IncrementSymbol] = increment + 1n & MaximumIncrement;
         }
-        return timestamp - this[EpochSymbol] << 22n | (workerId & MaximumWorkerId) << 17n | (processId & MaximumProcessId) << 12n | increment & MaximumIncrement;
+        return timestamp2 - this[EpochSymbol] << 22n | (workerId & MaximumWorkerId) << 17n | (processId & MaximumProcessId) << 12n | increment & MaximumIncrement;
       }
       /**
        * Deconstructs a snowflake given a snowflake ID
@@ -29866,9 +29866,9 @@ ${flattened}` : error.message || flattened || "Unknown Error";
         if (queueType === 0) {
           if (this.#sublimitedQueue && hasSublimit(routeId.bucketRoute, requestData.body, options.method)) {
             queue = this.#sublimitedQueue;
-            const wait = queue.wait();
+            const wait2 = queue.wait();
             this.#asyncQueue.shift();
-            await wait;
+            await wait2;
           } else if (this.#sublimitPromise) {
             await this.#sublimitPromise.promise;
           }
@@ -29901,7 +29901,7 @@ ${flattened}` : error.message || flattened || "Unknown Error";
           const isGlobal = this.globalLimited;
           let limit2;
           let timeout;
-          let delay2;
+          let delay3;
           if (isGlobal) {
             const offset2 = normalizeRateLimitOffset(this.manager.options.offset, routeId.bucketRoute);
             limit2 = this.manager.options.globalRequestsPerSecond;
@@ -29909,11 +29909,11 @@ ${flattened}` : error.message || flattened || "Unknown Error";
             if (!this.manager.globalDelay) {
               this.manager.globalDelay = this.globalDelayFor(timeout);
             }
-            delay2 = this.manager.globalDelay;
+            delay3 = this.manager.globalDelay;
           } else {
             limit2 = this.limit;
             timeout = this.getTimeToReset(routeId);
-            delay2 = sleep(timeout);
+            delay3 = sleep(timeout);
           }
           const rateLimitData = {
             global: isGlobal,
@@ -29935,7 +29935,7 @@ ${flattened}` : error.message || flattened || "Unknown Error";
           } else {
             this.debug(`Waiting ${timeout}ms for rate limit to pass`);
           }
-          await delay2;
+          await delay3;
         }
         if (!this.manager.globalReset || this.manager.globalReset < Date.now()) {
           this.manager.globalReset = Date.now() + 1e3;
@@ -30375,8 +30375,8 @@ ${flattened}` : error.message || flattened || "Unknown Error";
         let exceptions = "";
         if (method === "DELETE" && baseRoute === "/channels/:id/messages/:id") {
           const id = /\d{17,19}$/.exec(endpoint)[0];
-          const timestamp = import_snowflake.DiscordSnowflake.timestampFrom(id);
-          if (Date.now() - timestamp > 1e3 * 60 * 60 * 24 * 14) {
+          const timestamp2 = import_snowflake.DiscordSnowflake.timestampFrom(id);
+          if (Date.now() - timestamp2 > 1e3 * 60 * 60 * 24 * 14) {
             exceptions += "/Delete Old Message";
           }
         }
@@ -30565,7 +30565,7 @@ var require_Messages = __commonJS({
       [DjsErrorCodes.SelectOptionLabel]: "MessageSelectOption label must be a string",
       [DjsErrorCodes.SelectOptionValue]: "MessageSelectOption value must be a string",
       [DjsErrorCodes.SelectOptionDescription]: "MessageSelectOption description must be a string",
-      [DjsErrorCodes.InteractionCollectorError]: (reason) => `Collector received no interactions before ending with reason: ${reason}`,
+      [DjsErrorCodes.InteractionCollectorError]: (reason2) => `Collector received no interactions before ending with reason: ${reason2}`,
       [DjsErrorCodes.FileNotFound]: (file) => `File could not be found: ${file}`,
       [DjsErrorCodes.UserBannerNotFetched]: "You must fetch this user's banner before trying to generate its URL!",
       [DjsErrorCodes.UserNoDMChannel]: "No DM Channel exists!",
@@ -31889,7 +31889,7 @@ var require_dist8 = __commonJS({
       channelLink: () => channelLink,
       channelMention: () => channelMention,
       chatInputApplicationCommandMention: () => chatInputApplicationCommandMention,
-      codeBlock: () => codeBlock,
+      codeBlock: () => codeBlock2,
       email: () => email,
       escapeBold: () => escapeBold,
       escapeBulletedList: () => escapeBulletedList,
@@ -31929,7 +31929,7 @@ var require_dist8 = __commonJS({
     module2.exports = __toCommonJS2(index_exports);
     function escapeMarkdown(text, options = {}) {
       const {
-        codeBlock: codeBlock2 = true,
+        codeBlock: codeBlock22 = true,
         inlineCode: inlineCode2 = true,
         bold: bold2 = true,
         italic: italic2 = true,
@@ -31961,13 +31961,13 @@ var require_dist8 = __commonJS({
             numberedList,
             maskedLink
           });
-        }).join(codeBlock2 ? "\\`\\`\\`" : "```");
+        }).join(codeBlock22 ? "\\`\\`\\`" : "```");
       }
       if (!inlineCodeContent) {
         return text.split(/(?<=^|[^`])`(?=[^`]|$)/g).map((subString, index, array) => {
           if (index % 2 && index !== array.length - 1) return subString;
           return escapeMarkdown(subString, {
-            codeBlock: codeBlock2,
+            codeBlock: codeBlock22,
             bold: bold2,
             italic: italic2,
             underline: underline2,
@@ -31984,7 +31984,7 @@ var require_dist8 = __commonJS({
       let res = text;
       if (escape2) res = escapeEscape(res);
       if (inlineCode2) res = escapeInlineCode(res);
-      if (codeBlock2) res = escapeCodeBlock(res);
+      if (codeBlock22) res = escapeCodeBlock(res);
       if (italic2) res = escapeItalic(res);
       if (bold2) res = escapeBold(res);
       if (underline2) res = escapeUnderline(res);
@@ -32068,14 +32068,14 @@ var require_dist8 = __commonJS({
       return text.replaceAll(/\[.+]\(.+\)/gm, "\\$&");
     }
     __name(escapeMaskedLink, "escapeMaskedLink");
-    function codeBlock(language, content) {
+    function codeBlock2(language, content) {
       return content === void 0 ? `\`\`\`
 ${language}
 \`\`\`` : `\`\`\`${language}
 ${content}
 \`\`\``;
     }
-    __name(codeBlock, "codeBlock");
+    __name(codeBlock2, "codeBlock");
     function inlineCode(content) {
       return `\`${content}\``;
     }
@@ -32375,7 +32375,7 @@ var require_ChannelFlagsBitField = __commonJS({
 var require_Constants = __commonJS({
   "node_modules/discord.js/src/util/Constants.js"(exports2) {
     "use strict";
-    var { ChannelType: ChannelType5, MessageType, ComponentType, ImageFormat, StickerFormatType } = require_v106();
+    var { ChannelType: ChannelType8, MessageType, ComponentType, ImageFormat, StickerFormatType } = require_v106();
     exports2.MaxBulkDeletableMessageAge = 12096e5;
     exports2.SweeperKeys = [
       "autoModerationRules",
@@ -32402,18 +32402,18 @@ var require_Constants = __commonJS({
       MessageType.ContextMenuCommand
     ];
     exports2.GuildTextBasedChannelTypes = [
-      ChannelType5.GuildText,
-      ChannelType5.GuildAnnouncement,
-      ChannelType5.AnnouncementThread,
-      ChannelType5.PublicThread,
-      ChannelType5.PrivateThread,
-      ChannelType5.GuildVoice,
-      ChannelType5.GuildStageVoice
+      ChannelType8.GuildText,
+      ChannelType8.GuildAnnouncement,
+      ChannelType8.AnnouncementThread,
+      ChannelType8.PublicThread,
+      ChannelType8.PrivateThread,
+      ChannelType8.GuildVoice,
+      ChannelType8.GuildStageVoice
     ];
-    exports2.TextBasedChannelTypes = [...exports2.GuildTextBasedChannelTypes, ChannelType5.DM, ChannelType5.GroupDM];
-    exports2.SendableChannels = [...exports2.GuildTextBasedChannelTypes, ChannelType5.DM];
-    exports2.ThreadChannelTypes = [ChannelType5.AnnouncementThread, ChannelType5.PublicThread, ChannelType5.PrivateThread];
-    exports2.VoiceBasedChannelTypes = [ChannelType5.GuildVoice, ChannelType5.GuildStageVoice];
+    exports2.TextBasedChannelTypes = [...exports2.GuildTextBasedChannelTypes, ChannelType8.DM, ChannelType8.GroupDM];
+    exports2.SendableChannels = [...exports2.GuildTextBasedChannelTypes, ChannelType8.DM];
+    exports2.ThreadChannelTypes = [ChannelType8.AnnouncementThread, ChannelType8.PublicThread, ChannelType8.PrivateThread];
+    exports2.VoiceBasedChannelTypes = [ChannelType8.GuildVoice, ChannelType8.GuildStageVoice];
     exports2.SelectMenuTypes = [
       ComponentType.StringSelect,
       ComponentType.UserSelect,
@@ -32470,7 +32470,7 @@ var require_Constants = __commonJS({
 var require_PermissionsBitField = __commonJS({
   "node_modules/discord.js/src/util/PermissionsBitField.js"(exports2, module2) {
     "use strict";
-    var { PermissionFlagsBits: PermissionFlagsBits5 } = require_v106();
+    var { PermissionFlagsBits: PermissionFlagsBits13 } = require_v106();
     var BitField = require_BitField();
     var PermissionsBitField2 = class extends BitField {
       /**
@@ -32479,13 +32479,13 @@ var require_PermissionsBitField = __commonJS({
        * @memberof PermissionsBitField
        * @see {@link https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags}
        */
-      static Flags = PermissionFlagsBits5;
+      static Flags = PermissionFlagsBits13;
       /**
        * Bitfield representing every permission combined
        * @type {bigint}
        * @memberof PermissionsBitField
        */
-      static All = Object.values(PermissionFlagsBits5).reduce((all, p) => all | p, 0n);
+      static All = Object.values(PermissionFlagsBits13).reduce((all, p) => all | p, 0n);
       /**
        * Bitfield representing the default permissions for users
        * @type {bigint}
@@ -32497,7 +32497,7 @@ var require_PermissionsBitField = __commonJS({
        * @type {bigint}
        * @memberof PermissionsBitField
        */
-      static StageModerator = PermissionFlagsBits5.ManageChannels | PermissionFlagsBits5.MuteMembers | PermissionFlagsBits5.MoveMembers;
+      static StageModerator = PermissionFlagsBits13.ManageChannels | PermissionFlagsBits13.MuteMembers | PermissionFlagsBits13.MoveMembers;
       /**
        * @type {bigint}
        * @memberof PermissionsBitField
@@ -32524,7 +32524,7 @@ var require_PermissionsBitField = __commonJS({
        * @returns {string[]}
        */
       missing(bits, checkAdmin = true) {
-        return checkAdmin && this.has(PermissionFlagsBits5.Administrator) ? [] : super.missing(bits);
+        return checkAdmin && this.has(PermissionFlagsBits13.Administrator) ? [] : super.missing(bits);
       }
       /**
        * Checks whether the bitfield has a permission, or any of multiple permissions.
@@ -32533,7 +32533,7 @@ var require_PermissionsBitField = __commonJS({
        * @returns {boolean}
        */
       any(permission, checkAdmin = true) {
-        return checkAdmin && super.has(PermissionFlagsBits5.Administrator) || super.any(permission);
+        return checkAdmin && super.has(PermissionFlagsBits13.Administrator) || super.any(permission);
       }
       /**
        * Checks whether the bitfield has a permission, or multiple permissions.
@@ -32542,7 +32542,7 @@ var require_PermissionsBitField = __commonJS({
        * @returns {boolean}
        */
       has(permission, checkAdmin = true) {
-        return checkAdmin && super.has(PermissionFlagsBits5.Administrator) || super.has(permission);
+        return checkAdmin && super.has(PermissionFlagsBits13.Administrator) || super.has(permission);
       }
       /**
        * Gets an {@link Array} of bitfield names based on the permissions available.
@@ -32562,7 +32562,7 @@ var require_BaseChannel = __commonJS({
     "use strict";
     var { channelLink, channelMention } = require_dist8();
     var { DiscordSnowflake } = require_cjs();
-    var { ChannelType: ChannelType5, Routes: Routes4 } = require_v106();
+    var { ChannelType: ChannelType8, Routes: Routes4 } = require_v106();
     var Base = require_Base();
     var ChannelFlagsBitField = require_ChannelFlagsBitField();
     var { ThreadChannelTypes } = require_Constants();
@@ -32674,7 +32674,7 @@ var require_BaseChannel = __commonJS({
        * @returns {boolean}
        */
       isDMBased() {
-        return [ChannelType5.DM, ChannelType5.GroupDM].includes(this.type);
+        return [ChannelType8.DM, ChannelType8.GroupDM].includes(this.type);
       }
       /**
        * Indicates whether this channel is {@link BaseGuildVoiceChannel voice-based}.
@@ -32935,7 +32935,7 @@ var require_RoleFlagsBitField = __commonJS({
 var require_Role = __commonJS({
   "node_modules/discord.js/src/structures/Role.js"(exports2) {
     "use strict";
-    var { PermissionFlagsBits: PermissionFlagsBits5 } = require_v106();
+    var { PermissionFlagsBits: PermissionFlagsBits13 } = require_v106();
     var BaseRole = require_BaseRole();
     var { DiscordjsError: DiscordjsError2, ErrorCodes: ErrorCodes2 } = require_errors2();
     var PermissionsBitField2 = require_PermissionsBitField();
@@ -33002,7 +33002,7 @@ var require_Role = __commonJS({
       get editable() {
         if (this.managed) return false;
         const clientMember = this.guild.members.resolve(this.client.user);
-        if (!clientMember.permissions.has(PermissionFlagsBits5.ManageRoles)) return false;
+        if (!clientMember.permissions.has(PermissionFlagsBits13.ManageRoles)) return false;
         return clientMember.roles.highest.comparePositionTo(this) > 0;
       }
       /**
@@ -33081,8 +33081,8 @@ var require_Role = __commonJS({
        *   .then(updated => console.log(`Updated role name to ${updated.name}`))
        *   .catch(console.error);
        */
-      setName(name, reason) {
-        return this.edit({ name, reason });
+      setName(name, reason2) {
+        return this.edit({ name, reason: reason2 });
       }
       /**
        * Sets a new color for the role.
@@ -33092,8 +33092,8 @@ var require_Role = __commonJS({
        * @returns {Promise<Role>}
        * @deprecated Use {@link Role#setColors} instead.
        */
-      async setColor(color, reason) {
-        return this.edit({ color, reason });
+      async setColor(color, reason2) {
+        return this.edit({ color, reason: reason2 });
       }
       /**
        * Sets new colors for the role.
@@ -33116,8 +33116,8 @@ var require_Role = __commonJS({
        *   .then(updated => console.log(`Set holographic colors for role ${updated.name}`))
        *   .catch(console.error);
        */
-      async setColors(colors, reason) {
-        return this.edit({ colors, reason });
+      async setColors(colors, reason2) {
+        return this.edit({ colors, reason: reason2 });
       }
       /**
        * Sets whether or not the role should be hoisted.
@@ -33130,8 +33130,8 @@ var require_Role = __commonJS({
        *   .then(updated => console.log(`Role hoisted: ${updated.hoist}`))
        *   .catch(console.error);
        */
-      setHoist(hoist = true, reason) {
-        return this.edit({ hoist, reason });
+      setHoist(hoist = true, reason2) {
+        return this.edit({ hoist, reason: reason2 });
       }
       /**
        * Sets the permissions of the role.
@@ -33149,8 +33149,8 @@ var require_Role = __commonJS({
        *   .then(updated => console.log(`Updated permissions to ${updated.permissions.bitfield}`))
        *   .catch(console.error);
        */
-      setPermissions(permissions, reason) {
-        return this.edit({ permissions, reason });
+      setPermissions(permissions, reason2) {
+        return this.edit({ permissions, reason: reason2 });
       }
       /**
        * Sets whether this role is mentionable.
@@ -33163,8 +33163,8 @@ var require_Role = __commonJS({
        *   .then(updated => console.log(`Role updated ${updated.name}`))
        *   .catch(console.error);
        */
-      setMentionable(mentionable = true, reason) {
-        return this.edit({ mentionable, reason });
+      setMentionable(mentionable = true, reason2) {
+        return this.edit({ mentionable, reason: reason2 });
       }
       /**
        * Sets a new icon for the role.
@@ -33174,8 +33174,8 @@ var require_Role = __commonJS({
        * @param {string} [reason] Reason for changing the role's icon
        * @returns {Promise<Role>}
        */
-      setIcon(icon, reason) {
-        return this.edit({ icon, reason });
+      setIcon(icon, reason2) {
+        return this.edit({ icon, reason: reason2 });
       }
       /**
        * Sets a new unicode emoji for the role.
@@ -33188,8 +33188,8 @@ var require_Role = __commonJS({
        *   .then(updated => console.log(`Set unicode emoji for the role to ${updated.unicodeEmoji}`))
        *   .catch(console.error);
        */
-      setUnicodeEmoji(unicodeEmoji, reason) {
-        return this.edit({ unicodeEmoji, reason });
+      setUnicodeEmoji(unicodeEmoji, reason2) {
+        return this.edit({ unicodeEmoji, reason: reason2 });
       }
       /**
        * Options used to set the position of a role.
@@ -33221,8 +33221,8 @@ var require_Role = __commonJS({
        *   .then(deleted => console.log(`Deleted role ${deleted.name}`))
        *   .catch(console.error);
        */
-      async delete(reason) {
-        await this.guild.roles.delete(this.id, reason);
+      async delete(reason2) {
+        await this.guild.roles.delete(this.id, reason2);
         return this;
       }
       /**
@@ -33261,7 +33261,7 @@ var require_Role = __commonJS({
 var require_PermissionOverwrites = __commonJS({
   "node_modules/discord.js/src/structures/PermissionOverwrites.js"(exports2, module2) {
     "use strict";
-    var { OverwriteType } = require_v106();
+    var { OverwriteType: OverwriteType2 } = require_v106();
     var Base = require_Base();
     var { Role } = require_Role();
     var { DiscordjsTypeError: DiscordjsTypeError2, ErrorCodes: ErrorCodes2 } = require_errors2();
@@ -33297,8 +33297,8 @@ var require_PermissionOverwrites = __commonJS({
        *   .then(channel => console.log(channel.permissionOverwrites.get(message.author.id)))
        *   .catch(console.error);
        */
-      async edit(options, reason) {
-        await this.channel.permissionOverwrites.upsert(this.id, options, { type: this.type, reason }, this);
+      async edit(options, reason2) {
+        await this.channel.permissionOverwrites.upsert(this.id, options, { type: this.type, reason: reason2 }, this);
         return this;
       }
       /**
@@ -33306,8 +33306,8 @@ var require_PermissionOverwrites = __commonJS({
        * @param {string} [reason] Reason for deleting this overwrite
        * @returns {Promise<PermissionOverwrites>}
        */
-      async delete(reason) {
-        await this.channel.permissionOverwrites.delete(this.id, reason);
+      async delete(reason2) {
+        await this.channel.permissionOverwrites.delete(this.id, reason2);
         return this;
       }
       toJSON() {
@@ -33387,7 +33387,7 @@ var require_PermissionOverwrites = __commonJS({
        */
       static resolve(overwrite, guild) {
         if (overwrite instanceof this) return overwrite.toJSON();
-        if (typeof overwrite.id === "string" && overwrite.type in OverwriteType) {
+        if (typeof overwrite.id === "string" && overwrite.type in OverwriteType2) {
           return {
             id: overwrite.id,
             type: overwrite.type,
@@ -33399,7 +33399,7 @@ var require_PermissionOverwrites = __commonJS({
         if (!userOrRole) {
           throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "parameter", "cached User or Role");
         }
-        const type = userOrRole instanceof Role ? OverwriteType.Role : OverwriteType.Member;
+        const type = userOrRole instanceof Role ? OverwriteType2.Role : OverwriteType2.Member;
         return {
           id: userOrRole.id,
           type,
@@ -33418,7 +33418,7 @@ var require_PermissionOverwriteManager = __commonJS({
     "use strict";
     var process2 = require("node:process");
     var { Collection: Collection2 } = require_dist7();
-    var { OverwriteType, Routes: Routes4 } = require_v106();
+    var { OverwriteType: OverwriteType2, Routes: Routes4 } = require_v106();
     var CachedManager = require_CachedManager();
     var { DiscordjsTypeError: DiscordjsTypeError2, ErrorCodes: ErrorCodes2 } = require_errors2();
     var PermissionOverwrites = require_PermissionOverwrites();
@@ -33463,7 +33463,7 @@ var require_PermissionOverwriteManager = __commonJS({
        *   },
        * ], 'Needed to change permissions');
        */
-      async set(overwrites, reason) {
+      async set(overwrites, reason2) {
         if (!Array.isArray(overwrites) && !(overwrites instanceof Collection2)) {
           throw new DiscordjsTypeError2(
             ErrorCodes2.InvalidType,
@@ -33472,7 +33472,7 @@ var require_PermissionOverwriteManager = __commonJS({
             true
           );
         }
-        return this.channel.edit({ permissionOverwrites: overwrites, reason });
+        return this.channel.edit({ permissionOverwrites: overwrites, reason: reason2 });
       }
       /**
        * Extra information about the overwrite.
@@ -33492,16 +33492,16 @@ var require_PermissionOverwriteManager = __commonJS({
        */
       async upsert(userOrRole, options, overwriteOptions = {}, existing) {
         let userOrRoleId = this.channel.guild.roles.resolveId(userOrRole) ?? this.client.users.resolveId(userOrRole);
-        let { type, reason } = overwriteOptions;
+        let { type, reason: reason2 } = overwriteOptions;
         if (typeof type !== "number") {
           userOrRole = this.channel.guild.roles.resolve(userOrRole) ?? this.client.users.resolve(userOrRole);
           if (!userOrRole) throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "parameter", "User nor a Role");
-          type = userOrRole instanceof Role ? OverwriteType.Role : OverwriteType.Member;
+          type = userOrRole instanceof Role ? OverwriteType2.Role : OverwriteType2.Member;
         }
         const { allow, deny } = PermissionOverwrites.resolveOverwriteOptions(options, existing);
         await this.client.rest.put(Routes4.channelPermission(this.channel.id, userOrRoleId), {
           body: { id: userOrRoleId, type, allow, deny },
-          reason
+          reason: reason2
         });
         return this.channel;
       }
@@ -33548,10 +33548,10 @@ var require_PermissionOverwriteManager = __commonJS({
        * @param {string} [reason] The reason for deleting the overwrite
        * @returns {Promise<GuildChannel>}
        */
-      async delete(userOrRole, reason) {
+      async delete(userOrRole, reason2) {
         const userOrRoleId = this.channel.guild.roles.resolveId(userOrRole) ?? this.client.users.resolveId(userOrRole);
         if (!userOrRoleId) throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "parameter", "User nor a Role");
-        await this.client.rest.delete(Routes4.channelPermission(this.channel.id, userOrRoleId), { reason });
+        await this.client.rest.delete(Routes4.channelPermission(this.channel.id, userOrRoleId), { reason: reason2 });
         return this.channel;
       }
     };
@@ -33564,7 +33564,7 @@ var require_GuildChannel = __commonJS({
   "node_modules/discord.js/src/structures/GuildChannel.js"(exports2, module2) {
     "use strict";
     var { Snowflake } = require_cjs();
-    var { PermissionFlagsBits: PermissionFlagsBits5, ChannelType: ChannelType5 } = require_v106();
+    var { PermissionFlagsBits: PermissionFlagsBits13, ChannelType: ChannelType8 } = require_v106();
     var { BaseChannel } = require_BaseChannel();
     var { DiscordjsError: DiscordjsError2, ErrorCodes: ErrorCodes2 } = require_errors2();
     var PermissionOverwriteManager = require_PermissionOverwriteManager();
@@ -33642,7 +33642,7 @@ var require_GuildChannel = __commonJS({
        * @readonly
        */
       get position() {
-        const selfIsCategory = this.type === ChannelType5.GuildCategory;
+        const selfIsCategory = this.type === ChannelType8.GuildCategory;
         const types = getSortableGroupTypes(this.type);
         let count = 0;
         for (const channel of this.guild.channels.cache.values()) {
@@ -33705,7 +33705,7 @@ var require_GuildChannel = __commonJS({
         }
         const roles = member.roles.cache;
         const permissions = new PermissionsBitField2(roles.map((role) => role.permissions));
-        if (checkAdmin && permissions.has(PermissionFlagsBits5.Administrator)) {
+        if (checkAdmin && permissions.has(PermissionFlagsBits13.Administrator)) {
           return new PermissionsBitField2(PermissionsBitField2.All).freeze();
         }
         const overwrites = this.overwritesFor(member, true, roles);
@@ -33720,7 +33720,7 @@ var require_GuildChannel = __commonJS({
        * @private
        */
       rolePermissions(role, checkAdmin) {
-        if (checkAdmin && role.permissions.has(PermissionFlagsBits5.Administrator)) {
+        if (checkAdmin && role.permissions.has(PermissionFlagsBits13.Administrator)) {
           return new PermissionsBitField2(PermissionsBitField2.All).freeze();
         }
         const basePermissions = new PermissionsBitField2([role.permissions, role.guild.roles.everyone.permissions]);
@@ -33746,7 +33746,7 @@ var require_GuildChannel = __commonJS({
        */
       get members() {
         return this.guild.members.cache.filter(
-          (member) => this.permissionsFor(member).has(PermissionFlagsBits5.ViewChannel, false)
+          (member) => this.permissionsFor(member).has(PermissionFlagsBits13.ViewChannel, false)
         );
       }
       /**
@@ -33773,8 +33773,8 @@ var require_GuildChannel = __commonJS({
        *   .then(newChannel => console.log(`Channel's new name is ${newChannel.name}`))
        *   .catch(console.error);
        */
-      setName(name, reason) {
-        return this.edit({ name, reason });
+      setName(name, reason2) {
+        return this.edit({ name, reason: reason2 });
       }
       /**
        * Options used to set the parent of a channel.
@@ -33793,11 +33793,11 @@ var require_GuildChannel = __commonJS({
        *   .then(channel => console.log(`New parent of ${message.channel.name}: ${channel.name}`))
        *   .catch(console.error);
        */
-      setParent(channel, { lockPermissions = true, reason } = {}) {
+      setParent(channel, { lockPermissions = true, reason: reason2 } = {}) {
         return this.edit({
           parent: channel ?? null,
           lockPermissions,
-          reason
+          reason: reason2
         });
       }
       /**
@@ -33880,10 +33880,10 @@ var require_GuildChannel = __commonJS({
         if (this.client.user.id === this.guild.ownerId) return true;
         const permissions = this.permissionsFor(this.client.user);
         if (!permissions) return false;
-        if (permissions.has(PermissionFlagsBits5.Administrator, false)) return true;
+        if (permissions.has(PermissionFlagsBits13.Administrator, false)) return true;
         if (this.guild.members.me.communicationDisabledUntilTimestamp > Date.now()) return false;
-        const baseBitfield = PermissionFlagsBits5.ViewChannel | PermissionFlagsBits5.ManageChannels;
-        const bitfield = VoiceBasedChannelTypes.includes(this.type) ? baseBitfield | PermissionFlagsBits5.Connect : baseBitfield;
+        const baseBitfield = PermissionFlagsBits13.ViewChannel | PermissionFlagsBits13.ManageChannels;
+        const bitfield = VoiceBasedChannelTypes.includes(this.type) ? baseBitfield | PermissionFlagsBits13.Connect : baseBitfield;
         return permissions.has(bitfield, false);
       }
       /**
@@ -33895,7 +33895,7 @@ var require_GuildChannel = __commonJS({
         if (this.client.user.id === this.guild.ownerId) return true;
         const permissions = this.permissionsFor(this.client.user);
         if (!permissions) return false;
-        return permissions.has(PermissionFlagsBits5.ViewChannel, false);
+        return permissions.has(PermissionFlagsBits13.ViewChannel, false);
       }
       /**
        * Deletes this channel.
@@ -33907,8 +33907,8 @@ var require_GuildChannel = __commonJS({
        *   .then(console.log)
        *   .catch(console.error);
        */
-      async delete(reason) {
-        await this.guild.channels.delete(this.id, reason);
+      async delete(reason2) {
+        await this.guild.channels.delete(this.id, reason2);
         return this;
       }
     };
@@ -33962,7 +33962,7 @@ var require_Util = __commonJS({
     var { parse } = require("node:path");
     var process2 = require("node:process");
     var { Collection: Collection2 } = require_dist7();
-    var { ChannelType: ChannelType5, RouteBases, Routes: Routes4 } = require_v106();
+    var { ChannelType: ChannelType8, RouteBases, Routes: Routes4 } = require_v106();
     var { fetch: fetch2 } = require_undici();
     var Colors = require_Colors();
     var { DiscordjsError: DiscordjsError2, DiscordjsRangeError: DiscordjsRangeError2, DiscordjsTypeError: DiscordjsTypeError2, ErrorCodes: ErrorCodes2 } = require_errors2();
@@ -34031,24 +34031,24 @@ var require_Util = __commonJS({
       };
     }
     var TextSortableGroupTypes = [
-      ChannelType5.GuildText,
-      ChannelType5.GuildAnnouncement,
-      ChannelType5.GuildForum,
-      ChannelType5.GuildMedia
+      ChannelType8.GuildText,
+      ChannelType8.GuildAnnouncement,
+      ChannelType8.GuildForum,
+      ChannelType8.GuildMedia
     ];
-    var VoiceSortableGroupTypes = [ChannelType5.GuildVoice, ChannelType5.GuildStageVoice];
-    var CategorySortableGroupTypes = [ChannelType5.GuildCategory];
+    var VoiceSortableGroupTypes = [ChannelType8.GuildVoice, ChannelType8.GuildStageVoice];
+    var CategorySortableGroupTypes = [ChannelType8.GuildCategory];
     function getSortableGroupTypes(type) {
       switch (type) {
-        case ChannelType5.GuildText:
-        case ChannelType5.GuildAnnouncement:
-        case ChannelType5.GuildForum:
-        case ChannelType5.GuildMedia:
+        case ChannelType8.GuildText:
+        case ChannelType8.GuildAnnouncement:
+        case ChannelType8.GuildForum:
+        case ChannelType8.GuildMedia:
           return TextSortableGroupTypes;
-        case ChannelType5.GuildVoice:
-        case ChannelType5.GuildStageVoice:
+        case ChannelType8.GuildVoice:
+        case ChannelType8.GuildStageVoice:
           return VoiceSortableGroupTypes;
-        case ChannelType5.GuildCategory:
+        case ChannelType8.GuildCategory:
           return CategorySortableGroupTypes;
         default:
           return [type];
@@ -34063,9 +34063,9 @@ var require_Util = __commonJS({
       }
       return array.indexOf(element);
     }
-    function verifyString(data2, error = Error, errorMessage2 = `Expected a string, got ${data2} instead.`, allowEmpty = true) {
-      if (typeof data2 !== "string") throw new error(errorMessage2);
-      if (!allowEmpty && data2.length === 0) throw new error(errorMessage2);
+    function verifyString(data2, error = Error, errorMessage3 = `Expected a string, got ${data2} instead.`, allowEmpty = true) {
+      if (typeof data2 !== "string") throw new error(errorMessage3);
+      if (!allowEmpty && data2.length === 0) throw new error(errorMessage3);
       return data2;
     }
     function resolveColor(color) {
@@ -34094,11 +34094,11 @@ var require_Util = __commonJS({
         isGuildChannel ? (a, b) => a.rawPosition - b.rawPosition || Number(BigInt(a.id) - BigInt(b.id)) : (a, b) => a.rawPosition - b.rawPosition || Number(BigInt(b.id) - BigInt(a.id))
       );
     }
-    async function setPosition(item, position, relative, sorted, client, route, reason) {
+    async function setPosition(item, position, relative, sorted, client, route, reason2) {
       let updatedItems = [...sorted.values()];
       moveElementInArray(updatedItems, item, position, relative);
       updatedItems = updatedItems.map((r, i) => ({ id: r.id, position: i }));
-      await client.rest.patch(route, { body: updatedItems, reason });
+      await client.rest.patch(route, { body: updatedItems, reason: reason2 });
       return updatedItems;
     }
     function basename(path, ext) {
@@ -34123,7 +34123,7 @@ var require_Util = __commonJS({
               return user ? `@${user.displayName}` : match;
             }
             case "@&": {
-              if (channel.type === ChannelType5.DM) return match;
+              if (channel.type === ChannelType8.DM) return match;
               const role = channel.guild.roles.cache.get(id);
               return role ? `@${role.name}` : match;
             }
@@ -34717,8 +34717,8 @@ var require_BaseClient = __commonJS({
        * @param {WebhookDeleteOptions} [options] Options for deleting the webhook
        * @returns {Promise<void>}
        */
-      async deleteWebhook(id, { token, reason } = {}) {
-        await this.rest.delete(Routes4.webhook(id, token), { auth: !token, reason });
+      async deleteWebhook(id, { token, reason: reason2 } = {}) {
+        await this.rest.delete(Routes4.webhook(id, token), { auth: !token, reason: reason2 });
       }
       /**
        * Increments max listeners by one, if they are not zero.
@@ -34949,7 +34949,7 @@ var require_Collector = __commonJS({
        * @param {string} [reason='user'] The reason this collector is ending
        * @emits Collector#end
        */
-      stop(reason = "user") {
+      stop(reason2 = "user") {
         if (this.ended) return;
         if (this._timeout) {
           clearTimeout2(this._timeout);
@@ -34959,9 +34959,9 @@ var require_Collector = __commonJS({
           clearTimeout2(this._idletimeout);
           this._idletimeout = null;
         }
-        this._endReason = reason;
+        this._endReason = reason2;
         this.ended = true;
-        this.emit("end", this.collected, reason);
+        this.emit("end", this.collected, reason2);
       }
       /**
        * Options used to reset the timeout and idle timer of a {@link Collector}.
@@ -34988,9 +34988,9 @@ var require_Collector = __commonJS({
        * @returns {boolean} Whether the collector ended or not
        */
       checkEnd() {
-        const reason = this.endReason;
-        if (reason) this.stop(reason);
-        return Boolean(reason);
+        const reason2 = this.endReason;
+        if (reason2) this.stop(reason2);
+        return Boolean(reason2);
       }
       /**
        * Allows collectors to be consumed with for-await-of loops
@@ -35162,7 +35162,7 @@ var require_InteractionCollector = __commonJS({
     "use strict";
     var { Collection: Collection2 } = require_dist7();
     var Collector = require_Collector();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var InteractionCollector = class extends Collector {
       /**
        * @param {Client} client The client on which to collect interactions
@@ -35184,27 +35184,27 @@ var require_InteractionCollector = __commonJS({
         };
         if (this.messageId || this.messageInteractionId) {
           this._handleMessageDeletion = this._handleMessageDeletion.bind(this);
-          this.client.on(Events3.MessageDelete, this._handleMessageDeletion);
-          this.client.on(Events3.MessageBulkDelete, bulkDeleteListener);
+          this.client.on(Events11.MessageDelete, this._handleMessageDeletion);
+          this.client.on(Events11.MessageBulkDelete, bulkDeleteListener);
         }
         if (this.channelId) {
           this._handleChannelDeletion = this._handleChannelDeletion.bind(this);
           this._handleThreadDeletion = this._handleThreadDeletion.bind(this);
-          this.client.on(Events3.ChannelDelete, this._handleChannelDeletion);
-          this.client.on(Events3.ThreadDelete, this._handleThreadDeletion);
+          this.client.on(Events11.ChannelDelete, this._handleChannelDeletion);
+          this.client.on(Events11.ThreadDelete, this._handleThreadDeletion);
         }
         if (this.guildId) {
           this._handleGuildDeletion = this._handleGuildDeletion.bind(this);
-          this.client.on(Events3.GuildDelete, this._handleGuildDeletion);
+          this.client.on(Events11.GuildDelete, this._handleGuildDeletion);
         }
-        this.client.on(Events3.InteractionCreate, this.handleCollect);
+        this.client.on(Events11.InteractionCreate, this.handleCollect);
         this.once("end", () => {
-          this.client.removeListener(Events3.InteractionCreate, this.handleCollect);
-          this.client.removeListener(Events3.MessageDelete, this._handleMessageDeletion);
-          this.client.removeListener(Events3.MessageBulkDelete, bulkDeleteListener);
-          this.client.removeListener(Events3.ChannelDelete, this._handleChannelDeletion);
-          this.client.removeListener(Events3.ThreadDelete, this._handleThreadDeletion);
-          this.client.removeListener(Events3.GuildDelete, this._handleGuildDeletion);
+          this.client.removeListener(Events11.InteractionCreate, this.handleCollect);
+          this.client.removeListener(Events11.MessageDelete, this._handleMessageDeletion);
+          this.client.removeListener(Events11.MessageBulkDelete, bulkDeleteListener);
+          this.client.removeListener(Events11.ChannelDelete, this._handleChannelDeletion);
+          this.client.removeListener(Events11.ThreadDelete, this._handleThreadDeletion);
+          this.client.removeListener(Events11.GuildDelete, this._handleGuildDeletion);
           this.client.decrementMaxListeners();
         });
         this.on("collect", (interaction) => {
@@ -35322,7 +35322,7 @@ var require_MessageCollector = __commonJS({
   "node_modules/discord.js/src/structures/MessageCollector.js"(exports2, module2) {
     "use strict";
     var Collector = require_Collector();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var MessageCollector = class extends Collector {
       /**
        * @param {TextBasedChannels} channel The channel
@@ -35340,19 +35340,19 @@ var require_MessageCollector = __commonJS({
         this._handleThreadDeletion = this._handleThreadDeletion.bind(this);
         this._handleGuildDeletion = this._handleGuildDeletion.bind(this);
         this.client.incrementMaxListeners();
-        this.client.on(Events3.MessageCreate, this.handleCollect);
-        this.client.on(Events3.MessageDelete, this.handleDispose);
-        this.client.on(Events3.MessageBulkDelete, bulkDeleteListener);
-        this.client.on(Events3.ChannelDelete, this._handleChannelDeletion);
-        this.client.on(Events3.ThreadDelete, this._handleThreadDeletion);
-        this.client.on(Events3.GuildDelete, this._handleGuildDeletion);
+        this.client.on(Events11.MessageCreate, this.handleCollect);
+        this.client.on(Events11.MessageDelete, this.handleDispose);
+        this.client.on(Events11.MessageBulkDelete, bulkDeleteListener);
+        this.client.on(Events11.ChannelDelete, this._handleChannelDeletion);
+        this.client.on(Events11.ThreadDelete, this._handleThreadDeletion);
+        this.client.on(Events11.GuildDelete, this._handleGuildDeletion);
         this.once("end", () => {
-          this.client.removeListener(Events3.MessageCreate, this.handleCollect);
-          this.client.removeListener(Events3.MessageDelete, this.handleDispose);
-          this.client.removeListener(Events3.MessageBulkDelete, bulkDeleteListener);
-          this.client.removeListener(Events3.ChannelDelete, this._handleChannelDeletion);
-          this.client.removeListener(Events3.ThreadDelete, this._handleThreadDeletion);
-          this.client.removeListener(Events3.GuildDelete, this._handleGuildDeletion);
+          this.client.removeListener(Events11.MessageCreate, this.handleCollect);
+          this.client.removeListener(Events11.MessageDelete, this.handleDispose);
+          this.client.removeListener(Events11.MessageBulkDelete, bulkDeleteListener);
+          this.client.removeListener(Events11.ChannelDelete, this._handleChannelDeletion);
+          this.client.removeListener(Events11.ThreadDelete, this._handleThreadDeletion);
+          this.client.removeListener(Events11.GuildDelete, this._handleGuildDeletion);
           this.client.decrementMaxListeners();
         });
       }
@@ -35431,7 +35431,7 @@ var require_GuildTemplate = __commonJS({
     var { RouteBases, Routes: Routes4 } = require_v106();
     var Base = require_Base();
     var { resolveImage } = require_DataResolver();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var GuildTemplate2 = class extends Base {
       /**
        * A regular expression that matches guild template links.
@@ -35497,7 +35497,7 @@ var require_GuildTemplate = __commonJS({
         if (client.guilds.cache.has(data2.id)) return client.guilds.cache.get(data2.id);
         return new Promise((resolve3) => {
           const resolveGuild = (guild) => {
-            client.off(Events3.GuildCreate, handleGuild);
+            client.off(Events11.GuildCreate, handleGuild);
             client.decrementMaxListeners();
             resolve3(guild);
           };
@@ -35508,7 +35508,7 @@ var require_GuildTemplate = __commonJS({
             }
           };
           client.incrementMaxListeners();
-          client.on(Events3.GuildCreate, handleGuild);
+          client.on(Events11.GuildCreate, handleGuild);
           const timeout = setTimeout2(() => resolveGuild(client.guilds._add(data2)), 1e4).unref();
         });
       }
@@ -35848,8 +35848,8 @@ var require_GuildScheduledEvent = __commonJS({
        *  .then(guildScheduledEvent => console.log(`Set the name to: ${guildScheduledEvent.name}`))
        *  .catch(console.error);
        */
-      setName(name, reason) {
-        return this.edit({ name, reason });
+      setName(name, reason2) {
+        return this.edit({ name, reason: reason2 });
       }
       /**
        * Sets a new time to schedule the event at.
@@ -35862,8 +35862,8 @@ var require_GuildScheduledEvent = __commonJS({
        *  .then(guildScheduledEvent => console.log(`Set the start time to: ${guildScheduledEvent.scheduledStartTime}`))
        *  .catch(console.error);
        */
-      setScheduledStartTime(scheduledStartTime, reason) {
-        return this.edit({ scheduledStartTime, reason });
+      setScheduledStartTime(scheduledStartTime, reason2) {
+        return this.edit({ scheduledStartTime, reason: reason2 });
       }
       // TODO: scheduledEndTime gets reset on passing null but it hasn't been documented
       /**
@@ -35877,8 +35877,8 @@ var require_GuildScheduledEvent = __commonJS({
        *  .then(guildScheduledEvent => console.log(`Set the end time to: ${guildScheduledEvent.scheduledEndTime}`))
        *  .catch(console.error);
        */
-      setScheduledEndTime(scheduledEndTime, reason) {
-        return this.edit({ scheduledEndTime, reason });
+      setScheduledEndTime(scheduledEndTime, reason2) {
+        return this.edit({ scheduledEndTime, reason: reason2 });
       }
       /**
        * Sets the new description of the guild scheduled event.
@@ -35891,8 +35891,8 @@ var require_GuildScheduledEvent = __commonJS({
        *  .then(guildScheduledEvent => console.log(`Set the description to: ${guildScheduledEvent.description}`))
        *  .catch(console.error);
        */
-      setDescription(description, reason) {
-        return this.edit({ description, reason });
+      setDescription(description, reason2) {
+        return this.edit({ description, reason: reason2 });
       }
       /**
        * Sets the new status of the guild scheduled event.
@@ -35907,8 +35907,8 @@ var require_GuildScheduledEvent = __commonJS({
        *  .then(guildScheduledEvent => console.log(`Set the status to: ${guildScheduledEvent.status}`))
        *  .catch(console.error);
        */
-      setStatus(status, reason) {
-        return this.edit({ status, reason });
+      setStatus(status, reason2) {
+        return this.edit({ status, reason: reason2 });
       }
       /**
        * Sets the new location of the guild scheduled event.
@@ -35921,8 +35921,8 @@ var require_GuildScheduledEvent = __commonJS({
        *  .then(guildScheduledEvent => console.log(`Set the location to: ${guildScheduledEvent.entityMetadata.location}`))
        *  .catch(console.error);
        */
-      setLocation(location, reason) {
-        return this.edit({ entityMetadata: { location }, reason });
+      setLocation(location, reason2) {
+        return this.edit({ entityMetadata: { location }, reason: reason2 });
       }
       /**
        * Fetches subscribers of this guild scheduled event.
@@ -36443,7 +36443,7 @@ var require_Invite = __commonJS({
     var { Buffer: Buffer2 } = require("node:buffer");
     var { Collection: Collection2 } = require_dist7();
     var { lazy } = require_dist2();
-    var { RouteBases, Routes: Routes4, PermissionFlagsBits: PermissionFlagsBits5 } = require_v106();
+    var { RouteBases, Routes: Routes4, PermissionFlagsBits: PermissionFlagsBits13 } = require_v106();
     var Base = require_Base();
     var { GuildScheduledEvent } = require_GuildScheduledEvent();
     var IntegrationApplication = require_IntegrationApplication();
@@ -36591,7 +36591,7 @@ var require_Invite = __commonJS({
         if (!guild || !this.client.guilds.cache.has(guild.id)) return false;
         if (!guild.members.me) throw new DiscordjsError2(ErrorCodes2.GuildUncachedMe);
         return Boolean(
-          this.channel?.permissionsFor(this.client.user).has(PermissionFlagsBits5.ManageChannels, false) || guild.members.me.permissions.has(PermissionFlagsBits5.ManageGuild)
+          this.channel?.permissionsFor(this.client.user).has(PermissionFlagsBits13.ManageChannels, false) || guild.members.me.permissions.has(PermissionFlagsBits13.ManageGuild)
         );
       }
       /**
@@ -36631,8 +36631,8 @@ var require_Invite = __commonJS({
        * @param {string} [reason] Reason for deleting this invite
        * @returns {Promise<Invite>}
        */
-      async delete(reason) {
-        await this.client.rest.delete(Routes4.invite(this.code), { reason });
+      async delete(reason2) {
+        await this.client.rest.delete(Routes4.invite(this.code), { reason: reason2 });
         return this;
       }
       /**
@@ -36779,7 +36779,7 @@ var require_DataResolver = __commonJS({
 var require_MessageFlagsBitField = __commonJS({
   "node_modules/discord.js/src/util/MessageFlagsBitField.js"(exports2, module2) {
     "use strict";
-    var { MessageFlags: MessageFlags15 } = require_v106();
+    var { MessageFlags: MessageFlags18 } = require_v106();
     var BitField = require_BitField();
     var MessageFlagsBitField = class extends BitField {
       /**
@@ -36787,7 +36787,7 @@ var require_MessageFlagsBitField = __commonJS({
        * @type {MessageFlags}
        * @memberof MessageFlagsBitField
        */
-      static Flags = MessageFlags15;
+      static Flags = MessageFlags18;
     };
     module2.exports = MessageFlagsBitField;
   }
@@ -43873,7 +43873,7 @@ var require_dist9 = __commonJS({
       ContextMenuCommandAssertions: () => Assertions_exports11,
       ContextMenuCommandBuilder: () => ContextMenuCommandBuilder,
       EmbedAssertions: () => Assertions_exports,
-      EmbedBuilder: () => EmbedBuilder8,
+      EmbedBuilder: () => EmbedBuilder12,
       FileBuilder: () => FileBuilder,
       FileUploadAssertions: () => Assertions_exports4,
       FileUploadBuilder: () => FileUploadBuilder,
@@ -43899,7 +43899,7 @@ var require_dist9 = __commonJS({
       SlashCommandAssertions: () => Assertions_exports10,
       SlashCommandAttachmentOption: () => SlashCommandAttachmentOption,
       SlashCommandBooleanOption: () => SlashCommandBooleanOption,
-      SlashCommandBuilder: () => SlashCommandBuilder11,
+      SlashCommandBuilder: () => SlashCommandBuilder14,
       SlashCommandChannelOption: () => SlashCommandChannelOption,
       SlashCommandIntegerOption: () => SlashCommandIntegerOption,
       SlashCommandMentionableOption: () => SlashCommandMentionableOption,
@@ -44002,7 +44002,7 @@ var require_dist9 = __commonJS({
       return arr;
     }
     __name(normalizeArray, "normalizeArray");
-    var EmbedBuilder8 = class {
+    var EmbedBuilder12 = class {
       static {
         __name(this, "EmbedBuilder");
       }
@@ -44179,9 +44179,9 @@ var require_dist9 = __commonJS({
        *
        * @param timestamp - The timestamp or date to use
        */
-      setTimestamp(timestamp = Date.now()) {
-        timestampPredicate.parse(timestamp);
-        this.data.timestamp = timestamp ? new Date(timestamp).toISOString() : void 0;
+      setTimestamp(timestamp2 = Date.now()) {
+        timestampPredicate.parse(timestamp2);
+        this.data.timestamp = timestamp2 ? new Date(timestamp2).toISOString() : void 0;
         return this;
       }
       /**
@@ -44275,8 +44275,8 @@ var require_dist9 = __commonJS({
        *
        * @param label - The label to use
        */
-      setLabel(label) {
-        this.data.label = labelValueDescriptionValidator.parse(label);
+      setLabel(label2) {
+        this.data.label = labelValueDescriptionValidator.parse(label2);
         return this;
       }
       /**
@@ -44354,8 +44354,8 @@ var require_dist9 = __commonJS({
     }
     __name(validateRequiredSelectMenuParameters, "validateRequiredSelectMenuParameters");
     var defaultValidator = import_shapeshift2.s.boolean();
-    function validateRequiredSelectMenuOptionParameters(label, value) {
-      labelValueDescriptionValidator.parse(label);
+    function validateRequiredSelectMenuOptionParameters(label2, value) {
+      labelValueDescriptionValidator.parse(label2);
       labelValueDescriptionValidator.parse(value);
     }
     __name(validateRequiredSelectMenuOptionParameters, "validateRequiredSelectMenuOptionParameters");
@@ -44363,12 +44363,12 @@ var require_dist9 = __commonJS({
     var urlValidator = import_shapeshift2.s.string().url({
       allowedProtocols: ["http:", "https:", "discord:"]
     }).setValidationEnabled(isValidationEnabled);
-    function validateRequiredButtonParameters(style, label, emoji, customId, skuId, url) {
+    function validateRequiredButtonParameters(style, label2, emoji, customId, skuId, url) {
       if (style === import_v10.ButtonStyle.Premium) {
         if (!skuId) {
           throw new RangeError("Premium buttons must have an SKU id.");
         }
-        if (customId || label || url || emoji) {
+        if (customId || label2 || url || emoji) {
           throw new RangeError("Premium buttons cannot have a custom id, label, URL, or emoji.");
         }
       } else {
@@ -44378,7 +44378,7 @@ var require_dist9 = __commonJS({
         if (url && customId) {
           throw new RangeError("URL and custom id are mutually exclusive.");
         }
-        if (!label && !emoji) {
+        if (!label2 && !emoji) {
           throw new RangeError("Non-premium buttons must have a label and/or an emoji.");
         }
         if (style === import_v10.ButtonStyle.Link) {
@@ -44527,8 +44527,8 @@ var require_dist9 = __commonJS({
        *
        * @param label - The label to use
        */
-      setLabel(label) {
-        this.data.label = buttonLabelValidator.parse(label);
+      setLabel(label2) {
+        this.data.label = buttonLabelValidator.parse(label2);
         return this;
       }
       /**
@@ -44711,8 +44711,8 @@ var require_dist9 = __commonJS({
        *
        * @param label - The label to use
        */
-      setLabel(label) {
-        this.data.label = label;
+      setLabel(label2) {
+        this.data.label = label2;
         return this;
       }
       /**
@@ -44927,8 +44927,8 @@ var require_dist9 = __commonJS({
        *
        * @param label - The label to use
        */
-      setLabel(label) {
-        this.data.label = label;
+      setLabel(label2) {
+        this.data.label = label2;
         return this;
       }
       /**
@@ -45878,8 +45878,8 @@ var require_dist9 = __commonJS({
        * @param label - The label to use
        * @deprecated Use a label builder to create a label (and optionally a description) instead.
        */
-      setLabel(label) {
-        this.data.label = labelValidator.parse(label);
+      setLabel(label2) {
+        this.data.label = labelValidator.parse(label2);
         return this;
       }
       /**
@@ -46022,8 +46022,8 @@ var require_dist9 = __commonJS({
        *
        * @param label - The label to use
        */
-      setLabel(label) {
-        this.data.label = label;
+      setLabel(label2) {
+        this.data.label = label2;
         return this;
       }
       /**
@@ -47125,7 +47125,7 @@ var require_dist9 = __commonJS({
        */
       addLabelComponents(...components) {
         const normalized = normalizeArray(components);
-        const resolved = normalized.map((label) => resolveBuilder(label, LabelBuilder));
+        const resolved = normalized.map((label2) => resolveBuilder(label2, LabelBuilder));
         this.components.push(...resolved);
         return this;
       }
@@ -47192,7 +47192,7 @@ var require_dist9 = __commonJS({
        * @param labels - The replacing label objects
        */
       spliceLabelComponents(index, deleteCount, ...labels) {
-        const resolved = labels.map((label) => resolveBuilder(label, LabelBuilder));
+        const resolved = labels.map((label2) => resolveBuilder(label2, LabelBuilder));
         this.components.splice(index, deleteCount, ...resolved);
         return this;
       }
@@ -48205,7 +48205,7 @@ var require_dist9 = __commonJS({
         return this;
       }
     };
-    var SlashCommandBuilder11 = class {
+    var SlashCommandBuilder14 = class {
       /**
        * The name of this command.
        */
@@ -48258,10 +48258,10 @@ var require_dist9 = __commonJS({
        */
       nsfw = void 0;
     };
-    __name(SlashCommandBuilder11, "SlashCommandBuilder");
-    SlashCommandBuilder11 = __decorateClass([
+    __name(SlashCommandBuilder14, "SlashCommandBuilder");
+    SlashCommandBuilder14 = __decorateClass([
       (0, import_ts_mixer6.mix)(SharedSlashCommandOptions, SharedNameAndDescription, SharedSlashCommandSubcommands, SharedSlashCommand)
-    ], SlashCommandBuilder11);
+    ], SlashCommandBuilder14);
     var Assertions_exports11 = {};
     __export2(Assertions_exports11, {
       contextsPredicate: () => contextsPredicate2,
@@ -48894,7 +48894,7 @@ var require_ReactionCollector = __commonJS({
     "use strict";
     var { Collection: Collection2 } = require_dist7();
     var Collector = require_Collector();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var ReactionCollector = class _ReactionCollector extends Collector {
       /**
        * @param {Message} message The message upon which to collect reactions
@@ -48914,23 +48914,23 @@ var require_ReactionCollector = __commonJS({
           if (messages.has(this.message.id)) this.stop("messageDelete");
         };
         this.client.incrementMaxListeners();
-        this.client.on(Events3.MessageReactionAdd, this.handleCollect);
-        this.client.on(Events3.MessageReactionRemove, this.handleDispose);
-        this.client.on(Events3.MessageReactionRemoveAll, this.empty);
-        this.client.on(Events3.MessageDelete, this._handleMessageDeletion);
-        this.client.on(Events3.MessageBulkDelete, bulkDeleteListener);
-        this.client.on(Events3.ChannelDelete, this._handleChannelDeletion);
-        this.client.on(Events3.ThreadDelete, this._handleThreadDeletion);
-        this.client.on(Events3.GuildDelete, this._handleGuildDeletion);
+        this.client.on(Events11.MessageReactionAdd, this.handleCollect);
+        this.client.on(Events11.MessageReactionRemove, this.handleDispose);
+        this.client.on(Events11.MessageReactionRemoveAll, this.empty);
+        this.client.on(Events11.MessageDelete, this._handleMessageDeletion);
+        this.client.on(Events11.MessageBulkDelete, bulkDeleteListener);
+        this.client.on(Events11.ChannelDelete, this._handleChannelDeletion);
+        this.client.on(Events11.ThreadDelete, this._handleThreadDeletion);
+        this.client.on(Events11.GuildDelete, this._handleGuildDeletion);
         this.once("end", () => {
-          this.client.removeListener(Events3.MessageReactionAdd, this.handleCollect);
-          this.client.removeListener(Events3.MessageReactionRemove, this.handleDispose);
-          this.client.removeListener(Events3.MessageReactionRemoveAll, this.empty);
-          this.client.removeListener(Events3.MessageDelete, this._handleMessageDeletion);
-          this.client.removeListener(Events3.MessageBulkDelete, bulkDeleteListener);
-          this.client.removeListener(Events3.ChannelDelete, this._handleChannelDeletion);
-          this.client.removeListener(Events3.ThreadDelete, this._handleThreadDeletion);
-          this.client.removeListener(Events3.GuildDelete, this._handleGuildDeletion);
+          this.client.removeListener(Events11.MessageReactionAdd, this.handleCollect);
+          this.client.removeListener(Events11.MessageReactionRemove, this.handleDispose);
+          this.client.removeListener(Events11.MessageReactionRemoveAll, this.empty);
+          this.client.removeListener(Events11.MessageDelete, this._handleMessageDeletion);
+          this.client.removeListener(Events11.MessageBulkDelete, bulkDeleteListener);
+          this.client.removeListener(Events11.ChannelDelete, this._handleChannelDeletion);
+          this.client.removeListener(Events11.ThreadDelete, this._handleThreadDeletion);
+          this.client.removeListener(Events11.GuildDelete, this._handleGuildDeletion);
           this.client.decrementMaxListeners();
         });
         this.on("collect", (reaction, user) => {
@@ -49208,8 +49208,8 @@ var require_Sticker = __commonJS({
        *   .then(sticker => console.log(`Deleted sticker ${sticker.name}`))
        *   .catch(console.error);
        */
-      async delete(reason) {
-        await this.guild.stickers.delete(this, reason);
+      async delete(reason2) {
+        await this.guild.stickers.delete(this, reason2);
         return this;
       }
       /**
@@ -49368,7 +49368,7 @@ var require_GuildEmojiRoleManager = __commonJS({
 var require_GuildEmoji = __commonJS({
   "node_modules/discord.js/src/structures/GuildEmoji.js"(exports2, module2) {
     "use strict";
-    var { PermissionFlagsBits: PermissionFlagsBits5 } = require_v106();
+    var { PermissionFlagsBits: PermissionFlagsBits13 } = require_v106();
     var BaseGuildEmoji = require_BaseGuildEmoji();
     var { DiscordjsError: DiscordjsError2, ErrorCodes: ErrorCodes2 } = require_errors2();
     var GuildEmojiRoleManager = require_GuildEmojiRoleManager();
@@ -49401,7 +49401,7 @@ var require_GuildEmoji = __commonJS({
        */
       get deletable() {
         if (!this.guild.members.me) throw new DiscordjsError2(ErrorCodes2.GuildUncachedMe);
-        return !this.managed && this.guild.members.me.permissions.has(PermissionFlagsBits5.ManageGuildExpressions);
+        return !this.managed && this.guild.members.me.permissions.has(PermissionFlagsBits13.ManageGuildExpressions);
       }
       /**
        * A manager for roles this emoji is active for.
@@ -49444,16 +49444,16 @@ var require_GuildEmoji = __commonJS({
        * @param {string} [reason] Reason for changing the emoji's name
        * @returns {Promise<GuildEmoji>}
        */
-      setName(name, reason) {
-        return this.edit({ name, reason });
+      setName(name, reason2) {
+        return this.edit({ name, reason: reason2 });
       }
       /**
        * Deletes the emoji.
        * @param {string} [reason] Reason for deleting the emoji
        * @returns {Promise<GuildEmoji>}
        */
-      async delete(reason) {
-        await this.guild.emojis.delete(this.id, reason);
+      async delete(reason2) {
+        await this.guild.emojis.delete(this.id, reason2);
         return this;
       }
       /**
@@ -50717,10 +50717,10 @@ var require_Message = __commonJS({
     var { DiscordSnowflake } = require_cjs();
     var {
       InteractionType,
-      ChannelType: ChannelType5,
+      ChannelType: ChannelType8,
       MessageType,
-      MessageFlags: MessageFlags15,
-      PermissionFlagsBits: PermissionFlagsBits5,
+      MessageFlags: MessageFlags18,
+      PermissionFlagsBits: PermissionFlagsBits13,
       MessageReferenceType
     } = require_v106();
     var Attachment = require_Attachment();
@@ -51036,7 +51036,7 @@ var require_Message = __commonJS({
        * @readonly
        */
       get hasThread() {
-        return this.flags.has(MessageFlags15.HasThread);
+        return this.flags.has(MessageFlags18.HasThread);
       }
       /**
        * The thread started by this message
@@ -51099,8 +51099,8 @@ var require_Message = __commonJS({
       awaitReactions(options = {}) {
         return new Promise((resolve3, reject) => {
           const collector = this.createReactionCollector(options);
-          collector.once("end", (reactions, reason) => {
-            if (options.errors?.includes(reason)) reject(reactions);
+          collector.once("end", (reactions, reason2) => {
+            if (options.errors?.includes(reason2)) reject(reactions);
             else resolve3(reactions);
           });
         });
@@ -51156,10 +51156,10 @@ var require_Message = __commonJS({
         const _options = { ...options, max: 1 };
         return new Promise((resolve3, reject) => {
           const collector = this.createMessageComponentCollector(_options);
-          collector.once("end", (interactions, reason) => {
+          collector.once("end", (interactions, reason2) => {
             const interaction = interactions.first();
             if (interaction) resolve3(interaction);
-            else reject(new DiscordjsError2(ErrorCodes2.InteractionCollectorError, reason));
+            else reject(new DiscordjsError2(ErrorCodes2.InteractionCollectorError, reason2));
           });
         });
       }
@@ -51176,7 +51176,7 @@ var require_Message = __commonJS({
           if (this.channel.archived) return false;
           if (this.channel.locked) {
             const permissions = this.channel.permissionsFor(this.client.user);
-            if (!permissions?.has(PermissionFlagsBits5.ManageThreads, true)) return false;
+            if (!permissions?.has(PermissionFlagsBits13.ManageThreads, true)) return false;
           }
         }
         return precheck;
@@ -51196,8 +51196,8 @@ var require_Message = __commonJS({
         }
         const permissions = this.channel?.permissionsFor(this.client.user);
         if (!permissions) return false;
-        if (permissions.has(PermissionFlagsBits5.Administrator, false)) return true;
-        return this.type !== MessageType.AutoModerationAction && this.author.id === this.client.user.id || permissions.has(PermissionFlagsBits5.ManageMessages, false) && !this.guild.members.me.isCommunicationDisabled();
+        if (permissions.has(PermissionFlagsBits13.Administrator, false)) return true;
+        return this.type !== MessageType.AutoModerationAction && this.author.id === this.client.user.id || permissions.has(PermissionFlagsBits13.ManageMessages, false) && !this.guild.members.me.isCommunicationDisabled();
       }
       /**
        * Whether the message is bulk deletable by the client user
@@ -51208,7 +51208,7 @@ var require_Message = __commonJS({
        * channel.bulkDelete(messages.filter(message => message.bulkDeletable));
        */
       get bulkDeletable() {
-        return (this.inGuild() && Date.now() - this.createdTimestamp < MaxBulkDeletableMessageAge && this.deletable && this.channel?.permissionsFor(this.client.user).has(PermissionFlagsBits5.ManageMessages, false)) ?? false;
+        return (this.inGuild() && Date.now() - this.createdTimestamp < MaxBulkDeletableMessageAge && this.deletable && this.channel?.permissionsFor(this.client.user).has(PermissionFlagsBits13.ManageMessages, false)) ?? false;
       }
       /**
        * Whether the message is pinnable by the client user
@@ -51222,7 +51222,7 @@ var require_Message = __commonJS({
         if (!channel || channel.isVoiceBased() || !channel.viewable) return false;
         const permissions = channel?.permissionsFor(this.client.user);
         if (!permissions) return false;
-        return permissions.has(PermissionFlagsBits5.ReadMessageHistory | PermissionFlagsBits5.PinMessages);
+        return permissions.has(PermissionFlagsBits13.ReadMessageHistory | PermissionFlagsBits13.PinMessages);
       }
       /**
        * Fetches the Message this crosspost/reply/pin-add references, if available to the client
@@ -51243,10 +51243,10 @@ var require_Message = __commonJS({
        * @readonly
        */
       get crosspostable() {
-        const bitfield = PermissionFlagsBits5.SendMessages | (this.author.id === this.client.user.id ? PermissionsBitField2.DefaultBit : PermissionFlagsBits5.ManageMessages);
+        const bitfield = PermissionFlagsBits13.SendMessages | (this.author.id === this.client.user.id ? PermissionsBitField2.DefaultBit : PermissionFlagsBits13.ManageMessages);
         const { channel } = this;
         return Boolean(
-          channel?.type === ChannelType5.GuildAnnouncement && !this.flags.has(MessageFlags15.Crossposted) && this.reference?.type !== MessageReferenceType.Forward && this.type === MessageType.Default && !this.poll && channel.viewable && channel.permissionsFor(this.client.user)?.has(bitfield, false)
+          channel?.type === ChannelType8.GuildAnnouncement && !this.flags.has(MessageFlags18.Crossposted) && this.reference?.type !== MessageReferenceType.Forward && this.type === MessageType.Default && !this.poll && channel.viewable && channel.permissionsFor(this.client.user)?.has(bitfield, false)
         );
       }
       /**
@@ -51288,9 +51288,9 @@ var require_Message = __commonJS({
        *   .then(console.log)
        *   .catch(console.error)
        */
-      async pin(reason) {
+      async pin(reason2) {
         if (!this.channel) throw new DiscordjsError2(ErrorCodes2.ChannelNotCached);
-        await this.channel.messages.pin(this.id, reason);
+        await this.channel.messages.pin(this.id, reason2);
         return this;
       }
       /**
@@ -51303,9 +51303,9 @@ var require_Message = __commonJS({
        *   .then(console.log)
        *   .catch(console.error)
        */
-      async unpin(reason) {
+      async unpin(reason2) {
         if (!this.channel) throw new DiscordjsError2(ErrorCodes2.ChannelNotCached);
-        await this.channel.messages.unpin(this.id, reason);
+        await this.channel.messages.unpin(this.id, reason2);
         return this;
       }
       /**
@@ -51415,7 +51415,7 @@ var require_Message = __commonJS({
        */
       async startThread(options = {}) {
         if (!this.channel) throw new DiscordjsError2(ErrorCodes2.ChannelNotCached);
-        if (![ChannelType5.GuildText, ChannelType5.GuildAnnouncement].includes(this.channel.type)) {
+        if (![ChannelType8.GuildText, ChannelType8.GuildAnnouncement].includes(this.channel.type)) {
           throw new DiscordjsError2(ErrorCodes2.MessageThreadParent);
         }
         if (this.hasThread) throw new DiscordjsError2(ErrorCodes2.MessageExistingThread);
@@ -51447,9 +51447,9 @@ var require_Message = __commonJS({
       suppressEmbeds(suppress = true) {
         const flags = new MessageFlagsBitField(this.flags.bitfield);
         if (suppress) {
-          flags.add(MessageFlags15.SuppressEmbeds);
+          flags.add(MessageFlags18.SuppressEmbeds);
         } else {
-          flags.remove(MessageFlags15.SuppressEmbeds);
+          flags.remove(MessageFlags18.SuppressEmbeds);
         }
         return this.edit({ flags });
       }
@@ -51721,14 +51721,14 @@ var require_Webhook = __commonJS({
        * @param {WebhookEditOptions} options Options for editing the webhook
        * @returns {Promise<Webhook>}
        */
-      async edit({ name = this.name, avatar, channel, reason }) {
+      async edit({ name = this.name, avatar, channel, reason: reason2 }) {
         if (avatar && !(typeof avatar === "string" && avatar.startsWith("data:"))) {
           avatar = await resolveImage(avatar);
         }
         channel &&= channel.id ?? channel;
         const data2 = await this.client.rest.patch(Routes4.webhook(this.id, channel ? void 0 : this.token), {
           body: { name, avatar, channel_id: channel },
-          reason,
+          reason: reason2,
           auth: !this.token || Boolean(channel)
         });
         this.name = data2.name;
@@ -51800,8 +51800,8 @@ var require_Webhook = __commonJS({
        * @param {string} [reason] Reason for deleting this webhook
        * @returns {Promise<void>}
        */
-      delete(reason) {
-        return this.client.deleteWebhook(this.id, { token: this.token, reason });
+      delete(reason2) {
+        return this.client.deleteWebhook(this.id, { token: this.token, reason: reason2 });
       }
       /**
        * Delete a message that was sent by this webhook.
@@ -52003,7 +52003,7 @@ var require_WebhookClient = __commonJS({
 var require_VoiceState = __commonJS({
   "node_modules/discord.js/src/structures/VoiceState.js"(exports2, module2) {
     "use strict";
-    var { ChannelType: ChannelType5, Routes: Routes4 } = require_v106();
+    var { ChannelType: ChannelType8, Routes: Routes4 } = require_v106();
     var Base = require_Base();
     var { DiscordjsError: DiscordjsError2, DiscordjsTypeError: DiscordjsTypeError2, ErrorCodes: ErrorCodes2 } = require_errors2();
     var VoiceState = class extends Base {
@@ -52104,8 +52104,8 @@ var require_VoiceState = __commonJS({
        * @param {string} [reason] Reason for muting or unmuting
        * @returns {Promise<GuildMember>}
        */
-      setMute(mute = true, reason) {
-        return this.guild.members.edit(this.id, { mute, reason });
+      setMute(mute = true, reason2) {
+        return this.guild.members.edit(this.id, { mute, reason: reason2 });
       }
       /**
        * Deafens/undeafens the member of this voice state.
@@ -52113,16 +52113,16 @@ var require_VoiceState = __commonJS({
        * @param {string} [reason] Reason for deafening or undeafening
        * @returns {Promise<GuildMember>}
        */
-      setDeaf(deaf = true, reason) {
-        return this.guild.members.edit(this.id, { deaf, reason });
+      setDeaf(deaf = true, reason2) {
+        return this.guild.members.edit(this.id, { deaf, reason: reason2 });
       }
       /**
        * Disconnects the member from the channel.
        * @param {string} [reason] Reason for disconnecting the member from the channel
        * @returns {Promise<GuildMember>}
        */
-      disconnect(reason) {
-        return this.setChannel(null, reason);
+      disconnect(reason2) {
+        return this.setChannel(null, reason2);
       }
       /**
        * Moves the member to a different channel, or disconnects them from the one they're in.
@@ -52131,8 +52131,8 @@ var require_VoiceState = __commonJS({
        * @param {string} [reason] Reason for moving member to another channel or disconnecting
        * @returns {Promise<GuildMember>}
        */
-      setChannel(channel, reason) {
-        return this.guild.members.edit(this.id, { channel, reason });
+      setChannel(channel, reason2) {
+        return this.guild.members.edit(this.id, { channel, reason: reason2 });
       }
       /**
        * Data to edit the logged in user's own voice state with, when in a stage channel
@@ -52147,7 +52147,7 @@ var require_VoiceState = __commonJS({
        * @returns {Promise<VoiceState>}
        */
       async edit(options) {
-        if (this.channel?.type !== ChannelType5.GuildStageVoice) throw new DiscordjsError2(ErrorCodes2.VoiceNotStageChannel);
+        if (this.channel?.type !== ChannelType8.GuildStageVoice) throw new DiscordjsError2(ErrorCodes2.VoiceNotStageChannel);
         const target = this.client.user.id === this.id ? "@me" : this.id;
         if (target !== "@me" && options.requestToSpeak !== void 0) {
           throw new DiscordjsError2(ErrorCodes2.VoiceStateNotOwn);
@@ -52321,7 +52321,7 @@ var require_GuildMemberRoleManager = __commonJS({
        * @param {string} [reason] Reason for adding the role(s)
        * @returns {Promise<GuildMember>}
        */
-      async add(roleOrRoles, reason) {
+      async add(roleOrRoles, reason2) {
         if (roleOrRoles instanceof Collection2 || Array.isArray(roleOrRoles)) {
           const resolvedRoles = [];
           for (const role of roleOrRoles.values()) {
@@ -52332,7 +52332,7 @@ var require_GuildMemberRoleManager = __commonJS({
             resolvedRoles.push(resolvedRole);
           }
           const newRoles = [...new Set(resolvedRoles.concat(...this.cache.keys()))];
-          return this.set(newRoles, reason);
+          return this.set(newRoles, reason2);
         } else {
           roleOrRoles = this.guild.roles.resolveId(roleOrRoles);
           if (roleOrRoles === null) {
@@ -52342,7 +52342,7 @@ var require_GuildMemberRoleManager = __commonJS({
               "Role, Snowflake or Array or Collection of Roles or Snowflakes"
             );
           }
-          await this.client.rest.put(Routes4.guildMemberRole(this.guild.id, this.member.id, roleOrRoles), { reason });
+          await this.client.rest.put(Routes4.guildMemberRole(this.guild.id, this.member.id, roleOrRoles), { reason: reason2 });
           const clone = this.member._clone();
           clone._roles = [...this.cache.keys(), roleOrRoles];
           return clone;
@@ -52356,7 +52356,7 @@ var require_GuildMemberRoleManager = __commonJS({
        * @param {string} [reason] Reason for removing the role(s)
        * @returns {Promise<GuildMember>}
        */
-      async remove(roleOrRoles, reason) {
+      async remove(roleOrRoles, reason2) {
         if (roleOrRoles instanceof Collection2 || Array.isArray(roleOrRoles)) {
           const resolvedRoles = [];
           for (const role of roleOrRoles.values()) {
@@ -52367,7 +52367,7 @@ var require_GuildMemberRoleManager = __commonJS({
             resolvedRoles.push(resolvedRole);
           }
           const newRoles = this.cache.filter((role) => !resolvedRoles.includes(role.id));
-          return this.set(newRoles, reason);
+          return this.set(newRoles, reason2);
         } else {
           roleOrRoles = this.guild.roles.resolveId(roleOrRoles);
           if (roleOrRoles === null) {
@@ -52377,7 +52377,7 @@ var require_GuildMemberRoleManager = __commonJS({
               "Role, Snowflake or Array or Collection of Roles or Snowflakes"
             );
           }
-          await this.client.rest.delete(Routes4.guildMemberRole(this.guild.id, this.member.id, roleOrRoles), { reason });
+          await this.client.rest.delete(Routes4.guildMemberRole(this.guild.id, this.member.id, roleOrRoles), { reason: reason2 });
           const clone = this.member._clone();
           const newRoles = this.cache.filter((role) => role.id !== roleOrRoles);
           clone._roles = [...newRoles.keys()];
@@ -52400,8 +52400,8 @@ var require_GuildMemberRoleManager = __commonJS({
        *   .then(member => console.log(`Member roles is now of ${member.roles.cache.size} size`))
        *   .catch(console.error);
        */
-      set(roles, reason) {
-        return this.member.edit({ roles, reason });
+      set(roles, reason2) {
+        return this.member.edit({ roles, reason: reason2 });
       }
       clone() {
         const clone = new this.constructor(this.member);
@@ -52436,7 +52436,7 @@ var require_GuildMemberFlagsBitField = __commonJS({
 var require_GuildMember = __commonJS({
   "node_modules/discord.js/src/structures/GuildMember.js"(exports2) {
     "use strict";
-    var { PermissionFlagsBits: PermissionFlagsBits5 } = require_v106();
+    var { PermissionFlagsBits: PermissionFlagsBits13 } = require_v106();
     var Base = require_Base();
     var VoiceState = require_VoiceState();
     var TextBasedChannel = require_TextBasedChannel();
@@ -52688,7 +52688,7 @@ var require_GuildMember = __commonJS({
        */
       get kickable() {
         if (!this.guild.members.me) throw new DiscordjsError2(ErrorCodes2.GuildUncachedMe);
-        return this.manageable && this.guild.members.me.permissions.has(PermissionFlagsBits5.KickMembers);
+        return this.manageable && this.guild.members.me.permissions.has(PermissionFlagsBits13.KickMembers);
       }
       /**
        * Whether this member is bannable by the client user
@@ -52697,7 +52697,7 @@ var require_GuildMember = __commonJS({
        */
       get bannable() {
         if (!this.guild.members.me) throw new DiscordjsError2(ErrorCodes2.GuildUncachedMe);
-        return this.manageable && this.guild.members.me.permissions.has(PermissionFlagsBits5.BanMembers);
+        return this.manageable && this.guild.members.me.permissions.has(PermissionFlagsBits13.BanMembers);
       }
       /**
        * Whether this member is moderatable by the client user
@@ -52705,7 +52705,7 @@ var require_GuildMember = __commonJS({
        * @readonly
        */
       get moderatable() {
-        return !this.permissions.has(PermissionFlagsBits5.Administrator) && this.manageable && (this.guild.members.me?.permissions.has(PermissionFlagsBits5.ModerateMembers) ?? false);
+        return !this.permissions.has(PermissionFlagsBits13.Administrator) && this.manageable && (this.guild.members.me?.permissions.has(PermissionFlagsBits13.ModerateMembers) ?? false);
       }
       /**
        * Whether this member is currently timed out
@@ -52739,8 +52739,8 @@ var require_GuildMember = __commonJS({
        * @param {string} [reason] Reason for setting the flags
        * @returns {Promise<GuildMember>}
        */
-      setFlags(flags, reason) {
-        return this.edit({ flags, reason });
+      setFlags(flags, reason2) {
+        return this.edit({ flags, reason: reason2 });
       }
       /**
        * Sets the nickname for this member.
@@ -52758,8 +52758,8 @@ var require_GuildMember = __commonJS({
        *   .then(member => console.log(`Removed nickname for ${member.user.username}`))
        *   .catch(console.error);
        */
-      setNickname(nick, reason) {
-        return this.user.id === this.client.user.id ? this.guild.members.editMe({ nick, reason }) : this.edit({ nick, reason });
+      setNickname(nick, reason2) {
+        return this.user.id === this.client.user.id ? this.guild.members.editMe({ nick, reason: reason2 }) : this.edit({ nick, reason: reason2 });
       }
       /**
        * Creates a DM channel between the client and this member.
@@ -52781,8 +52781,8 @@ var require_GuildMember = __commonJS({
        * @param {string} [reason] Reason for kicking user
        * @returns {Promise<GuildMember>}
        */
-      kick(reason) {
-        return this.guild.members.kick(this, reason);
+      kick(reason2) {
+        return this.guild.members.kick(this, reason2);
       }
       /**
        * Bans this guild member.
@@ -52814,8 +52814,8 @@ var require_GuildMember = __commonJS({
        *   .then(member => console.log(`Removed timeout for ${member.displayName}`))
        *   .catch(console.error);
        */
-      disableCommunicationUntil(communicationDisabledUntil, reason) {
-        return this.edit({ communicationDisabledUntil, reason });
+      disableCommunicationUntil(communicationDisabledUntil, reason2) {
+        return this.edit({ communicationDisabledUntil, reason: reason2 });
       }
       /**
        * Times this guild member out.
@@ -52829,8 +52829,8 @@ var require_GuildMember = __commonJS({
        *   .then(console.log)
        *   .catch(console.error);
        */
-      timeout(timeout, reason) {
-        return this.disableCommunicationUntil(timeout && Date.now() + timeout, reason);
+      timeout(timeout, reason2) {
+        return this.disableCommunicationUntil(timeout && Date.now() + timeout, reason2);
       }
       /**
        * Fetches this GuildMember.
@@ -53119,10 +53119,10 @@ var require_MessageManager = __commonJS({
        * @param {string} [reason] Reason for pinning
        * @returns {Promise<void>}
        */
-      async pin(message, reason) {
+      async pin(message, reason2) {
         message = this.resolveId(message);
         if (!message) throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "message", "MessageResolvable");
-        await this.client.rest.put(Routes4.channelMessagesPin(this.channel.id, message), { reason });
+        await this.client.rest.put(Routes4.channelMessagesPin(this.channel.id, message), { reason: reason2 });
       }
       /**
        * Unpins a message from the channel's pinned messages, even if it's not cached.
@@ -53130,10 +53130,10 @@ var require_MessageManager = __commonJS({
        * @param {string} [reason] Reason for unpinning
        * @returns {Promise<void>}
        */
-      async unpin(message, reason) {
+      async unpin(message, reason2) {
         message = this.resolveId(message);
         if (!message) throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "message", "MessageResolvable");
-        await this.client.rest.delete(Routes4.channelMessagesPin(this.channel.id, message), { reason });
+        await this.client.rest.delete(Routes4.channelMessagesPin(this.channel.id, message), { reason: reason2 });
       }
       /**
        * Adds a reaction to a message, even if it's not cached.
@@ -53247,7 +53247,7 @@ var require_MessagePayload = __commonJS({
     var { Buffer: Buffer2 } = require("node:buffer");
     var { lazy, isJSONEncodable } = require_dist2();
     var { DiscordSnowflake } = require_cjs();
-    var { MessageFlags: MessageFlags15, MessageReferenceType } = require_v106();
+    var { MessageFlags: MessageFlags18, MessageReferenceType } = require_v106();
     var { DiscordjsError: DiscordjsError2, DiscordjsRangeError: DiscordjsRangeError2, ErrorCodes: ErrorCodes2 } = require_errors2();
     var { resolveFile } = require_DataResolver();
     var MessageFlagsBitField = require_MessageFlagsBitField();
@@ -53373,7 +53373,7 @@ var require_MessagePayload = __commonJS({
           flags = new MessageFlagsBitField(this.options.flags).bitfield;
         }
         if (isInteraction && this.options.ephemeral) {
-          flags |= MessageFlags15.Ephemeral;
+          flags |= MessageFlags18.Ephemeral;
         }
         let allowedMentions = this.options.allowedMentions === void 0 ? this.target.client.options.allowedMentions : this.options.allowedMentions;
         if (allowedMentions?.repliedUser !== void 0) {
@@ -53743,8 +53743,8 @@ var require_TextBasedChannel = __commonJS({
       awaitMessages(options = {}) {
         return new Promise((resolve3, reject) => {
           const collector = this.createMessageCollector(options);
-          collector.once("end", (collection, reason) => {
-            if (options.errors?.includes(reason)) {
+          collector.once("end", (collection, reason2) => {
+            if (options.errors?.includes(reason2)) {
               reject(collection);
             } else {
               resolve3(collection);
@@ -53786,10 +53786,10 @@ var require_TextBasedChannel = __commonJS({
         const _options = { ...options, max: 1 };
         return new Promise((resolve3, reject) => {
           const collector = this.createMessageComponentCollector(_options);
-          collector.once("end", (interactions, reason) => {
+          collector.once("end", (interactions, reason2) => {
             const interaction = interactions.first();
             if (interaction) resolve3(interaction);
-            else reject(new DiscordjsError2(ErrorCodes2.InteractionCollectorError, reason));
+            else reject(new DiscordjsError2(ErrorCodes2.InteractionCollectorError, reason2));
           });
         });
       }
@@ -53886,8 +53886,8 @@ var require_TextBasedChannel = __commonJS({
        * @param {string} [reason] Reason for changing the channel's rate limit
        * @returns {Promise<this>}
        */
-      setRateLimitPerUser(rateLimitPerUser, reason) {
-        return this.edit({ rateLimitPerUser, reason });
+      setRateLimitPerUser(rateLimitPerUser, reason2) {
+        return this.edit({ rateLimitPerUser, reason: reason2 });
       }
       /**
        * Sets whether this channel is flagged as NSFW.
@@ -53895,8 +53895,8 @@ var require_TextBasedChannel = __commonJS({
        * @param {string} [reason] Reason for changing the channel's NSFW flag
        * @returns {Promise<this>}
        */
-      setNSFW(nsfw = true, reason) {
-        return this.edit({ nsfw, reason });
+      setNSFW(nsfw = true, reason2) {
+        return this.edit({ nsfw, reason: reason2 });
       }
       static applyToClass(structure, full = false, ignore = []) {
         const props = ["send"];
@@ -54504,10 +54504,10 @@ var require_Partials = __commonJS({
 var require_Action = __commonJS({
   "node_modules/discord.js/src/client/actions/Action.js"(exports2, module2) {
     "use strict";
-    var { ChannelType: ChannelType5 } = require_v106();
+    var { ChannelType: ChannelType8 } = require_v106();
     var { Poll } = require_Poll();
     var { PollAnswer } = require_PollAnswer();
-    var Partials = require_Partials();
+    var Partials2 = require_Partials();
     var GenericAction = class {
       constructor(client) {
         this.client = client;
@@ -54526,12 +54526,12 @@ var require_Action = __commonJS({
           if (!data2.recipients.some((existingRecipient) => recipient.id === existingRecipient.id)) {
             payloadData.recipients = [...data2.recipients, recipient];
           }
-        } else if (data2.type === ChannelType5.DM || data2.type === ChannelType5.GroupDM) {
+        } else if (data2.type === ChannelType8.DM || data2.type === ChannelType8.GroupDM) {
           const recipient = data2.author ?? data2.user ?? { id: data2.user_id };
           payloadData.recipients = [recipient];
         }
         if (id !== void 0) payloadData.id = id;
-        return data2[this.client.actions.injectedChannel] ?? this.getPayload({ ...data2, ...payloadData }, this.client.channels, id, Partials.Channel);
+        return data2[this.client.actions.injectedChannel] ?? this.getPayload({ ...data2, ...payloadData }, this.client.channels, id, Partials2.Channel);
       }
       getMessage(data2, channel, cache) {
         const id = data2.message_id ?? data2.id;
@@ -54543,13 +54543,13 @@ var require_Action = __commonJS({
           },
           channel.messages,
           id,
-          Partials.Message,
+          Partials2.Message,
           cache
         );
       }
       getPoll(data2, message, channel) {
-        const includePollPartial = this.client.options.partials.includes(Partials.Poll);
-        const includePollAnswerPartial = this.client.options.partials.includes(Partials.PollAnswer);
+        const includePollPartial = this.client.options.partials.includes(Partials2.Poll);
+        const includePollAnswerPartial = this.client.options.partials.includes(Partials2.PollAnswer);
         if (message.partial && (!includePollPartial || !includePollAnswerPartial)) return null;
         if (!message.poll && includePollPartial) {
           message.poll = new Poll(this.client, data2, message, channel);
@@ -54570,15 +54570,15 @@ var require_Action = __commonJS({
           },
           message.reactions,
           id,
-          Partials.Reaction
+          Partials2.Reaction
         );
       }
       getMember(data2, guild) {
-        return this.getPayload(data2, guild.members, data2.user.id, Partials.GuildMember);
+        return this.getPayload(data2, guild.members, data2.user.id, Partials2.GuildMember);
       }
       getUser(data2) {
         const id = data2.user_id;
-        return data2[this.client.actions.injectedUser] ?? this.getPayload({ id }, this.client.users, id, Partials.User);
+        return data2[this.client.actions.injectedUser] ?? this.getPayload({ id }, this.client.users, id, Partials2.User);
       }
       getUserFromMember(data2) {
         if (data2.guild_id && data2.member?.user) {
@@ -54597,14 +54597,14 @@ var require_Action = __commonJS({
           { id, guild_id: data2.guild_id ?? guild.id },
           guild.scheduledEvents,
           id,
-          Partials.GuildScheduledEvent
+          Partials2.GuildScheduledEvent
         );
       }
       getThreadMember(id, manager) {
-        return this.getPayload({ user_id: id }, manager, id, Partials.ThreadMember, false);
+        return this.getPayload({ user_id: id }, manager, id, Partials2.ThreadMember, false);
       }
       getSoundboardSound(data2, guild) {
-        return this.getPayload(data2, guild.soundboardSounds, data2.sound_id, Partials.SoundboardSound);
+        return this.getPayload(data2, guild.soundboardSounds, data2.sound_id, Partials2.SoundboardSound);
       }
       spreadInjectedData(data2) {
         return Object.fromEntries(Object.getOwnPropertySymbols(data2).map((symbol) => [symbol, data2[symbol]]));
@@ -54619,11 +54619,11 @@ var require_ApplicationCommandPermissionsUpdate = __commonJS({
   "node_modules/discord.js/src/client/actions/ApplicationCommandPermissionsUpdate.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var ApplicationCommandPermissionsUpdateAction = class extends Action {
       handle(data2) {
         const client = this.client;
-        client.emit(Events3.ApplicationCommandPermissionsUpdate, {
+        client.emit(Events11.ApplicationCommandPermissionsUpdate, {
           permissions: data2.permissions,
           id: data2.id,
           guildId: data2.guild_id,
@@ -54697,13 +54697,13 @@ var require_AutoModerationActionExecution2 = __commonJS({
     "use strict";
     var Action = require_Action();
     var AutoModerationActionExecution = require_AutoModerationActionExecution();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var AutoModerationActionExecutionAction = class extends Action {
       handle(data2) {
         const { client } = this;
         const guild = client.guilds.cache.get(data2.guild_id);
         if (guild) {
-          client.emit(Events3.AutoModerationActionExecution, new AutoModerationActionExecution(data2, guild));
+          client.emit(Events11.AutoModerationActionExecution, new AutoModerationActionExecution(data2, guild));
         }
         return {};
       }
@@ -54717,14 +54717,14 @@ var require_AutoModerationRuleCreate = __commonJS({
   "node_modules/discord.js/src/client/actions/AutoModerationRuleCreate.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var AutoModerationRuleCreateAction = class extends Action {
       handle(data2) {
         const { client } = this;
         const guild = client.guilds.cache.get(data2.guild_id);
         if (guild) {
           const autoModerationRule = guild.autoModerationRules._add(data2);
-          client.emit(Events3.AutoModerationRuleCreate, autoModerationRule);
+          client.emit(Events11.AutoModerationRuleCreate, autoModerationRule);
         }
         return {};
       }
@@ -54738,7 +54738,7 @@ var require_AutoModerationRuleDelete = __commonJS({
   "node_modules/discord.js/src/client/actions/AutoModerationRuleDelete.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var AutoModerationRuleDeleteAction = class extends Action {
       handle(data2) {
         const { client } = this;
@@ -54747,7 +54747,7 @@ var require_AutoModerationRuleDelete = __commonJS({
           const autoModerationRule = guild.autoModerationRules.cache.get(data2.id);
           if (autoModerationRule) {
             guild.autoModerationRules.cache.delete(autoModerationRule.id);
-            client.emit(Events3.AutoModerationRuleDelete, autoModerationRule);
+            client.emit(Events11.AutoModerationRuleDelete, autoModerationRule);
           }
         }
         return {};
@@ -54762,7 +54762,7 @@ var require_AutoModerationRuleUpdate = __commonJS({
   "node_modules/discord.js/src/client/actions/AutoModerationRuleUpdate.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var AutoModerationRuleUpdateAction = class extends Action {
       handle(data2) {
         const { client } = this;
@@ -54770,7 +54770,7 @@ var require_AutoModerationRuleUpdate = __commonJS({
         if (guild) {
           const oldAutoModerationRule = guild.autoModerationRules.cache.get(data2.id)?._clone() ?? null;
           const newAutoModerationRule = guild.autoModerationRules._add(data2);
-          client.emit(Events3.AutoModerationRuleUpdate, oldAutoModerationRule, newAutoModerationRule);
+          client.emit(Events11.AutoModerationRuleUpdate, oldAutoModerationRule, newAutoModerationRule);
         }
         return {};
       }
@@ -54784,14 +54784,14 @@ var require_ChannelCreate = __commonJS({
   "node_modules/discord.js/src/client/actions/ChannelCreate.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var ChannelCreateAction = class extends Action {
       handle(data2) {
         const client = this.client;
         const existing = client.channels.cache.has(data2.id);
         const channel = client.channels._add(data2);
         if (!existing && channel) {
-          client.emit(Events3.ChannelCreate, channel);
+          client.emit(Events11.ChannelCreate, channel);
         }
         return { channel };
       }
@@ -54805,14 +54805,14 @@ var require_ChannelDelete = __commonJS({
   "node_modules/discord.js/src/client/actions/ChannelDelete.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var ChannelDeleteAction = class extends Action {
       handle(data2) {
         const client = this.client;
         const channel = client.channels.cache.get(data2.id);
         if (channel) {
           client.channels._remove(channel.id);
-          client.emit(Events3.ChannelDelete, channel);
+          client.emit(Events11.ChannelDelete, channel);
         }
       }
     };
@@ -54952,15 +54952,15 @@ var require_DMChannel = __commonJS({
   "node_modules/discord.js/src/structures/DMChannel.js"(exports2, module2) {
     "use strict";
     var { userMention } = require_dist8();
-    var { ChannelType: ChannelType5 } = require_v106();
+    var { ChannelType: ChannelType8 } = require_v106();
     var { BaseChannel } = require_BaseChannel();
     var TextBasedChannel = require_TextBasedChannel();
     var DMMessageManager = require_DMMessageManager();
-    var Partials = require_Partials();
+    var Partials2 = require_Partials();
     var DMChannel = class extends BaseChannel {
       constructor(client, data2) {
         super(client, data2);
-        this.type = ChannelType5.DM;
+        this.type = ChannelType8.DM;
         this.messages = new DMMessageManager(this);
       }
       _patch(data2) {
@@ -54970,7 +54970,7 @@ var require_DMChannel = __commonJS({
             .../* @__PURE__ */ new Set([...this.recipientIds ?? [], ...data2.recipients.map((recipient) => recipient.id)])
           ];
           for (const recipient of data2.recipients) {
-            if ("username" in recipient || this.client.options.partials.includes(Partials.User)) {
+            if ("username" in recipient || this.client.options.partials.includes(Partials2.User)) {
               this.client.users._add(recipient);
             }
           }
@@ -55113,7 +55113,7 @@ var require_GuildForumThreadManager = __commonJS({
         name,
         autoArchiveDuration = this.channel.defaultAutoArchiveDuration,
         message,
-        reason,
+        reason: reason2,
         rateLimitPerUser,
         appliedTags
       } = {}) {
@@ -55130,7 +55130,7 @@ var require_GuildForumThreadManager = __commonJS({
             message: body
           },
           files,
-          reason
+          reason: reason2
         });
         return this.client.actions.ThreadCreate.handle(data2).thread;
       }
@@ -55200,8 +55200,8 @@ var require_ThreadOnlyChannel = __commonJS({
        * @param {string} [reason] Reason for changing the available tags
        * @returns {Promise<this>}
        */
-      setAvailableTags(availableTags, reason) {
-        return this.edit({ availableTags, reason });
+      setAvailableTags(availableTags, reason2) {
+        return this.edit({ availableTags, reason: reason2 });
       }
       /**
        * Sets the default reaction emoji for this channel
@@ -55209,8 +55209,8 @@ var require_ThreadOnlyChannel = __commonJS({
        * @param {string} [reason] Reason for changing the default reaction emoji
        * @returns {Promise<this>}
        */
-      setDefaultReactionEmoji(defaultReactionEmoji, reason) {
-        return this.edit({ defaultReactionEmoji, reason });
+      setDefaultReactionEmoji(defaultReactionEmoji, reason2) {
+        return this.edit({ defaultReactionEmoji, reason: reason2 });
       }
       /**
        * Sets the default rate limit per user (slowmode) for new threads in this channel
@@ -55218,8 +55218,8 @@ var require_ThreadOnlyChannel = __commonJS({
        * @param {string} [reason] Reason for changing the default rate limit
        * @returns {Promise<this>}
        */
-      setDefaultThreadRateLimitPerUser(defaultThreadRateLimitPerUser, reason) {
-        return this.edit({ defaultThreadRateLimitPerUser, reason });
+      setDefaultThreadRateLimitPerUser(defaultThreadRateLimitPerUser, reason2) {
+        return this.edit({ defaultThreadRateLimitPerUser, reason: reason2 });
       }
       /**
        * Creates an invite to this guild channel.
@@ -55249,8 +55249,8 @@ var require_ThreadOnlyChannel = __commonJS({
        * @param {string} [reason] Reason for changing the channel's default auto archive duration
        * @returns {Promise<this>}
        */
-      setDefaultAutoArchiveDuration(defaultAutoArchiveDuration, reason) {
-        return this.edit({ defaultAutoArchiveDuration, reason });
+      setDefaultAutoArchiveDuration(defaultAutoArchiveDuration, reason2) {
+        return this.edit({ defaultAutoArchiveDuration, reason: reason2 });
       }
       /**
        * Sets a new topic for the guild channel.
@@ -55263,8 +55263,8 @@ var require_ThreadOnlyChannel = __commonJS({
        *   .then(newChannel => console.log(`Channel's new topic is ${newChannel.topic}`))
        *   .catch(console.error);
        */
-      setTopic(topic, reason) {
-        return this.edit({ topic, reason });
+      setTopic(topic, reason2) {
+        return this.edit({ topic, reason: reason2 });
       }
       /**
        * Sets the default sort order mode used to order posts
@@ -55272,8 +55272,8 @@ var require_ThreadOnlyChannel = __commonJS({
        * @param {string} [reason] Reason for changing the default sort order
        * @returns {Promise<this>}
        */
-      setDefaultSortOrder(defaultSortOrder, reason) {
-        return this.edit({ defaultSortOrder, reason });
+      setDefaultSortOrder(defaultSortOrder, reason2) {
+        return this.edit({ defaultSortOrder, reason: reason2 });
       }
       // These are here only for documentation purposes - they are implemented by TextBasedChannel
       /* eslint-disable no-empty-function */
@@ -55390,11 +55390,11 @@ var require_ThreadMember = __commonJS({
        * <warn>This parameter is **deprecated**. Reasons cannot be used.</warn>
        * @returns {Promise<ThreadMember>}
        */
-      async remove(reason) {
-        if (reason !== void 0) {
+      async remove(reason2) {
+        if (reason2 !== void 0) {
           emitDeprecationWarningForRemoveThreadMember(this.constructor.name);
         }
-        await this.thread.members.remove(this.id, reason);
+        await this.thread.members.remove(this.id, reason2);
         return this;
       }
     };
@@ -55485,8 +55485,8 @@ var require_ThreadMemberManager = __commonJS({
        * <warn>This parameter is **deprecated**. Reasons cannot be used.</warn>
        * @returns {Promise<Snowflake>}
        */
-      async add(member, reason) {
-        if (reason !== void 0 && !deprecationEmittedForAdd) {
+      async add(member, reason2) {
+        if (reason2 !== void 0 && !deprecationEmittedForAdd) {
           process2.emitWarning(
             // eslint-disable-next-line max-len
             "The reason parameter of ThreadMemberManager#add() is deprecated as Discord does not parse them. It will be removed in the next major version.",
@@ -55496,7 +55496,7 @@ var require_ThreadMemberManager = __commonJS({
         }
         const id = member === "@me" ? member : this.client.users.resolveId(member);
         if (!id) throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "member", "UserResolvable");
-        await this.client.rest.put(Routes4.threadMembers(this.thread.id, id), { reason });
+        await this.client.rest.put(Routes4.threadMembers(this.thread.id, id), { reason: reason2 });
         return id;
       }
       /**
@@ -55506,13 +55506,13 @@ var require_ThreadMemberManager = __commonJS({
        * <warn>This parameter is **deprecated**. Reasons cannot be used.</warn>
        * @returns {Promise<Snowflake>}
        */
-      async remove(member, reason) {
-        if (reason !== void 0) {
+      async remove(member, reason2) {
+        if (reason2 !== void 0) {
           emitDeprecationWarningForRemoveThreadMember(this.constructor.name);
         }
         const id = member === "@me" ? member : this.client.users.resolveId(member);
         if (!id) throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "member", "UserResolvable");
-        await this.client.rest.delete(Routes4.threadMembers(this.thread.id, id), { reason });
+        await this.client.rest.delete(Routes4.threadMembers(this.thread.id, id), { reason: reason2 });
         return id;
       }
       /**
@@ -55582,7 +55582,7 @@ var require_ThreadChannel = __commonJS({
     "use strict";
     var { DiscordAPIError } = require_dist6();
     var { lazy } = require_dist2();
-    var { RESTJSONErrorCodes, ChannelFlags, ChannelType: ChannelType5, PermissionFlagsBits: PermissionFlagsBits5, Routes: Routes4 } = require_v106();
+    var { RESTJSONErrorCodes, ChannelFlags, ChannelType: ChannelType8, PermissionFlagsBits: PermissionFlagsBits13, Routes: Routes4 } = require_v106();
     var { BaseChannel } = require_BaseChannel();
     var getThreadOnlyChannel = lazy(() => require_ThreadOnlyChannel());
     var TextBasedChannel = require_TextBasedChannel();
@@ -55616,7 +55616,7 @@ var require_ThreadChannel = __commonJS({
         }
         if ("thread_metadata" in data2) {
           this.locked = data2.thread_metadata.locked ?? false;
-          this.invitable = this.type === ChannelType5.PrivateThread ? data2.thread_metadata.invitable ?? false : null;
+          this.invitable = this.type === ChannelType8.PrivateThread ? data2.thread_metadata.invitable ?? false : null;
           this.archived = data2.thread_metadata.archived;
           this.autoArchiveDuration = data2.thread_metadata.auto_archive_duration;
           this.archiveTimestamp = Date.parse(data2.thread_metadata.archive_timestamp);
@@ -55630,7 +55630,7 @@ var require_ThreadChannel = __commonJS({
           this.archiveTimestamp ??= null;
           this.invitable ??= null;
         }
-        this._createdTimestamp ??= this.type === ChannelType5.PrivateThread ? super.createdTimestamp : null;
+        this._createdTimestamp ??= this.type === ChannelType8.PrivateThread ? super.createdTimestamp : null;
         if ("last_message_id" in data2) {
           this.lastMessageId = data2.last_message_id;
         } else {
@@ -55803,7 +55803,7 @@ var require_ThreadChannel = __commonJS({
             auto_archive_duration: options.autoArchiveDuration,
             rate_limit_per_user: options.rateLimitPerUser,
             locked: options.locked,
-            invitable: this.type === ChannelType5.PrivateThread ? options.invitable : void 0,
+            invitable: this.type === ChannelType8.PrivateThread ? options.invitable : void 0,
             applied_tags: options.appliedTags,
             flags: "flags" in options ? ChannelFlagsBitField.resolve(options.flags) : void 0
           },
@@ -55822,8 +55822,8 @@ var require_ThreadChannel = __commonJS({
        *   .then(newThread => console.log(`Thread is now ${newThread.archived ? 'archived' : 'active'}`))
        *   .catch(console.error);
        */
-      setArchived(archived = true, reason) {
-        return this.edit({ archived, reason });
+      setArchived(archived = true, reason2) {
+        return this.edit({ archived, reason: reason2 });
       }
       /**
        * Sets the duration after which the thread will automatically archive in case of no recent activity.
@@ -55839,8 +55839,8 @@ var require_ThreadChannel = __commonJS({
        *    });
        *   .catch(console.error);
        */
-      setAutoArchiveDuration(autoArchiveDuration, reason) {
-        return this.edit({ autoArchiveDuration, reason });
+      setAutoArchiveDuration(autoArchiveDuration, reason2) {
+        return this.edit({ autoArchiveDuration, reason: reason2 });
       }
       /**
        * Sets whether members without the {@link PermissionFlagsBits.ManageThreads} permission
@@ -55849,11 +55849,11 @@ var require_ThreadChannel = __commonJS({
        * @param {string} [reason] Reason for changing invite
        * @returns {Promise<ThreadChannel>}
        */
-      async setInvitable(invitable = true, reason) {
-        if (this.type !== ChannelType5.PrivateThread) {
+      async setInvitable(invitable = true, reason2) {
+        if (this.type !== ChannelType8.PrivateThread) {
           throw new DiscordjsRangeError2(ErrorCodes2.ThreadInvitableType, this.type);
         }
-        return this.edit({ invitable, reason });
+        return this.edit({ invitable, reason: reason2 });
       }
       /**
        * Sets whether the thread can be **unarchived** by anyone with the
@@ -55868,8 +55868,8 @@ var require_ThreadChannel = __commonJS({
        *   .then(newThread => console.log(`Thread is now ${newThread.locked ? 'locked' : 'unlocked'}`))
        *   .catch(console.error);
        */
-      setLocked(locked = true, reason) {
-        return this.edit({ locked, reason });
+      setLocked(locked = true, reason2) {
+        return this.edit({ locked, reason: reason2 });
       }
       /**
        * Sets a new name for this thread.
@@ -55882,8 +55882,8 @@ var require_ThreadChannel = __commonJS({
        *   .then(newThread => console.log(`Thread's new name is ${newThread.name}`))
        *   .catch(console.error);
        */
-      setName(name, reason) {
-        return this.edit({ name, reason });
+      setName(name, reason2) {
+        return this.edit({ name, reason: reason2 });
       }
       /**
        * Sets the rate limit per user (slowmode) for this thread.
@@ -55891,8 +55891,8 @@ var require_ThreadChannel = __commonJS({
        * @param {string} [reason] Reason for changing the thread's rate limit
        * @returns {Promise<ThreadChannel>}
        */
-      setRateLimitPerUser(rateLimitPerUser, reason) {
-        return this.edit({ rateLimitPerUser, reason });
+      setRateLimitPerUser(rateLimitPerUser, reason2) {
+        return this.edit({ rateLimitPerUser, reason: reason2 });
       }
       /**
        * Set the applied tags for this channel (only applicable to forum threads)
@@ -55900,24 +55900,24 @@ var require_ThreadChannel = __commonJS({
        * @param {string} [reason] Reason for changing the thread's applied tags
        * @returns {Promise<ThreadChannel>}
        */
-      setAppliedTags(appliedTags, reason) {
-        return this.edit({ appliedTags, reason });
+      setAppliedTags(appliedTags, reason2) {
+        return this.edit({ appliedTags, reason: reason2 });
       }
       /**
        * Pins this thread from the forum channel (only applicable to forum threads).
        * @param {string} [reason] Reason for pinning
        * @returns {Promise<ThreadChannel>}
        */
-      pin(reason) {
-        return this.edit({ flags: this.flags.add(ChannelFlags.Pinned), reason });
+      pin(reason2) {
+        return this.edit({ flags: this.flags.add(ChannelFlags.Pinned), reason: reason2 });
       }
       /**
        * Unpins this thread from the forum channel (only applicable to forum threads).
        * @param {string} [reason] Reason for unpinning
        * @returns {Promise<ThreadChannel>}
        */
-      unpin(reason) {
-        return this.edit({ flags: this.flags.remove(ChannelFlags.Pinned), reason });
+      unpin(reason2) {
+        return this.edit({ flags: this.flags.remove(ChannelFlags.Pinned), reason: reason2 });
       }
       /**
        * Whether the client user is a member of the thread.
@@ -55933,7 +55933,7 @@ var require_ThreadChannel = __commonJS({
        * @readonly
        */
       get editable() {
-        return this.ownerId === this.client.user.id && (this.type !== ChannelType5.PrivateThread || this.joined) || this.manageable;
+        return this.ownerId === this.client.user.id && (this.type !== ChannelType8.PrivateThread || this.joined) || this.manageable;
       }
       /**
        * Whether the thread is joinable by the client user
@@ -55942,7 +55942,7 @@ var require_ThreadChannel = __commonJS({
        */
       get joinable() {
         return !this.archived && !this.joined && this.permissionsFor(this.client.user)?.has(
-          this.type === ChannelType5.PrivateThread ? PermissionFlagsBits5.ManageThreads : PermissionFlagsBits5.ViewChannel,
+          this.type === ChannelType8.PrivateThread ? PermissionFlagsBits13.ManageThreads : PermissionFlagsBits13.ViewChannel,
           false
         );
       }
@@ -55954,8 +55954,8 @@ var require_ThreadChannel = __commonJS({
       get manageable() {
         const permissions = this.permissionsFor(this.client.user);
         if (!permissions) return false;
-        if (permissions.has(PermissionFlagsBits5.Administrator, false)) return true;
-        return this.guild.members.me.communicationDisabledUntilTimestamp < Date.now() && permissions.has(PermissionFlagsBits5.ManageThreads, false);
+        if (permissions.has(PermissionFlagsBits13.Administrator, false)) return true;
+        return this.guild.members.me.communicationDisabledUntilTimestamp < Date.now() && permissions.has(PermissionFlagsBits13.ManageThreads, false);
       }
       /**
        * Whether the thread is viewable by the client user
@@ -55966,7 +55966,7 @@ var require_ThreadChannel = __commonJS({
         if (this.client.user.id === this.guild.ownerId) return true;
         const permissions = this.permissionsFor(this.client.user);
         if (!permissions) return false;
-        return permissions.has(PermissionFlagsBits5.ViewChannel, false);
+        return permissions.has(PermissionFlagsBits13.ViewChannel, false);
       }
       /**
        * Whether the client user can send messages in this thread
@@ -55976,8 +55976,8 @@ var require_ThreadChannel = __commonJS({
       get sendable() {
         const permissions = this.permissionsFor(this.client.user);
         if (!permissions) return false;
-        if (permissions.has(PermissionFlagsBits5.Administrator, false)) return true;
-        return !(this.archived && this.locked && !this.manageable) && (this.type !== ChannelType5.PrivateThread || this.joined || this.manageable) && permissions.has(PermissionFlagsBits5.SendMessagesInThreads, false) && this.guild.members.me.communicationDisabledUntilTimestamp < Date.now();
+        if (permissions.has(PermissionFlagsBits13.Administrator, false)) return true;
+        return !(this.archived && this.locked && !this.manageable) && (this.type !== ChannelType8.PrivateThread || this.joined || this.manageable) && permissions.has(PermissionFlagsBits13.SendMessagesInThreads, false) && this.guild.members.me.communicationDisabledUntilTimestamp < Date.now();
       }
       /**
        * Whether the thread is unarchivable by the client user
@@ -55997,8 +55997,8 @@ var require_ThreadChannel = __commonJS({
        *   .then(deletedThread => console.log(deletedThread))
        *   .catch(console.error);
        */
-      async delete(reason) {
-        await this.guild.channels.delete(this.id, reason);
+      async delete(reason2) {
+        await this.guild.channels.delete(this.id, reason2);
         return this;
       }
       // These are here only for documentation purposes - they are implemented by TextBasedChannel
@@ -56143,22 +56143,22 @@ var require_ThreadManager = __commonJS({
         if (type === "private" && !fetchAll) {
           path = Routes4.channelJoinedArchivedThreads(this.channel.id);
         }
-        let timestamp;
+        let timestamp2;
         let id;
         const query = makeURLSearchParams2({ limit });
         if (before !== void 0) {
           if (before instanceof ThreadChannel || /^\d{17,19}$/.test(String(before))) {
             id = this.resolveId(before);
-            timestamp = this.resolve(before)?.archivedAt?.toISOString();
-            const toUse = type === "private" && !fetchAll ? id : timestamp;
+            timestamp2 = this.resolve(before)?.archivedAt?.toISOString();
+            const toUse = type === "private" && !fetchAll ? id : timestamp2;
             if (toUse) {
               query.set("before", toUse);
             }
           } else {
             try {
-              timestamp = new Date(before).toISOString();
+              timestamp2 = new Date(before).toISOString();
               if (type === "public" || fetchAll) {
-                query.set("before", timestamp);
+                query.set("before", timestamp2);
               }
             } catch {
               throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "before", "DateResolvable or ThreadChannelResolvable");
@@ -56200,7 +56200,7 @@ var require_ThreadManager = __commonJS({
 var require_GuildTextThreadManager = __commonJS({
   "node_modules/discord.js/src/managers/GuildTextThreadManager.js"(exports2, module2) {
     "use strict";
-    var { ChannelType: ChannelType5, Routes: Routes4 } = require_v106();
+    var { ChannelType: ChannelType8, Routes: Routes4 } = require_v106();
     var ThreadManager = require_ThreadManager();
     var { DiscordjsTypeError: DiscordjsTypeError2, ErrorCodes: ErrorCodes2 } = require_errors2();
     var GuildTextThreadManager = class extends ThreadManager {
@@ -56253,15 +56253,15 @@ var require_GuildTextThreadManager = __commonJS({
         startMessage,
         type,
         invitable,
-        reason,
+        reason: reason2,
         rateLimitPerUser
       } = {}) {
-        let resolvedType = this.channel.type === ChannelType5.GuildAnnouncement ? ChannelType5.AnnouncementThread : ChannelType5.PublicThread;
+        let resolvedType = this.channel.type === ChannelType8.GuildAnnouncement ? ChannelType8.AnnouncementThread : ChannelType8.PublicThread;
         let startMessageId;
         if (startMessage) {
           startMessageId = this.channel.messages.resolveId(startMessage);
           if (!startMessageId) throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "startMessage", "MessageResolvable");
-        } else if (this.channel.type !== ChannelType5.GuildAnnouncement) {
+        } else if (this.channel.type !== ChannelType8.GuildAnnouncement) {
           resolvedType = type ?? resolvedType;
         }
         const data2 = await this.client.rest.post(Routes4.threads(this.channel.id, startMessageId), {
@@ -56269,10 +56269,10 @@ var require_GuildTextThreadManager = __commonJS({
             name,
             auto_archive_duration: autoArchiveDuration,
             type: resolvedType,
-            invitable: resolvedType === ChannelType5.PrivateThread ? invitable : void 0,
+            invitable: resolvedType === ChannelType8.PrivateThread ? invitable : void 0,
             rate_limit_per_user: rateLimitPerUser
           },
-          reason
+          reason: reason2
         });
         return this.client.actions.ThreadCreate.handle(data2).thread;
       }
@@ -56329,8 +56329,8 @@ var require_BaseGuildTextChannel = __commonJS({
        * @param {string} [reason] Reason for changing the channel's default auto archive duration
        * @returns {Promise<TextChannel>}
        */
-      setDefaultAutoArchiveDuration(defaultAutoArchiveDuration, reason) {
-        return this.edit({ defaultAutoArchiveDuration, reason });
+      setDefaultAutoArchiveDuration(defaultAutoArchiveDuration, reason2) {
+        return this.edit({ defaultAutoArchiveDuration, reason: reason2 });
       }
       /**
        * Sets the type of this channel.
@@ -56339,8 +56339,8 @@ var require_BaseGuildTextChannel = __commonJS({
        * @param {string} [reason] Reason for changing the channel's type
        * @returns {Promise<GuildChannel>}
        */
-      setType(type, reason) {
-        return this.edit({ type, reason });
+      setType(type, reason2) {
+        return this.edit({ type, reason: reason2 });
       }
       /**
        * Sets a new topic for the guild channel.
@@ -56353,8 +56353,8 @@ var require_BaseGuildTextChannel = __commonJS({
        *   .then(newChannel => console.log(`Channel's new topic is ${newChannel.topic}`))
        *   .catch(console.error);
        */
-      setTopic(topic, reason) {
-        return this.edit({ topic, reason });
+      setTopic(topic, reason2) {
+        return this.edit({ topic, reason: reason2 });
       }
       /**
        * Data that can be resolved to an Application. This can be:
@@ -56458,10 +56458,10 @@ var require_NewsChannel = __commonJS({
        *     .catch(console.error);
        * }
        */
-      async addFollower(channel, reason) {
+      async addFollower(channel, reason2) {
         const channelId = this.guild.channels.resolveId(channel);
         if (!channelId) throw new DiscordjsError2(ErrorCodes2.GuildChannelResolve);
-        await this.client.rest.post(Routes4.channelFollowers(this.id), { body: { webhook_channel_id: channelId }, reason });
+        await this.client.rest.post(Routes4.channelFollowers(this.id), { body: { webhook_channel_id: channelId }, reason: reason2 });
         return this;
       }
     };
@@ -56474,7 +56474,7 @@ var require_BaseGuildVoiceChannel = __commonJS({
   "node_modules/discord.js/src/structures/BaseGuildVoiceChannel.js"(exports2, module2) {
     "use strict";
     var { Collection: Collection2 } = require_dist7();
-    var { PermissionFlagsBits: PermissionFlagsBits5 } = require_v106();
+    var { PermissionFlagsBits: PermissionFlagsBits13 } = require_v106();
     var GuildChannel = require_GuildChannel();
     var TextBasedChannel = require_TextBasedChannel();
     var GuildMessageManager = require_GuildMessageManager();
@@ -56545,8 +56545,8 @@ var require_BaseGuildVoiceChannel = __commonJS({
         if (!this.viewable) return false;
         const permissions = this.permissionsFor(this.client.user);
         if (!permissions) return false;
-        if (permissions.has(PermissionFlagsBits5.Administrator, false)) return true;
-        return this.guild.members.me.communicationDisabledUntilTimestamp < Date.now() && permissions.has(PermissionFlagsBits5.Connect, false);
+        if (permissions.has(PermissionFlagsBits13.Administrator, false)) return true;
+        return this.guild.members.me.communicationDisabledUntilTimestamp < Date.now() && permissions.has(PermissionFlagsBits13.Connect, false);
       }
       /**
        * Creates an invite to this guild channel.
@@ -56580,8 +56580,8 @@ var require_BaseGuildVoiceChannel = __commonJS({
        *   .then(channel => console.log(`Set bitrate to ${channel.bitrate}bps for ${channel.name}`))
        *   .catch(console.error);
        */
-      setBitrate(bitrate, reason) {
-        return this.edit({ bitrate, reason });
+      setBitrate(bitrate, reason2) {
+        return this.edit({ bitrate, reason: reason2 });
       }
       /**
        * Sets the RTC region of the channel.
@@ -56595,8 +56595,8 @@ var require_BaseGuildVoiceChannel = __commonJS({
        * // Remove a fixed region for this channel - let Discord decide automatically
        * channel.setRTCRegion(null, 'We want to let Discord decide.');
        */
-      setRTCRegion(rtcRegion, reason) {
-        return this.edit({ rtcRegion, reason });
+      setRTCRegion(rtcRegion, reason2) {
+        return this.edit({ rtcRegion, reason: reason2 });
       }
       /**
        * Sets the user limit of the channel.
@@ -56609,8 +56609,8 @@ var require_BaseGuildVoiceChannel = __commonJS({
        *   .then(channel => console.log(`Set user limit to ${channel.userLimit} for ${channel.name}`))
        *   .catch(console.error);
        */
-      setUserLimit(userLimit, reason) {
-        return this.edit({ userLimit, reason });
+      setUserLimit(userLimit, reason2) {
+        return this.edit({ userLimit, reason: reason2 });
       }
       /**
        * Sets the camera video quality mode of the channel.
@@ -56618,8 +56618,8 @@ var require_BaseGuildVoiceChannel = __commonJS({
        * @param {string} [reason] Reason for changing the camera video quality mode.
        * @returns {Promise<BaseGuildVoiceChannel>}
        */
-      setVideoQualityMode(videoQualityMode, reason) {
-        return this.edit({ videoQualityMode, reason });
+      setVideoQualityMode(videoQualityMode, reason2) {
+        return this.edit({ videoQualityMode, reason: reason2 });
       }
       // These are here only for documentation purposes - they are implemented by TextBasedChannel
       /* eslint-disable no-empty-function */
@@ -56692,8 +56692,8 @@ var require_StageChannel = __commonJS({
        *   .then(channel => console.log(`Channel's new topic is ${channel.topic}`))
        *   .catch(console.error);
        */
-      setTopic(topic, reason) {
-        return this.edit({ topic, reason });
+      setTopic(topic, reason2) {
+        return this.edit({ topic, reason: reason2 });
       }
     };
     module2.exports = StageChannel;
@@ -56718,8 +56718,8 @@ var require_TextChannel = __commonJS({
        * @param {string} [reason] Reason for changing the channel's rate limit
        * @returns {Promise<TextChannel>}
        */
-      setRateLimitPerUser(rateLimitPerUser, reason) {
-        return this.edit({ rateLimitPerUser, reason });
+      setRateLimitPerUser(rateLimitPerUser, reason2) {
+        return this.edit({ rateLimitPerUser, reason: reason2 });
       }
     };
     module2.exports = TextChannel;
@@ -56730,7 +56730,7 @@ var require_TextChannel = __commonJS({
 var require_VoiceChannel = __commonJS({
   "node_modules/discord.js/src/structures/VoiceChannel.js"(exports2, module2) {
     "use strict";
-    var { PermissionFlagsBits: PermissionFlagsBits5, Routes: Routes4 } = require_v106();
+    var { PermissionFlagsBits: PermissionFlagsBits13, Routes: Routes4 } = require_v106();
     var BaseGuildVoiceChannel = require_BaseGuildVoiceChannel();
     var VoiceChannel = class extends BaseGuildVoiceChannel {
       /**
@@ -56740,7 +56740,7 @@ var require_VoiceChannel = __commonJS({
        */
       get joinable() {
         if (!super.joinable) return false;
-        if (this.full && !this.permissionsFor(this.client.user).has(PermissionFlagsBits5.MoveMembers, false)) return false;
+        if (this.full && !this.permissionsFor(this.client.user).has(PermissionFlagsBits13.MoveMembers, false)) return false;
         return true;
       }
       /**
@@ -56751,8 +56751,8 @@ var require_VoiceChannel = __commonJS({
       get speakable() {
         const permissions = this.permissionsFor(this.client.user);
         if (!permissions) return false;
-        if (permissions.has(PermissionFlagsBits5.Administrator, false)) return true;
-        return this.guild.members.me.communicationDisabledUntilTimestamp < Date.now() && permissions.has(PermissionFlagsBits5.Speak, false);
+        if (permissions.has(PermissionFlagsBits13.Administrator, false)) return true;
+        return this.guild.members.me.communicationDisabledUntilTimestamp < Date.now() && permissions.has(PermissionFlagsBits13.Speak, false);
       }
       /**
        * @typedef {Object} SendSoundboardSoundOptions
@@ -56912,8 +56912,8 @@ var require_ForumChannel = __commonJS({
        * @param {string} [reason] Reason for changing the default forum layout
        * @returns {Promise<ForumChannel>}
        */
-      setDefaultForumLayout(defaultForumLayout, reason) {
-        return this.edit({ defaultForumLayout, reason });
+      setDefaultForumLayout(defaultForumLayout, reason2) {
+        return this.edit({ defaultForumLayout, reason: reason2 });
       }
     };
     module2.exports = ForumChannel;
@@ -56936,7 +56936,7 @@ var require_Channels = __commonJS({
   "node_modules/discord.js/src/util/Channels.js"(exports2, module2) {
     "use strict";
     var { lazy } = require_dist2();
-    var { ChannelType: ChannelType5 } = require_v106();
+    var { ChannelType: ChannelType8 } = require_v106();
     var getCategoryChannel = lazy(() => require_CategoryChannel());
     var getDMChannel = lazy(() => require_DMChannel());
     var getNewsChannel = lazy(() => require_NewsChannel());
@@ -56951,49 +56951,49 @@ var require_Channels = __commonJS({
     function createChannel(client, data2, guild, { allowUnknownGuild } = {}) {
       let channel;
       if (!data2.guild_id && !guild) {
-        if (data2.recipients && data2.type !== ChannelType5.GroupDM || data2.type === ChannelType5.DM) {
+        if (data2.recipients && data2.type !== ChannelType8.GroupDM || data2.type === ChannelType8.DM) {
           channel = new (getDMChannel())(client, data2);
-        } else if (data2.type === ChannelType5.GroupDM) {
+        } else if (data2.type === ChannelType8.GroupDM) {
           channel = new (getPartialGroupDMChannel())(client, data2);
         }
       } else {
         guild ??= client.guilds.cache.get(data2.guild_id);
         if (guild || allowUnknownGuild) {
           switch (data2.type) {
-            case ChannelType5.GuildText: {
+            case ChannelType8.GuildText: {
               channel = new (getTextChannel())(guild, data2, client);
               break;
             }
-            case ChannelType5.GuildVoice: {
+            case ChannelType8.GuildVoice: {
               channel = new (getVoiceChannel())(guild, data2, client);
               break;
             }
-            case ChannelType5.GuildCategory: {
+            case ChannelType8.GuildCategory: {
               channel = new (getCategoryChannel())(guild, data2, client);
               break;
             }
-            case ChannelType5.GuildAnnouncement: {
+            case ChannelType8.GuildAnnouncement: {
               channel = new (getNewsChannel())(guild, data2, client);
               break;
             }
-            case ChannelType5.GuildStageVoice: {
+            case ChannelType8.GuildStageVoice: {
               channel = new (getStageChannel())(guild, data2, client);
               break;
             }
-            case ChannelType5.AnnouncementThread:
-            case ChannelType5.PublicThread:
-            case ChannelType5.PrivateThread: {
+            case ChannelType8.AnnouncementThread:
+            case ChannelType8.PublicThread:
+            case ChannelType8.PrivateThread: {
               channel = new (getThreadChannel())(guild, data2, client);
               if (!allowUnknownGuild) channel.parent?.threads.cache.set(channel.id, channel);
               break;
             }
-            case ChannelType5.GuildDirectory:
+            case ChannelType8.GuildDirectory:
               channel = new (getDirectoryChannel())(guild, data2, client);
               break;
-            case ChannelType5.GuildForum:
+            case ChannelType8.GuildForum:
               channel = new (getForumChannel())(guild, data2, client);
               break;
-            case ChannelType5.GuildMedia:
+            case ChannelType8.GuildMedia:
               channel = new (getMediaChannel())(guild, data2, client);
               break;
           }
@@ -57087,12 +57087,12 @@ var require_EntitlementCreate = __commonJS({
   "node_modules/discord.js/src/client/actions/EntitlementCreate.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var EntitlementCreateAction = class extends Action {
       handle(data2) {
         const client = this.client;
         const entitlement = client.application.entitlements._add(data2);
-        client.emit(Events3.EntitlementCreate, entitlement);
+        client.emit(Events11.EntitlementCreate, entitlement);
         return {};
       }
     };
@@ -57105,13 +57105,13 @@ var require_EntitlementDelete = __commonJS({
   "node_modules/discord.js/src/client/actions/EntitlementDelete.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var EntitlementDeleteAction = class extends Action {
       handle(data2) {
         const client = this.client;
         const entitlement = client.application.entitlements._add(data2, false);
         client.application.entitlements.cache.delete(entitlement.id);
-        client.emit(Events3.EntitlementDelete, entitlement);
+        client.emit(Events11.EntitlementDelete, entitlement);
         return {};
       }
     };
@@ -57124,13 +57124,13 @@ var require_EntitlementUpdate = __commonJS({
   "node_modules/discord.js/src/client/actions/EntitlementUpdate.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var EntitlementUpdateAction = class extends Action {
       handle(data2) {
         const client = this.client;
         const oldEntitlement = client.application.entitlements.cache.get(data2.id)?._clone() ?? null;
         const newEntitlement = client.application.entitlements._add(data2);
-        client.emit(Events3.EntitlementUpdate, oldEntitlement, newEntitlement);
+        client.emit(Events11.EntitlementUpdate, oldEntitlement, newEntitlement);
         return {};
       }
     };
@@ -57201,8 +57201,8 @@ var require_AutoModerationRule = __commonJS({
        * @param {string} [reason] The reason for deleting this auto moderation rule
        * @returns {Promise<void>}
        */
-      delete(reason) {
-        return this.guild.autoModerationRules.delete(this.id, reason);
+      delete(reason2) {
+        return this.guild.autoModerationRules.delete(this.id, reason2);
       }
       /**
        * Sets the name for this auto moderation rule.
@@ -57210,8 +57210,8 @@ var require_AutoModerationRule = __commonJS({
        * @param {string} [reason] The reason for changing the name of this auto moderation rule
        * @returns {Promise<AutoModerationRule>}
        */
-      setName(name, reason) {
-        return this.edit({ name, reason });
+      setName(name, reason2) {
+        return this.edit({ name, reason: reason2 });
       }
       /**
        * Sets the event type for this auto moderation rule.
@@ -57219,8 +57219,8 @@ var require_AutoModerationRule = __commonJS({
        * @param {string} [reason] The reason for changing the event type of this auto moderation rule
        * @returns {Promise<AutoModerationRule>}
        */
-      setEventType(eventType, reason) {
-        return this.edit({ eventType, reason });
+      setEventType(eventType, reason2) {
+        return this.edit({ eventType, reason: reason2 });
       }
       /**
        * Sets the keyword filter for this auto moderation rule.
@@ -57228,8 +57228,8 @@ var require_AutoModerationRule = __commonJS({
        * @param {string} [reason] The reason for changing the keyword filter of this auto moderation rule
        * @returns {Promise<AutoModerationRule>}
        */
-      setKeywordFilter(keywordFilter, reason) {
-        return this.edit({ triggerMetadata: { ...this.triggerMetadata, keywordFilter }, reason });
+      setKeywordFilter(keywordFilter, reason2) {
+        return this.edit({ triggerMetadata: { ...this.triggerMetadata, keywordFilter }, reason: reason2 });
       }
       /**
        * Sets the regular expression patterns for this auto moderation rule.
@@ -57238,8 +57238,8 @@ var require_AutoModerationRule = __commonJS({
        * @param {string} [reason] The reason for changing the regular expression patterns of this auto moderation rule
        * @returns {Promise<AutoModerationRule>}
        */
-      setRegexPatterns(regexPatterns, reason) {
-        return this.edit({ triggerMetadata: { ...this.triggerMetadata, regexPatterns }, reason });
+      setRegexPatterns(regexPatterns, reason2) {
+        return this.edit({ triggerMetadata: { ...this.triggerMetadata, regexPatterns }, reason: reason2 });
       }
       /**
        * Sets the presets for this auto moderation rule.
@@ -57247,8 +57247,8 @@ var require_AutoModerationRule = __commonJS({
        * @param {string} [reason] The reason for changing the presets of this auto moderation rule
        * @returns {Promise<AutoModerationRule>}
        */
-      setPresets(presets, reason) {
-        return this.edit({ triggerMetadata: { ...this.triggerMetadata, presets }, reason });
+      setPresets(presets, reason2) {
+        return this.edit({ triggerMetadata: { ...this.triggerMetadata, presets }, reason: reason2 });
       }
       /**
        * Sets the allow list for this auto moderation rule.
@@ -57259,8 +57259,8 @@ var require_AutoModerationRule = __commonJS({
        * @param {string} [reason] The reason for changing the allow list of this auto moderation rule
        * @returns {Promise<AutoModerationRule>}
        */
-      setAllowList(allowList, reason) {
-        return this.edit({ triggerMetadata: { ...this.triggerMetadata, allowList }, reason });
+      setAllowList(allowList, reason2) {
+        return this.edit({ triggerMetadata: { ...this.triggerMetadata, allowList }, reason: reason2 });
       }
       /**
        * Sets the mention total limit for this auto moderation rule.
@@ -57268,8 +57268,8 @@ var require_AutoModerationRule = __commonJS({
        * @param {string} [reason] The reason for changing the mention total limit of this auto moderation rule
        * @returns {Promise<AutoModerationRule>}
        */
-      setMentionTotalLimit(mentionTotalLimit, reason) {
-        return this.edit({ triggerMetadata: { ...this.triggerMetadata, mentionTotalLimit }, reason });
+      setMentionTotalLimit(mentionTotalLimit, reason2) {
+        return this.edit({ triggerMetadata: { ...this.triggerMetadata, mentionTotalLimit }, reason: reason2 });
       }
       /**
        * Sets whether to enable mention raid protection for this auto moderation rule.
@@ -57278,8 +57278,8 @@ var require_AutoModerationRule = __commonJS({
        * @param {string} [reason] The reason for changing the mention raid protection of this auto moderation rule
        * @returns {Promise<AutoModerationRule>}
        */
-      setMentionRaidProtectionEnabled(mentionRaidProtectionEnabled, reason) {
-        return this.edit({ triggerMetadata: { ...this.triggerMetadata, mentionRaidProtectionEnabled }, reason });
+      setMentionRaidProtectionEnabled(mentionRaidProtectionEnabled, reason2) {
+        return this.edit({ triggerMetadata: { ...this.triggerMetadata, mentionRaidProtectionEnabled }, reason: reason2 });
       }
       /**
        * Sets the actions for this auto moderation rule.
@@ -57287,8 +57287,8 @@ var require_AutoModerationRule = __commonJS({
        * @param {string} [reason] The reason for changing the actions of this auto moderation rule
        * @returns {Promise<AutoModerationRule>}
        */
-      setActions(actions, reason) {
-        return this.edit({ actions, reason });
+      setActions(actions, reason2) {
+        return this.edit({ actions, reason: reason2 });
       }
       /**
        * Sets whether this auto moderation rule should be enabled.
@@ -57296,8 +57296,8 @@ var require_AutoModerationRule = __commonJS({
        * @param {string} [reason] The reason for enabling or disabling this auto moderation rule
        * @returns {Promise<AutoModerationRule>}
        */
-      setEnabled(enabled = true, reason) {
-        return this.edit({ enabled, reason });
+      setEnabled(enabled = true, reason2) {
+        return this.edit({ enabled, reason: reason2 });
       }
       /**
        * Sets the exempt roles for this auto moderation rule.
@@ -57306,8 +57306,8 @@ var require_AutoModerationRule = __commonJS({
        * @param {string} [reason] The reason for changing the exempt roles of this auto moderation rule
        * @returns {Promise<AutoModerationRule>}
        */
-      setExemptRoles(exemptRoles, reason) {
-        return this.edit({ exemptRoles, reason });
+      setExemptRoles(exemptRoles, reason2) {
+        return this.edit({ exemptRoles, reason: reason2 });
       }
       /**
        * Sets the exempt channels for this auto moderation rule.
@@ -57316,8 +57316,8 @@ var require_AutoModerationRule = __commonJS({
        * @param {string} [reason] The reason for changing the exempt channels of this auto moderation rule
        * @returns {Promise<AutoModerationRule>}
        */
-      setExemptChannels(exemptChannels, reason) {
-        return this.edit({ exemptChannels, reason });
+      setExemptChannels(exemptChannels, reason2) {
+        return this.edit({ exemptChannels, reason: reason2 });
       }
     };
     module2.exports = AutoModerationRule;
@@ -57502,8 +57502,8 @@ var require_Integration = __commonJS({
        * @returns {Promise<Integration>}
        * @param {string} [reason] Reason for deleting this integration
        */
-      async delete(reason) {
-        await this.client.rest.delete(Routes4.guildIntegration(this.guild.id, this.id), { reason });
+      async delete(reason2) {
+        await this.client.rest.delete(Routes4.guildIntegration(this.guild.id, this.id), { reason: reason2 });
         return this;
       }
       toJSON() {
@@ -57644,7 +57644,7 @@ var require_GuildAuditLogsEntry = __commonJS({
   "node_modules/discord.js/src/structures/GuildAuditLogsEntry.js"(exports2, module2) {
     "use strict";
     var { DiscordSnowflake } = require_cjs();
-    var { AuditLogOptionsType, AuditLogEvent } = require_v106();
+    var { AuditLogOptionsType, AuditLogEvent: AuditLogEvent9 } = require_v106();
     var AutoModerationRule = require_AutoModerationRule();
     var { GuildOnboardingPrompt } = require_GuildOnboardingPrompt();
     var { GuildScheduledEvent } = require_GuildScheduledEvent();
@@ -57653,7 +57653,7 @@ var require_GuildAuditLogsEntry = __commonJS({
     var { StageInstance } = require_StageInstance();
     var { Sticker: Sticker2 } = require_Sticker();
     var Webhook2 = require_Webhook();
-    var Partials = require_Partials();
+    var Partials2 = require_Partials();
     var { flatten } = require_Util();
     var Targets = {
       All: "All",
@@ -57697,7 +57697,7 @@ var require_GuildAuditLogsEntry = __commonJS({
         this.action = data2.action_type;
         this.reason = data2.reason ?? null;
         this.executorId = data2.user_id;
-        this.executor = data2.user_id ? guild.client.options.partials.includes(Partials.User) ? guild.client.users._add({ id: data2.user_id }) : guild.client.users.cache.get(data2.user_id) ?? null : null;
+        this.executor = data2.user_id ? guild.client.options.partials.includes(Partials2.User) ? guild.client.users._add({ id: data2.user_id }) : guild.client.users.cache.get(data2.user_id) ?? null : null;
         this.changes = data2.changes?.map((change) => ({
           key: change.key,
           ..."old_value" in change ? { old: change.old_value } : {},
@@ -57706,35 +57706,35 @@ var require_GuildAuditLogsEntry = __commonJS({
         this.id = data2.id;
         this.extra = null;
         switch (data2.action_type) {
-          case AuditLogEvent.MemberPrune:
+          case AuditLogEvent9.MemberPrune:
             this.extra = {
               removed: Number(data2.options.members_removed),
               days: Number(data2.options.delete_member_days)
             };
             break;
-          case AuditLogEvent.MemberMove:
-          case AuditLogEvent.MessageDelete:
+          case AuditLogEvent9.MemberMove:
+          case AuditLogEvent9.MessageDelete:
             this.extra = {
               channel: guild.channels.cache.get(data2.options.channel_id) ?? { id: data2.options.channel_id },
               count: Number(data2.options.count)
             };
             break;
-          case AuditLogEvent.MessagePin:
-          case AuditLogEvent.MessageUnpin:
+          case AuditLogEvent9.MessagePin:
+          case AuditLogEvent9.MessageUnpin:
             this.extra = {
               channel: guild.client.channels.cache.get(data2.options.channel_id) ?? { id: data2.options.channel_id },
               messageId: data2.options.message_id
             };
             break;
-          case AuditLogEvent.MessageBulkDelete:
-          case AuditLogEvent.MemberDisconnect:
+          case AuditLogEvent9.MessageBulkDelete:
+          case AuditLogEvent9.MemberDisconnect:
             this.extra = {
               count: Number(data2.options.count)
             };
             break;
-          case AuditLogEvent.ChannelOverwriteCreate:
-          case AuditLogEvent.ChannelOverwriteUpdate:
-          case AuditLogEvent.ChannelOverwriteDelete:
+          case AuditLogEvent9.ChannelOverwriteCreate:
+          case AuditLogEvent9.ChannelOverwriteUpdate:
+          case AuditLogEvent9.ChannelOverwriteDelete:
             switch (data2.options.type) {
               case AuditLogOptionsType.Role:
                 this.extra = guild.roles.cache.get(data2.options.id) ?? {
@@ -57753,29 +57753,29 @@ var require_GuildAuditLogsEntry = __commonJS({
                 break;
             }
             break;
-          case AuditLogEvent.StageInstanceCreate:
-          case AuditLogEvent.StageInstanceDelete:
-          case AuditLogEvent.StageInstanceUpdate:
+          case AuditLogEvent9.StageInstanceCreate:
+          case AuditLogEvent9.StageInstanceDelete:
+          case AuditLogEvent9.StageInstanceUpdate:
             this.extra = {
               channel: guild.client.channels.cache.get(data2.options?.channel_id) ?? { id: data2.options?.channel_id }
             };
             break;
-          case AuditLogEvent.ApplicationCommandPermissionUpdate:
+          case AuditLogEvent9.ApplicationCommandPermissionUpdate:
             this.extra = {
               applicationId: data2.options.application_id
             };
             break;
-          case AuditLogEvent.AutoModerationBlockMessage:
-          case AuditLogEvent.AutoModerationFlagToChannel:
-          case AuditLogEvent.AutoModerationUserCommunicationDisabled:
+          case AuditLogEvent9.AutoModerationBlockMessage:
+          case AuditLogEvent9.AutoModerationFlagToChannel:
+          case AuditLogEvent9.AutoModerationUserCommunicationDisabled:
             this.extra = {
               autoModerationRuleName: data2.options.auto_moderation_rule_name,
               autoModerationRuleTriggerType: data2.options.auto_moderation_rule_trigger_type,
               channel: guild.client.channels.cache.get(data2.options?.channel_id) ?? { id: data2.options?.channel_id }
             };
             break;
-          case AuditLogEvent.MemberKick:
-          case AuditLogEvent.MemberRoleUpdate: {
+          case AuditLogEvent9.MemberKick:
+          case AuditLogEvent9.MemberRoleUpdate: {
             if (data2.integration_type) {
               this.extra = {
                 integrationType: data2.integration_type
@@ -57792,7 +57792,7 @@ var require_GuildAuditLogsEntry = __commonJS({
           this.target = changesReduce(this.changes);
           this.target.id = data2.target_id;
         } else if (targetType === Targets.User && data2.target_id) {
-          this.target = guild.client.options.partials.includes(Partials.User) ? guild.client.users._add({ id: data2.target_id }) : guild.client.users.cache.get(data2.target_id) ?? null;
+          this.target = guild.client.options.partials.includes(Partials2.User) ? guild.client.users._add({ id: data2.target_id }) : guild.client.users.cache.get(data2.target_id) ?? null;
         } else if (targetType === Targets.Guild) {
           this.target = guild.client.guilds.cache.get(data2.target_id);
         } else if (targetType === Targets.Webhook) {
@@ -57807,7 +57807,7 @@ var require_GuildAuditLogsEntry = __commonJS({
           const inviteChange = this.changes.find(({ key }) => key === "code");
           this.target = guild.invites.cache.get(inviteChange.new ?? inviteChange.old) ?? new Invite2(guild.client, changesReduce(this.changes, { guild }));
         } else if (targetType === Targets.Message) {
-          this.target = data2.action_type === AuditLogEvent.MessageBulkDelete ? guild.channels.cache.get(data2.target_id) ?? { id: data2.target_id } : guild.client.users.cache.get(data2.target_id) ?? null;
+          this.target = data2.action_type === AuditLogEvent9.MessageBulkDelete ? guild.channels.cache.get(data2.target_id) ?? { id: data2.target_id } : guild.client.users.cache.get(data2.target_id) ?? null;
         } else if (targetType === Targets.Integration) {
           this.target = logs?.integrations.get(data2.target_id) ?? new Integration(guild.client, changesReduce(this.changes, { id: data2.target_id }), guild);
         } else if (targetType === Targets.Channel || targetType === Targets.Thread) {
@@ -57834,7 +57834,7 @@ var require_GuildAuditLogsEntry = __commonJS({
             guild
           );
         } else if (targetType === Targets.GuildOnboardingPrompt) {
-          this.target = data2.action_type === AuditLogEvent.OnboardingPromptCreate ? new GuildOnboardingPrompt(guild.client, changesReduce(this.changes, { id: data2.target_id }), guild.id) : changesReduce(this.changes, { id: data2.target_id });
+          this.target = data2.action_type === AuditLogEvent9.OnboardingPromptCreate ? new GuildOnboardingPrompt(guild.client, changesReduce(this.changes, { id: data2.target_id }), guild.id) : changesReduce(this.changes, { id: data2.target_id });
         } else if (targetType === Targets.Role) {
           this.target = guild.roles.cache.get(data2.target_id) ?? { id: data2.target_id };
         } else if (targetType === Targets.Emoji) {
@@ -57879,77 +57879,77 @@ var require_GuildAuditLogsEntry = __commonJS({
        */
       static actionType(action) {
         if ([
-          AuditLogEvent.ChannelCreate,
-          AuditLogEvent.ChannelOverwriteCreate,
-          AuditLogEvent.MemberBanRemove,
-          AuditLogEvent.BotAdd,
-          AuditLogEvent.RoleCreate,
-          AuditLogEvent.InviteCreate,
-          AuditLogEvent.WebhookCreate,
-          AuditLogEvent.EmojiCreate,
-          AuditLogEvent.MessagePin,
-          AuditLogEvent.IntegrationCreate,
-          AuditLogEvent.StageInstanceCreate,
-          AuditLogEvent.StickerCreate,
-          AuditLogEvent.GuildScheduledEventCreate,
-          AuditLogEvent.ThreadCreate,
-          AuditLogEvent.SoundboardSoundCreate,
-          AuditLogEvent.AutoModerationRuleCreate,
-          AuditLogEvent.AutoModerationBlockMessage,
-          AuditLogEvent.OnboardingPromptCreate,
-          AuditLogEvent.OnboardingCreate
+          AuditLogEvent9.ChannelCreate,
+          AuditLogEvent9.ChannelOverwriteCreate,
+          AuditLogEvent9.MemberBanRemove,
+          AuditLogEvent9.BotAdd,
+          AuditLogEvent9.RoleCreate,
+          AuditLogEvent9.InviteCreate,
+          AuditLogEvent9.WebhookCreate,
+          AuditLogEvent9.EmojiCreate,
+          AuditLogEvent9.MessagePin,
+          AuditLogEvent9.IntegrationCreate,
+          AuditLogEvent9.StageInstanceCreate,
+          AuditLogEvent9.StickerCreate,
+          AuditLogEvent9.GuildScheduledEventCreate,
+          AuditLogEvent9.ThreadCreate,
+          AuditLogEvent9.SoundboardSoundCreate,
+          AuditLogEvent9.AutoModerationRuleCreate,
+          AuditLogEvent9.AutoModerationBlockMessage,
+          AuditLogEvent9.OnboardingPromptCreate,
+          AuditLogEvent9.OnboardingCreate
         ].includes(action)) {
           return "Create";
         }
         if ([
-          AuditLogEvent.ChannelDelete,
-          AuditLogEvent.ChannelOverwriteDelete,
-          AuditLogEvent.MemberKick,
-          AuditLogEvent.MemberPrune,
-          AuditLogEvent.MemberBanAdd,
-          AuditLogEvent.MemberDisconnect,
-          AuditLogEvent.RoleDelete,
-          AuditLogEvent.InviteDelete,
-          AuditLogEvent.WebhookDelete,
-          AuditLogEvent.EmojiDelete,
-          AuditLogEvent.MessageDelete,
-          AuditLogEvent.MessageBulkDelete,
-          AuditLogEvent.MessageUnpin,
-          AuditLogEvent.IntegrationDelete,
-          AuditLogEvent.StageInstanceDelete,
-          AuditLogEvent.StickerDelete,
-          AuditLogEvent.GuildScheduledEventDelete,
-          AuditLogEvent.ThreadDelete,
-          AuditLogEvent.SoundboardSoundDelete,
-          AuditLogEvent.AutoModerationRuleDelete,
-          AuditLogEvent.OnboardingPromptDelete
+          AuditLogEvent9.ChannelDelete,
+          AuditLogEvent9.ChannelOverwriteDelete,
+          AuditLogEvent9.MemberKick,
+          AuditLogEvent9.MemberPrune,
+          AuditLogEvent9.MemberBanAdd,
+          AuditLogEvent9.MemberDisconnect,
+          AuditLogEvent9.RoleDelete,
+          AuditLogEvent9.InviteDelete,
+          AuditLogEvent9.WebhookDelete,
+          AuditLogEvent9.EmojiDelete,
+          AuditLogEvent9.MessageDelete,
+          AuditLogEvent9.MessageBulkDelete,
+          AuditLogEvent9.MessageUnpin,
+          AuditLogEvent9.IntegrationDelete,
+          AuditLogEvent9.StageInstanceDelete,
+          AuditLogEvent9.StickerDelete,
+          AuditLogEvent9.GuildScheduledEventDelete,
+          AuditLogEvent9.ThreadDelete,
+          AuditLogEvent9.SoundboardSoundDelete,
+          AuditLogEvent9.AutoModerationRuleDelete,
+          AuditLogEvent9.OnboardingPromptDelete
         ].includes(action)) {
           return "Delete";
         }
         if ([
-          AuditLogEvent.GuildUpdate,
-          AuditLogEvent.ChannelUpdate,
-          AuditLogEvent.ChannelOverwriteUpdate,
-          AuditLogEvent.MemberUpdate,
-          AuditLogEvent.MemberRoleUpdate,
-          AuditLogEvent.MemberMove,
-          AuditLogEvent.RoleUpdate,
-          AuditLogEvent.InviteUpdate,
-          AuditLogEvent.WebhookUpdate,
-          AuditLogEvent.EmojiUpdate,
-          AuditLogEvent.IntegrationUpdate,
-          AuditLogEvent.StageInstanceUpdate,
-          AuditLogEvent.StickerUpdate,
-          AuditLogEvent.GuildScheduledEventUpdate,
-          AuditLogEvent.ThreadUpdate,
-          AuditLogEvent.SoundboardSoundUpdate,
-          AuditLogEvent.ApplicationCommandPermissionUpdate,
-          AuditLogEvent.AutoModerationRuleUpdate,
-          AuditLogEvent.AutoModerationBlockMessage,
-          AuditLogEvent.AutoModerationFlagToChannel,
-          AuditLogEvent.AutoModerationUserCommunicationDisabled,
-          AuditLogEvent.OnboardingPromptUpdate,
-          AuditLogEvent.OnboardingUpdate
+          AuditLogEvent9.GuildUpdate,
+          AuditLogEvent9.ChannelUpdate,
+          AuditLogEvent9.ChannelOverwriteUpdate,
+          AuditLogEvent9.MemberUpdate,
+          AuditLogEvent9.MemberRoleUpdate,
+          AuditLogEvent9.MemberMove,
+          AuditLogEvent9.RoleUpdate,
+          AuditLogEvent9.InviteUpdate,
+          AuditLogEvent9.WebhookUpdate,
+          AuditLogEvent9.EmojiUpdate,
+          AuditLogEvent9.IntegrationUpdate,
+          AuditLogEvent9.StageInstanceUpdate,
+          AuditLogEvent9.StickerUpdate,
+          AuditLogEvent9.GuildScheduledEventUpdate,
+          AuditLogEvent9.ThreadUpdate,
+          AuditLogEvent9.SoundboardSoundUpdate,
+          AuditLogEvent9.ApplicationCommandPermissionUpdate,
+          AuditLogEvent9.AutoModerationRuleUpdate,
+          AuditLogEvent9.AutoModerationBlockMessage,
+          AuditLogEvent9.AutoModerationFlagToChannel,
+          AuditLogEvent9.AutoModerationUserCommunicationDisabled,
+          AuditLogEvent9.OnboardingPromptUpdate,
+          AuditLogEvent9.OnboardingUpdate
         ].includes(action)) {
           return "Update";
         }
@@ -57985,7 +57985,7 @@ var require_GuildAuditLogEntryCreate = __commonJS({
     "use strict";
     var Action = require_Action();
     var GuildAuditLogsEntry = require_GuildAuditLogsEntry();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var GuildAuditLogEntryCreateAction = class extends Action {
       handle(data2) {
         const client = this.client;
@@ -57993,7 +57993,7 @@ var require_GuildAuditLogEntryCreate = __commonJS({
         let auditLogEntry;
         if (guild) {
           auditLogEntry = new GuildAuditLogsEntry(guild, data2);
-          client.emit(Events3.GuildAuditLogEntryCreate, auditLogEntry, guild);
+          client.emit(Events11.GuildAuditLogEntryCreate, auditLogEntry, guild);
         }
         return { auditLogEntry };
       }
@@ -58007,12 +58007,12 @@ var require_GuildBanAdd = __commonJS({
   "node_modules/discord.js/src/client/actions/GuildBanAdd.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var GuildBanAdd = class extends Action {
       handle(data2) {
         const client = this.client;
         const guild = client.guilds.cache.get(data2.guild_id);
-        if (guild) client.emit(Events3.GuildBanAdd, guild.bans._add(data2));
+        if (guild) client.emit(Events11.GuildBanAdd, guild.bans._add(data2));
       }
     };
     module2.exports = GuildBanAdd;
@@ -58065,7 +58065,7 @@ var require_GuildBanRemove = __commonJS({
     "use strict";
     var Action = require_Action();
     var GuildBan = require_GuildBan();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var GuildBanRemove = class extends Action {
       handle(data2) {
         const client = this.client;
@@ -58073,7 +58073,7 @@ var require_GuildBanRemove = __commonJS({
         if (guild) {
           const ban = guild.bans.cache.get(data2.user.id) ?? new GuildBan(client, data2, guild);
           guild.bans.cache.delete(ban.user.id);
-          client.emit(Events3.GuildBanRemove, ban);
+          client.emit(Events11.GuildBanRemove, ban);
         }
       }
     };
@@ -58108,7 +58108,7 @@ var require_GuildDelete = __commonJS({
   "node_modules/discord.js/src/client/actions/GuildDelete.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var GuildDeleteAction = class extends Action {
       handle(data2) {
         const client = this.client;
@@ -58116,13 +58116,13 @@ var require_GuildDelete = __commonJS({
         if (guild) {
           if (data2.unavailable) {
             guild.available = false;
-            client.emit(Events3.GuildUnavailable, guild);
+            client.emit(Events11.GuildUnavailable, guild);
             return;
           }
           for (const channel of guild.channels.cache.values()) this.client.channels._remove(channel.id);
           client.voice.adapters.get(data2.id)?.destroy();
           client.guilds.cache.delete(guild.id);
-          client.emit(Events3.GuildDelete, guild);
+          client.emit(Events11.GuildDelete, guild);
         }
       }
     };
@@ -58135,12 +58135,12 @@ var require_GuildEmojiCreate = __commonJS({
   "node_modules/discord.js/src/client/actions/GuildEmojiCreate.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var GuildEmojiCreateAction = class extends Action {
       handle(guild, createdEmoji) {
         const already = guild.emojis.cache.has(createdEmoji.id);
         const emoji = guild.emojis._add(createdEmoji);
-        if (!already) this.client.emit(Events3.GuildEmojiCreate, emoji);
+        if (!already) this.client.emit(Events11.GuildEmojiCreate, emoji);
         return { emoji };
       }
     };
@@ -58153,11 +58153,11 @@ var require_GuildEmojiDelete = __commonJS({
   "node_modules/discord.js/src/client/actions/GuildEmojiDelete.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var GuildEmojiDeleteAction = class extends Action {
       handle(emoji) {
         emoji.guild.emojis.cache.delete(emoji.id);
-        this.client.emit(Events3.GuildEmojiDelete, emoji);
+        this.client.emit(Events11.GuildEmojiDelete, emoji);
         return { emoji };
       }
     };
@@ -58170,11 +58170,11 @@ var require_GuildEmojiUpdate = __commonJS({
   "node_modules/discord.js/src/client/actions/GuildEmojiUpdate.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var GuildEmojiUpdateAction = class extends Action {
       handle(current, data2) {
         const old = current._update(data2);
-        this.client.emit(Events3.GuildEmojiUpdate, old, current);
+        this.client.emit(Events11.GuildEmojiUpdate, old, current);
         return { emoji: current };
       }
     };
@@ -58217,12 +58217,12 @@ var require_GuildIntegrationsUpdate = __commonJS({
   "node_modules/discord.js/src/client/actions/GuildIntegrationsUpdate.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var GuildIntegrationsUpdate = class extends Action {
       handle(data2) {
         const client = this.client;
         const guild = client.guilds.cache.get(data2.guild_id);
-        if (guild) client.emit(Events3.GuildIntegrationsUpdate, guild);
+        if (guild) client.emit(Events11.GuildIntegrationsUpdate, guild);
       }
     };
     module2.exports = GuildIntegrationsUpdate;
@@ -58253,7 +58253,7 @@ var require_GuildMemberRemove = __commonJS({
   "node_modules/discord.js/src/client/actions/GuildMemberRemove.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var Status2 = require_Status();
     var GuildMemberRemoveAction = class extends Action {
       handle(data2, shard) {
@@ -58265,7 +58265,7 @@ var require_GuildMemberRemove = __commonJS({
           guild.memberCount--;
           if (member) {
             guild.members.cache.delete(member.id);
-            if (shard.status === Status2.Ready) client.emit(Events3.GuildMemberRemove, member);
+            if (shard.status === Status2.Ready) client.emit(Events11.GuildMemberRemove, member);
           }
           guild.presences.cache.delete(data2.user.id);
           guild.voiceStates.cache.delete(data2.user.id);
@@ -58282,7 +58282,7 @@ var require_GuildMemberUpdate = __commonJS({
   "node_modules/discord.js/src/client/actions/GuildMemberUpdate.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var Status2 = require_Status();
     var GuildMemberUpdateAction = class extends Action {
       handle(data2, shard) {
@@ -58300,10 +58300,10 @@ var require_GuildMemberUpdate = __commonJS({
           const member = this.getMember({ user: data2.user }, guild);
           if (member) {
             const old = member._update(data2);
-            if (shard.status === Status2.Ready && !member.equals(old)) client.emit(Events3.GuildMemberUpdate, old, member);
+            if (shard.status === Status2.Ready && !member.equals(old)) client.emit(Events11.GuildMemberUpdate, old, member);
           } else {
             const newMember = guild.members._add(data2);
-            this.client.emit(Events3.GuildMemberAvailable, newMember);
+            this.client.emit(Events11.GuildMemberAvailable, newMember);
           }
         }
       }
@@ -58317,7 +58317,7 @@ var require_GuildRoleCreate = __commonJS({
   "node_modules/discord.js/src/client/actions/GuildRoleCreate.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var GuildRoleCreate = class extends Action {
       handle(data2) {
         const client = this.client;
@@ -58326,7 +58326,7 @@ var require_GuildRoleCreate = __commonJS({
         if (guild) {
           const already = guild.roles.cache.has(data2.role.id);
           role = guild.roles._add(data2.role);
-          if (!already) client.emit(Events3.GuildRoleCreate, role);
+          if (!already) client.emit(Events11.GuildRoleCreate, role);
         }
         return { role };
       }
@@ -58340,7 +58340,7 @@ var require_GuildRoleDelete = __commonJS({
   "node_modules/discord.js/src/client/actions/GuildRoleDelete.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var GuildRoleDeleteAction = class extends Action {
       handle(data2) {
         const client = this.client;
@@ -58350,7 +58350,7 @@ var require_GuildRoleDelete = __commonJS({
           role = guild.roles.cache.get(data2.role_id);
           if (role) {
             guild.roles.cache.delete(data2.role_id);
-            client.emit(Events3.GuildRoleDelete, role);
+            client.emit(Events11.GuildRoleDelete, role);
           }
         }
         return { role };
@@ -58365,7 +58365,7 @@ var require_GuildRoleUpdate = __commonJS({
   "node_modules/discord.js/src/client/actions/GuildRoleUpdate.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var GuildRoleUpdateAction = class extends Action {
       handle(data2) {
         const client = this.client;
@@ -58375,7 +58375,7 @@ var require_GuildRoleUpdate = __commonJS({
           const role = guild.roles.cache.get(data2.role.id);
           if (role) {
             old = role._update(data2.role);
-            client.emit(Events3.GuildRoleUpdate, old, role);
+            client.emit(Events11.GuildRoleUpdate, old, role);
           }
           return {
             old,
@@ -58419,14 +58419,14 @@ var require_GuildScheduledEventCreate = __commonJS({
   "node_modules/discord.js/src/client/actions/GuildScheduledEventCreate.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var GuildScheduledEventCreateAction = class extends Action {
       handle(data2) {
         const client = this.client;
         const guild = client.guilds.cache.get(data2.guild_id);
         if (guild) {
           const guildScheduledEvent = guild.scheduledEvents._add(data2);
-          client.emit(Events3.GuildScheduledEventCreate, guildScheduledEvent);
+          client.emit(Events11.GuildScheduledEventCreate, guildScheduledEvent);
           return { guildScheduledEvent };
         }
         return {};
@@ -58441,7 +58441,7 @@ var require_GuildScheduledEventDelete = __commonJS({
   "node_modules/discord.js/src/client/actions/GuildScheduledEventDelete.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var GuildScheduledEventDeleteAction = class extends Action {
       handle(data2) {
         const client = this.client;
@@ -58450,7 +58450,7 @@ var require_GuildScheduledEventDelete = __commonJS({
           const guildScheduledEvent = this.getScheduledEvent(data2, guild);
           if (guildScheduledEvent) {
             guild.scheduledEvents.cache.delete(guildScheduledEvent.id);
-            client.emit(Events3.GuildScheduledEventDelete, guildScheduledEvent);
+            client.emit(Events11.GuildScheduledEventDelete, guildScheduledEvent);
             return { guildScheduledEvent };
           }
         }
@@ -58466,7 +58466,7 @@ var require_GuildScheduledEventUpdate = __commonJS({
   "node_modules/discord.js/src/client/actions/GuildScheduledEventUpdate.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var GuildScheduledEventUpdateAction = class extends Action {
       handle(data2) {
         const client = this.client;
@@ -58474,7 +58474,7 @@ var require_GuildScheduledEventUpdate = __commonJS({
         if (guild) {
           const oldGuildScheduledEvent = guild.scheduledEvents.cache.get(data2.id)?._clone() ?? null;
           const newGuildScheduledEvent = guild.scheduledEvents._add(data2);
-          client.emit(Events3.GuildScheduledEventUpdate, oldGuildScheduledEvent, newGuildScheduledEvent);
+          client.emit(Events11.GuildScheduledEventUpdate, oldGuildScheduledEvent, newGuildScheduledEvent);
           return { oldGuildScheduledEvent, newGuildScheduledEvent };
         }
         return {};
@@ -58489,7 +58489,7 @@ var require_GuildScheduledEventUserAdd = __commonJS({
   "node_modules/discord.js/src/client/actions/GuildScheduledEventUserAdd.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var GuildScheduledEventUserAddAction = class extends Action {
       handle(data2) {
         const client = this.client;
@@ -58498,7 +58498,7 @@ var require_GuildScheduledEventUserAdd = __commonJS({
           const guildScheduledEvent = this.getScheduledEvent(data2, guild);
           const user = this.getUser(data2);
           if (guildScheduledEvent && user) {
-            client.emit(Events3.GuildScheduledEventUserAdd, guildScheduledEvent, user);
+            client.emit(Events11.GuildScheduledEventUserAdd, guildScheduledEvent, user);
             return { guildScheduledEvent, user };
           }
         }
@@ -58514,7 +58514,7 @@ var require_GuildScheduledEventUserRemove = __commonJS({
   "node_modules/discord.js/src/client/actions/GuildScheduledEventUserRemove.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var GuildScheduledEventUserRemoveAction = class extends Action {
       handle(data2) {
         const client = this.client;
@@ -58523,7 +58523,7 @@ var require_GuildScheduledEventUserRemove = __commonJS({
           const guildScheduledEvent = this.getScheduledEvent(data2, guild);
           const user = this.getUser(data2);
           if (guildScheduledEvent && user) {
-            client.emit(Events3.GuildScheduledEventUserRemove, guildScheduledEvent, user);
+            client.emit(Events11.GuildScheduledEventUserRemove, guildScheduledEvent, user);
             return { guildScheduledEvent, user };
           }
         }
@@ -58539,7 +58539,7 @@ var require_GuildSoundboardSoundDelete = __commonJS({
   "node_modules/discord.js/src/client/actions/GuildSoundboardSoundDelete.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var GuildSoundboardSoundDeleteAction = class extends Action {
       handle(data2) {
         const guild = this.client.guilds.cache.get(data2.guild_id);
@@ -58547,7 +58547,7 @@ var require_GuildSoundboardSoundDelete = __commonJS({
         const soundboardSound = this.getSoundboardSound(data2, guild);
         if (soundboardSound) {
           guild.soundboardSounds.cache.delete(soundboardSound.soundId);
-          this.client.emit(Events3.GuildSoundboardSoundDelete, soundboardSound);
+          this.client.emit(Events11.GuildSoundboardSoundDelete, soundboardSound);
         }
         return { soundboardSound };
       }
@@ -58561,12 +58561,12 @@ var require_GuildStickerCreate = __commonJS({
   "node_modules/discord.js/src/client/actions/GuildStickerCreate.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var GuildStickerCreateAction = class extends Action {
       handle(guild, createdSticker) {
         const already = guild.stickers.cache.has(createdSticker.id);
         const sticker = guild.stickers._add(createdSticker);
-        if (!already) this.client.emit(Events3.GuildStickerCreate, sticker);
+        if (!already) this.client.emit(Events11.GuildStickerCreate, sticker);
         return { sticker };
       }
     };
@@ -58579,11 +58579,11 @@ var require_GuildStickerDelete = __commonJS({
   "node_modules/discord.js/src/client/actions/GuildStickerDelete.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var GuildStickerDeleteAction = class extends Action {
       handle(sticker) {
         sticker.guild.stickers.cache.delete(sticker.id);
-        this.client.emit(Events3.GuildStickerDelete, sticker);
+        this.client.emit(Events11.GuildStickerDelete, sticker);
         return { sticker };
       }
     };
@@ -58596,11 +58596,11 @@ var require_GuildStickerUpdate = __commonJS({
   "node_modules/discord.js/src/client/actions/GuildStickerUpdate.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var GuildStickerUpdateAction = class extends Action {
       handle(current, data2) {
         const old = current._update(data2);
-        this.client.emit(Events3.GuildStickerUpdate, old, current);
+        this.client.emit(Events11.GuildStickerUpdate, old, current);
         return { sticker: current };
       }
     };
@@ -58643,14 +58643,14 @@ var require_GuildUpdate = __commonJS({
   "node_modules/discord.js/src/client/actions/GuildUpdate.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var GuildUpdateAction = class extends Action {
       handle(data2) {
         const client = this.client;
         const guild = client.guilds.cache.get(data2.id);
         if (guild) {
           const old = guild._update(data2);
-          client.emit(Events3.GuildUpdate, old, guild);
+          client.emit(Events11.GuildUpdate, old, guild);
           return {
             old,
             updated: guild
@@ -59090,10 +59090,10 @@ var require_InteractionResponse = __commonJS({
         const _options = { ...options, max: 1 };
         return new Promise((resolve3, reject) => {
           const collector = this.createMessageComponentCollector(_options);
-          collector.once("end", (interactions, reason) => {
+          collector.once("end", (interactions, reason2) => {
             const interaction = interactions.first();
             if (interaction) resolve3(interaction);
-            else reject(new DiscordjsError2(ErrorCodes2.InteractionCollectorError, reason));
+            else reject(new DiscordjsError2(ErrorCodes2.InteractionCollectorError, reason2));
           });
         });
       }
@@ -59145,7 +59145,7 @@ var require_InteractionResponses = __commonJS({
     var { deprecate } = require("node:util");
     var { makeURLSearchParams: makeURLSearchParams2 } = require_dist6();
     var { isJSONEncodable } = require_dist2();
-    var { InteractionResponseType, MessageFlags: MessageFlags15, Routes: Routes4, InteractionType } = require_v106();
+    var { InteractionResponseType, MessageFlags: MessageFlags18, Routes: Routes4, InteractionType } = require_v106();
     var { DiscordjsError: DiscordjsError2, ErrorCodes: ErrorCodes2 } = require_errors2();
     var MessageFlagsBitField = require_MessageFlagsBitField();
     var InteractionCallbackResponse = require_InteractionCallbackResponse();
@@ -59239,7 +59239,7 @@ var require_InteractionResponses = __commonJS({
         }
         const flags = new MessageFlagsBitField(options.flags);
         if (options.ephemeral) {
-          flags.add(MessageFlags15.Ephemeral);
+          flags.add(MessageFlags18.Ephemeral);
         }
         const response = await this.client.rest.post(Routes4.interactionCallback(this.id, this.token), {
           body: {
@@ -59252,7 +59252,7 @@ var require_InteractionResponses = __commonJS({
           query: makeURLSearchParams2({ with_response: options.withResponse ?? false })
         });
         this.deferred = true;
-        this.ephemeral = flags.has(MessageFlags15.Ephemeral);
+        this.ephemeral = flags.has(MessageFlags18.Ephemeral);
         return options.withResponse ? new InteractionCallbackResponse(this.client, response) : options.fetchReply ? this.fetchReply() : new InteractionResponse(this);
       }
       /**
@@ -59307,7 +59307,7 @@ var require_InteractionResponses = __commonJS({
           auth: false,
           query: makeURLSearchParams2({ with_response: options.withResponse ?? false })
         });
-        this.ephemeral = Boolean(data2.flags & MessageFlags15.Ephemeral);
+        this.ephemeral = Boolean(data2.flags & MessageFlags18.Ephemeral);
         this.replied = true;
         return options.withResponse ? new InteractionCallbackResponse(this.client, response) : options.fetchReply ? this.fetchReply() : new InteractionResponse(this);
       }
@@ -59519,10 +59519,10 @@ var require_InteractionResponses = __commonJS({
         const _options = { ...options, max: 1, interactionType: InteractionType.ModalSubmit };
         return new Promise((resolve3, reject) => {
           const collector = new InteractionCollector(this.client, _options);
-          collector.once("end", (interactions, reason) => {
+          collector.once("end", (interactions, reason2) => {
             const interaction = interactions.first();
             if (interaction) resolve3(interaction);
-            else reject(new DiscordjsError2(ErrorCodes2.InteractionCollectorError, reason));
+            else reject(new DiscordjsError2(ErrorCodes2.InteractionCollectorError, reason2));
           });
         });
       }
@@ -59820,7 +59820,7 @@ var require_MentionableSelectMenuInteraction = __commonJS({
     "use strict";
     var { Collection: Collection2 } = require_dist7();
     var MessageComponentInteraction = require_MessageComponentInteraction();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var MentionableSelectMenuInteraction = class extends MessageComponentInteraction {
       constructor(client, data2) {
         super(client, data2);
@@ -59835,7 +59835,7 @@ var require_MentionableSelectMenuInteraction = __commonJS({
             const user = users[id];
             if (!user) {
               this.client.emit(
-                Events3.Debug,
+                Events11.Debug,
                 `[MentionableSelectMenuInteraction] Received a member without a user, skipping ${id}`
               );
               continue;
@@ -60374,7 +60374,7 @@ var require_UserSelectMenuInteraction = __commonJS({
     "use strict";
     var { Collection: Collection2 } = require_dist7();
     var MessageComponentInteraction = require_MessageComponentInteraction();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var UserSelectMenuInteraction = class extends MessageComponentInteraction {
       constructor(client, data2) {
         super(client, data2);
@@ -60388,7 +60388,7 @@ var require_UserSelectMenuInteraction = __commonJS({
         for (const [id, member] of Object.entries(resolved?.members ?? {})) {
           const user = resolved.users[id];
           if (!user) {
-            this.client.emit(Events3.Debug, `[UserSelectMenuInteraction] Received a member without a user, skipping ${id}`);
+            this.client.emit(Events11.Debug, `[UserSelectMenuInteraction] Received a member without a user, skipping ${id}`);
             continue;
           }
           this.members.set(id, this.guild?.members._add({ user, ...member }) ?? { user, ...member });
@@ -60417,7 +60417,7 @@ var require_InteractionCreate = __commonJS({
     var StringSelectMenuInteraction = require_StringSelectMenuInteraction();
     var UserContextMenuCommandInteraction = require_UserContextMenuCommandInteraction();
     var UserSelectMenuInteraction = require_UserSelectMenuInteraction();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var InteractionCreateAction = class extends Action {
       handle(data2) {
         const client = this.client;
@@ -60441,7 +60441,7 @@ var require_InteractionCreate = __commonJS({
                 break;
               default:
                 client.emit(
-                  Events3.Debug,
+                  Events11.Debug,
                   `[INTERACTION] Received application command interaction with unknown type: ${data2.data.type}`
                 );
                 return;
@@ -60470,7 +60470,7 @@ var require_InteractionCreate = __commonJS({
                 break;
               default:
                 client.emit(
-                  Events3.Debug,
+                  Events11.Debug,
                   `[INTERACTION] Received component interaction with unknown type: ${data2.data.component_type}`
                 );
                 return;
@@ -60483,11 +60483,11 @@ var require_InteractionCreate = __commonJS({
             InteractionClass = ModalSubmitInteraction;
             break;
           default:
-            client.emit(Events3.Debug, `[INTERACTION] Received interaction with unknown type: ${data2.type}`);
+            client.emit(Events11.Debug, `[INTERACTION] Received interaction with unknown type: ${data2.type}`);
             return;
         }
         const interaction = new InteractionClass(client, data2);
-        client.emit(Events3.InteractionCreate, interaction);
+        client.emit(Events11.InteractionCreate, interaction);
       }
     };
     module2.exports = InteractionCreateAction;
@@ -60499,7 +60499,7 @@ var require_InviteCreate = __commonJS({
   "node_modules/discord.js/src/client/actions/InviteCreate.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var InviteCreateAction = class extends Action {
       handle(data2) {
         const client = this.client;
@@ -60508,7 +60508,7 @@ var require_InviteCreate = __commonJS({
         if (!channel) return false;
         const inviteData = Object.assign(data2, { channel, guild });
         const invite = guild.invites._add(inviteData);
-        client.emit(Events3.InviteCreate, invite);
+        client.emit(Events11.InviteCreate, invite);
         return { invite };
       }
     };
@@ -60522,7 +60522,7 @@ var require_InviteDelete = __commonJS({
     "use strict";
     var Action = require_Action();
     var Invite2 = require_Invite();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var InviteDeleteAction = class extends Action {
       handle(data2) {
         const client = this.client;
@@ -60532,7 +60532,7 @@ var require_InviteDelete = __commonJS({
         const inviteData = Object.assign(data2, { channel, guild });
         const invite = new Invite2(client, inviteData);
         guild.invites.cache.delete(invite.code);
-        client.emit(Events3.InviteDelete, invite);
+        client.emit(Events11.InviteDelete, invite);
         return { invite };
       }
     };
@@ -60545,7 +60545,7 @@ var require_MessageCreate = __commonJS({
   "node_modules/discord.js/src/client/actions/MessageCreate.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var MessageCreateAction = class extends Action {
       handle(data2) {
         const client = this.client;
@@ -60565,7 +60565,7 @@ var require_MessageCreate = __commonJS({
           if (existing && existing.author?.id !== this.client.user.id) return { message: existing };
           const message = existing ?? channel.messages._add(data2);
           channel.lastMessageId = data2.id;
-          client.emit(Events3.MessageCreate, message);
+          client.emit(Events11.MessageCreate, message);
           return { message };
         }
         return {};
@@ -60580,7 +60580,7 @@ var require_MessageDelete = __commonJS({
   "node_modules/discord.js/src/client/actions/MessageDelete.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var MessageDeleteAction = class extends Action {
       handle(data2) {
         const client = this.client;
@@ -60592,7 +60592,7 @@ var require_MessageDelete = __commonJS({
           message = this.getMessage(data2, channel);
           if (message) {
             channel.messages.cache.delete(message.id);
-            client.emit(Events3.MessageDelete, message);
+            client.emit(Events11.MessageDelete, message);
           }
         }
         return { message };
@@ -60608,7 +60608,7 @@ var require_MessageDeleteBulk = __commonJS({
     "use strict";
     var { Collection: Collection2 } = require_dist7();
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var MessageDeleteBulkAction = class extends Action {
       handle(data2) {
         const client = this.client;
@@ -60632,7 +60632,7 @@ var require_MessageDeleteBulk = __commonJS({
               channel.messages.cache.delete(id);
             }
           }
-          if (messages.size > 0) client.emit(Events3.MessageBulkDelete, messages, channel);
+          if (messages.size > 0) client.emit(Events11.MessageBulkDelete, messages, channel);
           return { messages };
         }
         return {};
@@ -60647,7 +60647,7 @@ var require_MessagePollVoteAdd = __commonJS({
   "node_modules/discord.js/src/client/actions/MessagePollVoteAdd.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var MessagePollVoteAddAction = class extends Action {
       handle(data2) {
         const channel = this.getChannel({ id: data2.channel_id, ..."guild_id" in data2 && { guild_id: data2.guild_id } });
@@ -60663,7 +60663,7 @@ var require_MessagePollVoteAdd = __commonJS({
           answer.voters._add(user);
         }
         answer.voteCount++;
-        this.client.emit(Events3.MessagePollVoteAdd, answer, data2.user_id);
+        this.client.emit(Events11.MessagePollVoteAdd, answer, data2.user_id);
         return { poll };
       }
     };
@@ -60676,7 +60676,7 @@ var require_MessagePollVoteRemove = __commonJS({
   "node_modules/discord.js/src/client/actions/MessagePollVoteRemove.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var MessagePollVoteRemoveAction = class extends Action {
       handle(data2) {
         const channel = this.getChannel({ id: data2.channel_id, ..."guild_id" in data2 && { guild_id: data2.guild_id } });
@@ -60691,7 +60691,7 @@ var require_MessagePollVoteRemove = __commonJS({
         if (answer.voteCount > 0) {
           answer.voteCount--;
         }
-        this.client.emit(Events3.MessagePollVoteRemove, answer, data2.user_id);
+        this.client.emit(Events11.MessagePollVoteRemove, answer, data2.user_id);
         return { poll };
       }
     };
@@ -60704,8 +60704,8 @@ var require_MessageReactionAdd = __commonJS({
   "node_modules/discord.js/src/client/actions/MessageReactionAdd.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
-    var Partials = require_Partials();
+    var Events11 = require_Events();
+    var Partials2 = require_Partials();
     var MessageReactionAdd = class extends Action {
       handle(data2, fromStructure = false) {
         if (!data2.emoji) return false;
@@ -60720,7 +60720,7 @@ var require_MessageReactionAdd = __commonJS({
         if (!channel?.isTextBased()) return false;
         const message = this.getMessage(data2, channel);
         if (!message) return false;
-        const includePartial = this.client.options.partials.includes(Partials.Reaction);
+        const includePartial = this.client.options.partials.includes(Partials2.Reaction);
         if (message.partial && !includePartial) return false;
         const reaction = message.reactions._add({
           emoji: data2.emoji,
@@ -60731,7 +60731,7 @@ var require_MessageReactionAdd = __commonJS({
         if (!reaction) return false;
         reaction._add(user, data2.burst);
         if (fromStructure) return { message, reaction, user };
-        this.client.emit(Events3.MessageReactionAdd, reaction, user, { type: data2.type, burst: data2.burst });
+        this.client.emit(Events11.MessageReactionAdd, reaction, user, { type: data2.type, burst: data2.burst });
         return { message, reaction, user };
       }
     };
@@ -60744,7 +60744,7 @@ var require_MessageReactionRemove = __commonJS({
   "node_modules/discord.js/src/client/actions/MessageReactionRemove.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var MessageReactionRemove = class extends Action {
       handle(data2) {
         if (!data2.emoji) return false;
@@ -60761,7 +60761,7 @@ var require_MessageReactionRemove = __commonJS({
         const reaction = this.getReaction(data2, message, user);
         if (!reaction) return false;
         reaction._remove(user, data2.burst);
-        this.client.emit(Events3.MessageReactionRemove, reaction, user, { type: data2.type, burst: data2.burst });
+        this.client.emit(Events11.MessageReactionRemove, reaction, user, { type: data2.type, burst: data2.burst });
         return { message, reaction, user };
       }
     };
@@ -60774,7 +60774,7 @@ var require_MessageReactionRemoveAll = __commonJS({
   "node_modules/discord.js/src/client/actions/MessageReactionRemoveAll.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var MessageReactionRemoveAll = class extends Action {
       handle(data2) {
         const channel = this.getChannel({ id: data2.channel_id, ..."guild_id" in data2 && { guild_id: data2.guild_id } });
@@ -60783,7 +60783,7 @@ var require_MessageReactionRemoveAll = __commonJS({
         if (!message) return false;
         const removed = message.reactions.cache.clone();
         message.reactions.cache.clear();
-        this.client.emit(Events3.MessageReactionRemoveAll, message, removed);
+        this.client.emit(Events11.MessageReactionRemoveAll, message, removed);
         return { message };
       }
     };
@@ -60796,7 +60796,7 @@ var require_MessageReactionRemoveEmoji = __commonJS({
   "node_modules/discord.js/src/client/actions/MessageReactionRemoveEmoji.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var MessageReactionRemoveEmoji = class extends Action {
       handle(data2) {
         const channel = this.getChannel({ id: data2.channel_id, ..."guild_id" in data2 && { guild_id: data2.guild_id } });
@@ -60806,7 +60806,7 @@ var require_MessageReactionRemoveEmoji = __commonJS({
         const reaction = this.getReaction(data2, message);
         if (!reaction) return false;
         if (!message.partial) message.reactions.cache.delete(reaction.emoji.id ?? reaction.emoji.name);
-        this.client.emit(Events3.MessageReactionRemoveEmoji, reaction);
+        this.client.emit(Events11.MessageReactionRemoveEmoji, reaction);
         return { reaction };
       }
     };
@@ -60824,8 +60824,8 @@ var require_MessageUpdate = __commonJS({
         const channel = this.getChannel({ id: data2.channel_id, ..."guild_id" in data2 && { guild_id: data2.guild_id } });
         if (channel) {
           if (!channel.isTextBased()) return {};
-          const { id, channel_id, guild_id, author, timestamp, type } = data2;
-          const message = this.getMessage({ id, channel_id, guild_id, author, timestamp, type }, channel);
+          const { id, channel_id, guild_id, author, timestamp: timestamp2, type } = data2;
+          const message = this.getMessage({ id, channel_id, guild_id, author, timestamp: timestamp2, type }, channel);
           if (message) {
             const old = message._update(data2);
             return {
@@ -60846,12 +60846,12 @@ var require_PresenceUpdate = __commonJS({
   "node_modules/discord.js/src/client/actions/PresenceUpdate.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
-    var Partials = require_Partials();
+    var Events11 = require_Events();
+    var Partials2 = require_Partials();
     var PresenceUpdateAction = class extends Action {
       handle(data2) {
         let user = this.client.users.cache.get(data2.user.id);
-        if (!user && ("username" in data2.user || this.client.options.partials.includes(Partials.User))) {
+        if (!user && ("username" in data2.user || this.client.options.partials.includes(Partials2.User))) {
           user = this.client.users._add(data2.user);
         }
         if (!user) return;
@@ -60868,11 +60868,11 @@ var require_PresenceUpdate = __commonJS({
             deaf: false,
             mute: false
           });
-          this.client.emit(Events3.GuildMemberAvailable, member);
+          this.client.emit(Events11.GuildMemberAvailable, member);
         }
         const newPresence = guild.presences._add(Object.assign(data2, { guild }));
-        if (this.client.listenerCount(Events3.PresenceUpdate) && !newPresence.equals(oldPresence)) {
-          this.client.emit(Events3.PresenceUpdate, oldPresence, newPresence);
+        if (this.client.listenerCount(Events11.PresenceUpdate) && !newPresence.equals(oldPresence)) {
+          this.client.emit(Events11.PresenceUpdate, oldPresence, newPresence);
         }
       }
     };
@@ -60885,14 +60885,14 @@ var require_StageInstanceCreate = __commonJS({
   "node_modules/discord.js/src/client/actions/StageInstanceCreate.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var StageInstanceCreateAction = class extends Action {
       handle(data2) {
         const client = this.client;
         const channel = this.getChannel({ id: data2.channel_id, guild_id: data2.guild_id });
         if (channel) {
           const stageInstance = channel.guild.stageInstances._add(data2);
-          client.emit(Events3.StageInstanceCreate, stageInstance);
+          client.emit(Events11.StageInstanceCreate, stageInstance);
           return { stageInstance };
         }
         return {};
@@ -60907,7 +60907,7 @@ var require_StageInstanceDelete = __commonJS({
   "node_modules/discord.js/src/client/actions/StageInstanceDelete.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var StageInstanceDeleteAction = class extends Action {
       handle(data2) {
         const client = this.client;
@@ -60916,7 +60916,7 @@ var require_StageInstanceDelete = __commonJS({
           const stageInstance = channel.guild.stageInstances._add(data2);
           if (stageInstance) {
             channel.guild.stageInstances.cache.delete(stageInstance.id);
-            client.emit(Events3.StageInstanceDelete, stageInstance);
+            client.emit(Events11.StageInstanceDelete, stageInstance);
             return { stageInstance };
           }
         }
@@ -60932,7 +60932,7 @@ var require_StageInstanceUpdate = __commonJS({
   "node_modules/discord.js/src/client/actions/StageInstanceUpdate.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var StageInstanceUpdateAction = class extends Action {
       handle(data2) {
         const client = this.client;
@@ -60940,7 +60940,7 @@ var require_StageInstanceUpdate = __commonJS({
         if (channel) {
           const oldStageInstance = channel.guild.stageInstances.cache.get(data2.id)?._clone() ?? null;
           const newStageInstance = channel.guild.stageInstances._add(data2);
-          client.emit(Events3.StageInstanceUpdate, oldStageInstance, newStageInstance);
+          client.emit(Events11.StageInstanceUpdate, oldStageInstance, newStageInstance);
           return { oldStageInstance, newStageInstance };
         }
         return {};
@@ -60955,14 +60955,14 @@ var require_ThreadCreate = __commonJS({
   "node_modules/discord.js/src/client/actions/ThreadCreate.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var ThreadCreateAction = class extends Action {
       handle(data2) {
         const client = this.client;
         const existing = client.channels.cache.has(data2.id);
         const thread = client.channels._add(data2);
         if (!existing && thread) {
-          client.emit(Events3.ThreadCreate, thread, data2.newly_created ?? false);
+          client.emit(Events11.ThreadCreate, thread, data2.newly_created ?? false);
         }
         return { thread };
       }
@@ -60976,14 +60976,14 @@ var require_ThreadDelete = __commonJS({
   "node_modules/discord.js/src/client/actions/ThreadDelete.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var ThreadDeleteAction = class extends Action {
       handle(data2) {
         const client = this.client;
         const thread = client.channels.cache.get(data2.id);
         if (thread) {
           client.channels._remove(thread.id);
-          client.emit(Events3.ThreadDelete, thread);
+          client.emit(Events11.ThreadDelete, thread);
         }
         return { thread };
       }
@@ -60998,7 +60998,7 @@ var require_ThreadListSync = __commonJS({
     "use strict";
     var { Collection: Collection2 } = require_dist7();
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var ThreadListSyncAction = class extends Action {
       handle(data2) {
         const client = this.client;
@@ -61024,7 +61024,7 @@ var require_ThreadListSync = __commonJS({
             thread.members._add(rawMember);
           }
         }
-        client.emit(Events3.ThreadListSync, syncedThreads, guild);
+        client.emit(Events11.ThreadListSync, syncedThreads, guild);
         return {
           syncedThreads
         };
@@ -61046,7 +61046,7 @@ var require_ThreadMemberUpdate = __commonJS({
   "node_modules/discord.js/src/client/actions/ThreadMemberUpdate.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var ThreadMemberUpdateAction = class extends Action {
       handle(data2) {
         const client = this.client;
@@ -61058,7 +61058,7 @@ var require_ThreadMemberUpdate = __commonJS({
             return { newMember };
           }
           const old = member._update(data2);
-          client.emit(Events3.ThreadMemberUpdate, old, member);
+          client.emit(Events11.ThreadMemberUpdate, old, member);
         }
         return {};
       }
@@ -61073,7 +61073,7 @@ var require_ThreadMembersUpdate = __commonJS({
     "use strict";
     var { Collection: Collection2 } = require_dist7();
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var ThreadMembersUpdateAction = class extends Action {
       handle(data2) {
         const client = this.client;
@@ -61095,7 +61095,7 @@ var require_ThreadMembersUpdate = __commonJS({
           if (addedMembers.size === 0 && removedMembers.size === 0) {
             return {};
           }
-          client.emit(Events3.ThreadMembersUpdate, addedMembers, removedMembers, thread);
+          client.emit(Events11.ThreadMembersUpdate, addedMembers, removedMembers, thread);
         }
         return {};
       }
@@ -61163,18 +61163,18 @@ var require_TypingStart = __commonJS({
     "use strict";
     var Action = require_Action();
     var Typing = require_Typing();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var TypingStart = class extends Action {
       handle(data2) {
         const channel = this.getChannel({ id: data2.channel_id, ..."guild_id" in data2 && { guild_id: data2.guild_id } });
         if (!channel) return;
         if (!channel.isTextBased()) {
-          this.client.emit(Events3.Warn, `Discord sent a typing packet to a ${channel.type} channel ${channel.id}`);
+          this.client.emit(Events11.Warn, `Discord sent a typing packet to a ${channel.type} channel ${channel.id}`);
           return;
         }
         const user = this.getUserFromMember(data2);
         if (user) {
-          this.client.emit(Events3.TypingStart, new Typing(channel, user, data2));
+          this.client.emit(Events11.TypingStart, new Typing(channel, user, data2));
         }
       }
     };
@@ -61187,14 +61187,14 @@ var require_UserUpdate = __commonJS({
   "node_modules/discord.js/src/client/actions/UserUpdate.js"(exports2, module2) {
     "use strict";
     var Action = require_Action();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var UserUpdateAction = class extends Action {
       handle(data2) {
         const client = this.client;
         const newUser = data2.id === client.user.id ? client.user : client.users.cache.get(data2.id);
         const oldUser = newUser._update(data2);
         if (!oldUser.equals(newUser)) {
-          client.emit(Events3.UserUpdate, oldUser, newUser);
+          client.emit(Events11.UserUpdate, oldUser, newUser);
           return {
             old: oldUser,
             updated: newUser
@@ -61216,7 +61216,7 @@ var require_VoiceStateUpdate = __commonJS({
     "use strict";
     var Action = require_Action();
     var VoiceState = require_VoiceState();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var VoiceStateUpdate = class extends Action {
       handle(data2) {
         const client = this.client;
@@ -61231,10 +61231,10 @@ var require_VoiceStateUpdate = __commonJS({
             member = guild.members._add(data2.member);
           }
           if (member?.user.id === client.user.id) {
-            client.emit(Events3.Debug, `[VOICE] received voice state update: ${JSON.stringify(data2)}`);
+            client.emit(Events11.Debug, `[VOICE] received voice state update: ${JSON.stringify(data2)}`);
             client.voice.onVoiceStateUpdate(data2);
           }
-          client.emit(Events3.VoiceStateUpdate, oldState, newState);
+          client.emit(Events11.VoiceStateUpdate, oldState, newState);
         }
       }
     };
@@ -61355,12 +61355,12 @@ var require_ActionsManager = __commonJS({
 var require_ClientVoiceManager = __commonJS({
   "node_modules/discord.js/src/client/voice/ClientVoiceManager.js"(exports2, module2) {
     "use strict";
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var ClientVoiceManager2 = class {
       constructor(client) {
         Object.defineProperty(this, "client", { value: client });
         this.adapters = /* @__PURE__ */ new Map();
-        client.on(Events3.ShardDisconnect, (_, shardId) => {
+        client.on(Events11.ShardDisconnect, (_, shardId) => {
           for (const [guildId, adapter] of this.adapters.entries()) {
             if (client.guilds.cache.get(guildId)?.shardId === shardId) {
               adapter.destroy();
@@ -64993,16 +64993,16 @@ var require_websocket2 = __commonJS({
         process.nextTick(cb, err);
       }
     }
-    function receiverOnConclude(code, reason) {
+    function receiverOnConclude(code, reason2) {
       const websocket = this[kWebSocket];
       websocket._closeFrameReceived = true;
-      websocket._closeMessage = reason;
+      websocket._closeMessage = reason2;
       websocket._closeCode = code;
       if (websocket._socket[kWebSocket] === void 0) return;
       websocket._socket.removeListener("data", socketOnData);
       process.nextTick(resume, websocket._socket);
       if (code === 1005) websocket.close();
-      else websocket.close(code, reason);
+      else websocket.close(code, reason2);
     }
     function receiverOnDrain() {
       const websocket = this[kWebSocket];
@@ -65779,7 +65779,7 @@ var require_dist11 = __commonJS({
     var import_node_worker_threads2 = require("worker_threads");
     var import_collection2 = require_dist10();
     var import_node_events = require("events");
-    var import_node_path3 = require("path");
+    var import_node_path11 = require("path");
     var import_node_worker_threads = require("worker_threads");
     var import_collection = require_dist10();
     var WorkerSendPayloadOp = /* @__PURE__ */ ((WorkerSendPayloadOp2) => {
@@ -65932,18 +65932,18 @@ var require_dist11 = __commonJS({
       resolveWorkerPath() {
         const path = this.options.workerPath;
         if (!path) {
-          return (0, import_node_path3.join)(__dirname, "defaultWorker.js");
+          return (0, import_node_path11.join)(__dirname, "defaultWorker.js");
         }
-        if ((0, import_node_path3.isAbsolute)(path)) {
+        if ((0, import_node_path11.isAbsolute)(path)) {
           return path;
         }
         if (/^\.\.?[/\\]/.test(path)) {
-          return (0, import_node_path3.resolve)(path);
+          return (0, import_node_path11.resolve)(path);
         }
         try {
           return require.resolve(path);
         } catch {
-          return (0, import_node_path3.resolve)(path);
+          return (0, import_node_path11.resolve)(path);
         }
       }
       async waitForWorkerReady(worker) {
@@ -66113,7 +66113,7 @@ var require_dist11 = __commonJS({
     var import_node_buffer = require("buffer");
     var import_node_events2 = require("events");
     var import_node_timers = require("timers");
-    var import_promises2 = require("timers/promises");
+    var import_promises22 = require("timers/promises");
     var import_node_url = require("url");
     var import_node_util = require("util");
     var import_node_zlib = require("zlib");
@@ -66127,7 +66127,7 @@ var require_dist11 = __commonJS({
     var import_collection4 = require_dist10();
     var import_util = require_dist2();
     var import_v10 = require_v106();
-    var import_promises3 = require("timers/promises");
+    var import_promises9 = require("timers/promises");
     var import_collection3 = require_dist10();
     var import_async_queue = require_cjs2();
     var SimpleIdentifyThrottler = class {
@@ -66154,7 +66154,7 @@ var require_dist11 = __commonJS({
           const diff = state.resetsAt - Date.now();
           if (diff > 0 && diff <= 5e3) {
             const time = diff + Math.random() * 1500;
-            await (0, import_promises3.setTimeout)(time);
+            await (0, import_promises9.setTimeout)(time);
           }
           state.resetsAt = Date.now() + 5e3;
         } finally {
@@ -66407,7 +66407,7 @@ var require_dist11 = __commonJS({
         }
         this.#status = 0;
         if (options.recover !== void 0) {
-          await (0, import_promises2.setTimeout)(500);
+          await (0, import_promises22.setTimeout)(500);
           return this.internalConnect();
         }
       }
@@ -66471,7 +66471,7 @@ var require_dist11 = __commonJS({
           this.debug([`Was about to hit the send rate limit, sleeping for ${sleepFor}ms`]);
           const controller = new AbortController();
           const interrupted = await Promise.race([
-            (0, import_promises2.setTimeout)(sleepFor).then(() => false),
+            (0, import_promises22.setTimeout)(sleepFor).then(() => false),
             (0, import_node_events2.once)(this, "closed", { signal: controller.signal }).then(() => true)
           ]);
           if (interrupted) {
@@ -66706,7 +66706,7 @@ var require_dist11 = __commonJS({
             try {
               const controller = new AbortController();
               this.initialHeartbeatTimeoutController = controller;
-              await (0, import_promises2.setTimeout)(firstWait, void 0, { signal: controller.signal });
+              await (0, import_promises22.setTimeout)(firstWait, void 0, { signal: controller.signal });
             } catch {
               this.debug(["Cancelled initial heartbeat due to #destroy being called"]);
               return;
@@ -67196,7 +67196,7 @@ var require_WebSocketShard = __commonJS({
     var EventEmitter = require("node:events");
     var process2 = require("node:process");
     var { setTimeout: setTimeout2, clearTimeout: clearTimeout2 } = require("node:timers");
-    var { GatewayIntentBits: GatewayIntentBits2 } = require_v106();
+    var { GatewayIntentBits: GatewayIntentBits3 } = require_v106();
     var Status2 = require_Status();
     var WebSocketShardEvents = require_WebSocketShardEvents();
     var deprecationEmittedForImportant = false;
@@ -67283,7 +67283,7 @@ var require_WebSocketShard = __commonJS({
           this.emit(WebSocketShardEvents.AllReady);
           return;
         }
-        const hasGuildsIntent = this.manager.client.options.intents.has(GatewayIntentBits2.Guilds);
+        const hasGuildsIntent = this.manager.client.options.intents.has(GatewayIntentBits3.Guilds);
         const { waitGuildTimeout } = this.manager.client.options;
         this.readyTimeout = setTimeout2(
           () => {
@@ -67396,13 +67396,13 @@ var require_CHANNEL_DELETE = __commonJS({
 var require_CHANNEL_PINS_UPDATE = __commonJS({
   "node_modules/discord.js/src/client/websocket/handlers/CHANNEL_PINS_UPDATE.js"(exports2, module2) {
     "use strict";
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     module2.exports = (client, { d: data2 }) => {
       const channel = client.channels.cache.get(data2.channel_id);
       const time = data2.last_pin_timestamp ? Date.parse(data2.last_pin_timestamp) : null;
       if (channel) {
         channel.lastPinTimestamp = time;
-        client.emit(Events3.ChannelPinsUpdate, channel, time);
+        client.emit(Events11.ChannelPinsUpdate, channel, time);
       }
     };
   }
@@ -67412,11 +67412,11 @@ var require_CHANNEL_PINS_UPDATE = __commonJS({
 var require_CHANNEL_UPDATE = __commonJS({
   "node_modules/discord.js/src/client/websocket/handlers/CHANNEL_UPDATE.js"(exports2, module2) {
     "use strict";
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     module2.exports = (client, packet) => {
       const { old, updated } = client.actions.ChannelUpdate.handle(packet.d);
       if (old && updated) {
-        client.emit(Events3.ChannelUpdate, old, updated);
+        client.emit(Events11.ChannelUpdate, old, updated);
       }
     };
   }
@@ -67486,20 +67486,20 @@ var require_GUILD_BAN_REMOVE = __commonJS({
 var require_GUILD_CREATE = __commonJS({
   "node_modules/discord.js/src/client/websocket/handlers/GUILD_CREATE.js"(exports2, module2) {
     "use strict";
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var Status2 = require_Status();
     module2.exports = (client, { d: data2 }, shard) => {
       let guild = client.guilds.cache.get(data2.id);
       if (guild) {
         if (!guild.available && !data2.unavailable) {
           guild._patch(data2);
-          client.emit(Events3.GuildAvailable, guild);
+          client.emit(Events11.GuildAvailable, guild);
         }
       } else {
         data2.shardId = shard.id;
         guild = client.guilds._add(data2);
         if (client.ws.status === Status2.Ready) {
-          client.emit(Events3.GuildCreate, guild);
+          client.emit(Events11.GuildCreate, guild);
         }
       }
     };
@@ -67541,7 +67541,7 @@ var require_GUILD_MEMBERS_CHUNK = __commonJS({
   "node_modules/discord.js/src/client/websocket/handlers/GUILD_MEMBERS_CHUNK.js"(exports2, module2) {
     "use strict";
     var { Collection: Collection2 } = require_dist7();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     module2.exports = (client, { d: data2 }) => {
       const guild = client.guilds.cache.get(data2.guild_id);
       if (!guild) return;
@@ -67550,7 +67550,7 @@ var require_GUILD_MEMBERS_CHUNK = __commonJS({
       if (data2.presences) {
         for (const presence of data2.presences) guild.presences._add(Object.assign(presence, { guild }));
       }
-      client.emit(Events3.GuildMembersChunk, members, guild, {
+      client.emit(Events11.GuildMembersChunk, members, guild, {
         index: data2.chunk_index,
         count: data2.chunk_count,
         notFound: data2.not_found,
@@ -67564,7 +67564,7 @@ var require_GUILD_MEMBERS_CHUNK = __commonJS({
 var require_GUILD_MEMBER_ADD = __commonJS({
   "node_modules/discord.js/src/client/websocket/handlers/GUILD_MEMBER_ADD.js"(exports2, module2) {
     "use strict";
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var Status2 = require_Status();
     module2.exports = (client, { d: data2 }, shard) => {
       const guild = client.guilds.cache.get(data2.guild_id);
@@ -67572,7 +67572,7 @@ var require_GUILD_MEMBER_ADD = __commonJS({
         guild.memberCount++;
         const member = guild.members._add(data2);
         if (shard.status === Status2.Ready) {
-          client.emit(Events3.GuildMemberAdd, member);
+          client.emit(Events11.GuildMemberAdd, member);
         }
       }
     };
@@ -67684,7 +67684,7 @@ var require_GUILD_SOUNDBOARD_SOUNDS_UPDATE = __commonJS({
   "node_modules/discord.js/src/client/websocket/handlers/GUILD_SOUNDBOARD_SOUNDS_UPDATE.js"(exports2, module2) {
     "use strict";
     var { Collection: Collection2 } = require_dist7();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     module2.exports = (client, { d: data2 }) => {
       const guild = client.guilds.cache.get(data2.guild_id);
       if (!guild) return;
@@ -67692,7 +67692,7 @@ var require_GUILD_SOUNDBOARD_SOUNDS_UPDATE = __commonJS({
       for (const soundboardSound of data2.soundboard_sounds) {
         soundboardSounds.set(soundboardSound.sound_id, guild.soundboardSounds._add(soundboardSound));
       }
-      client.emit(Events3.GuildSoundboardSoundsUpdate, soundboardSounds, guild);
+      client.emit(Events11.GuildSoundboardSoundsUpdate, soundboardSounds, guild);
     };
   }
 });
@@ -67701,12 +67701,12 @@ var require_GUILD_SOUNDBOARD_SOUNDS_UPDATE = __commonJS({
 var require_GUILD_SOUNDBOARD_SOUND_CREATE = __commonJS({
   "node_modules/discord.js/src/client/websocket/handlers/GUILD_SOUNDBOARD_SOUND_CREATE.js"(exports2, module2) {
     "use strict";
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     module2.exports = (client, { d: data2 }) => {
       const guild = client.guilds.cache.get(data2.guild_id);
       if (!guild) return;
       const soundboardSound = guild.soundboardSounds._add(data2);
-      client.emit(Events3.GuildSoundboardSoundCreate, soundboardSound);
+      client.emit(Events11.GuildSoundboardSoundCreate, soundboardSound);
     };
   }
 });
@@ -67725,13 +67725,13 @@ var require_GUILD_SOUNDBOARD_SOUND_DELETE = __commonJS({
 var require_GUILD_SOUNDBOARD_SOUND_UPDATE = __commonJS({
   "node_modules/discord.js/src/client/websocket/handlers/GUILD_SOUNDBOARD_SOUND_UPDATE.js"(exports2, module2) {
     "use strict";
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     module2.exports = (client, { d: data2 }) => {
       const guild = client.guilds.cache.get(data2.guild_id);
       if (!guild) return;
       const oldGuildSoundboardSound = guild.soundboardSounds.cache.get(data2.sound_id)?._clone() ?? null;
       const newGuildSoundboardSound = guild.soundboardSounds._add(data2);
-      client.emit(Events3.GuildSoundboardSoundUpdate, oldGuildSoundboardSound, newGuildSoundboardSound);
+      client.emit(Events11.GuildSoundboardSoundUpdate, oldGuildSoundboardSound, newGuildSoundboardSound);
     };
   }
 });
@@ -67880,11 +67880,11 @@ var require_MESSAGE_REACTION_REMOVE_EMOJI = __commonJS({
 var require_MESSAGE_UPDATE = __commonJS({
   "node_modules/discord.js/src/client/websocket/handlers/MESSAGE_UPDATE.js"(exports2, module2) {
     "use strict";
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     module2.exports = (client, packet) => {
       const { old, updated } = client.actions.MessageUpdate.handle(packet.d);
       if (old && updated) {
-        client.emit(Events3.MessageUpdate, old, updated);
+        client.emit(Events11.MessageUpdate, old, updated);
       }
     };
   }
@@ -68134,10 +68134,10 @@ var require_READY = __commonJS({
 var require_RESUMED = __commonJS({
   "node_modules/discord.js/src/client/websocket/handlers/RESUMED.js"(exports2, module2) {
     "use strict";
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     module2.exports = (client, packet, shard) => {
       const replayed = shard.sessionInfo.sequence - shard.closeSequence;
-      client.emit(Events3.ShardResume, shard.id, replayed);
+      client.emit(Events11.ShardResume, shard.id, replayed);
     };
   }
 });
@@ -68147,7 +68147,7 @@ var require_SOUNDBOARD_SOUNDS = __commonJS({
   "node_modules/discord.js/src/client/websocket/handlers/SOUNDBOARD_SOUNDS.js"(exports2, module2) {
     "use strict";
     var { Collection: Collection2 } = require_dist7();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     module2.exports = (client, { d: data2 }) => {
       const guild = client.guilds.cache.get(data2.guild_id);
       if (!guild) return;
@@ -68155,7 +68155,7 @@ var require_SOUNDBOARD_SOUNDS = __commonJS({
       for (const soundboardSound of data2.soundboard_sounds) {
         soundboardSounds.set(soundboardSound.sound_id, guild.soundboardSounds._add(soundboardSound));
       }
-      client.emit(Events3.SoundboardSounds, soundboardSounds, guild);
+      client.emit(Events11.SoundboardSounds, soundboardSounds, guild);
     };
   }
 });
@@ -68194,10 +68194,10 @@ var require_STAGE_INSTANCE_UPDATE = __commonJS({
 var require_SUBSCRIPTION_CREATE = __commonJS({
   "node_modules/discord.js/src/client/websocket/handlers/SUBSCRIPTION_CREATE.js"(exports2, module2) {
     "use strict";
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     module2.exports = (client, { d: data2 }) => {
       const subscription = client.application.subscriptions._add(data2);
-      client.emit(Events3.SubscriptionCreate, subscription);
+      client.emit(Events11.SubscriptionCreate, subscription);
     };
   }
 });
@@ -68206,11 +68206,11 @@ var require_SUBSCRIPTION_CREATE = __commonJS({
 var require_SUBSCRIPTION_DELETE = __commonJS({
   "node_modules/discord.js/src/client/websocket/handlers/SUBSCRIPTION_DELETE.js"(exports2, module2) {
     "use strict";
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     module2.exports = (client, { d: data2 }) => {
       const subscription = client.application.subscriptions._add(data2, false);
       client.application.subscriptions.cache.delete(subscription.id);
-      client.emit(Events3.SubscriptionDelete, subscription);
+      client.emit(Events11.SubscriptionDelete, subscription);
     };
   }
 });
@@ -68219,11 +68219,11 @@ var require_SUBSCRIPTION_DELETE = __commonJS({
 var require_SUBSCRIPTION_UPDATE = __commonJS({
   "node_modules/discord.js/src/client/websocket/handlers/SUBSCRIPTION_UPDATE.js"(exports2, module2) {
     "use strict";
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     module2.exports = (client, { d: data2 }) => {
       const oldSubscription = client.application.subscriptions.cache.get(data2.id)?._clone() ?? null;
       const newSubscription = client.application.subscriptions._add(data2);
-      client.emit(Events3.SubscriptionUpdate, oldSubscription, newSubscription);
+      client.emit(Events11.SubscriptionUpdate, oldSubscription, newSubscription);
     };
   }
 });
@@ -68282,11 +68282,11 @@ var require_THREAD_MEMBER_UPDATE = __commonJS({
 var require_THREAD_UPDATE = __commonJS({
   "node_modules/discord.js/src/client/websocket/handlers/THREAD_UPDATE.js"(exports2, module2) {
     "use strict";
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     module2.exports = (client, packet) => {
       const { old, updated } = client.actions.ChannelUpdate.handle(packet.d);
       if (old && updated) {
-        client.emit(Events3.ThreadUpdate, old, updated);
+        client.emit(Events11.ThreadUpdate, old, updated);
       }
     };
   }
@@ -68354,11 +68354,11 @@ var require_VOICE_CHANNEL_EFFECT_SEND = __commonJS({
   "node_modules/discord.js/src/client/websocket/handlers/VOICE_CHANNEL_EFFECT_SEND.js"(exports2, module2) {
     "use strict";
     var VoiceChannelEffect = require_VoiceChannelEffect();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     module2.exports = (client, { d: data2 }) => {
       const guild = client.guilds.cache.get(data2.guild_id);
       if (!guild) return;
-      client.emit(Events3.VoiceChannelEffectSend, new VoiceChannelEffect(data2, guild));
+      client.emit(Events11.VoiceChannelEffectSend, new VoiceChannelEffect(data2, guild));
     };
   }
 });
@@ -68367,14 +68367,14 @@ var require_VOICE_CHANNEL_EFFECT_SEND = __commonJS({
 var require_VOICE_SERVER_UPDATE = __commonJS({
   "node_modules/discord.js/src/client/websocket/handlers/VOICE_SERVER_UPDATE.js"(exports2, module2) {
     "use strict";
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     module2.exports = (client, { d: data2 }) => {
       client.emit(
-        Events3.Debug,
+        Events11.Debug,
         `[VOICE] received voice server: ${JSON.stringify({ ...data2, token: "*".repeat(data2.token.length) })}`
       );
       client.voice.onVoiceServer(data2);
-      client.emit(Events3.VoiceServerUpdate, {
+      client.emit(Events11.VoiceServerUpdate, {
         guildId: data2.guild_id,
         endpoint: data2.endpoint,
         token: data2.token
@@ -68504,7 +68504,7 @@ var require_WebSocketManager = __commonJS({
     var WebSocketShard = require_WebSocketShard();
     var PacketHandlers = require_handlers();
     var { DiscordjsError: DiscordjsError2, ErrorCodes: ErrorCodes2 } = require_errors2();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var Status2 = require_Status();
     var WebSocketShardEvents = require_WebSocketShardEvents();
     var zlib;
@@ -68562,7 +68562,7 @@ var require_WebSocketManager = __commonJS({
        */
       debug(messages, shardId) {
         this.client.emit(
-          Events3.Debug,
+          Events11.Debug,
           `[WS => ${typeof shardId === "number" ? `Shard ${shardId}` : "Manager"}] ${messages.join("\n	")}`
         );
       }
@@ -68617,7 +68617,7 @@ var require_WebSocketManager = __commonJS({
             const shard = new WebSocketShard(this, id);
             this.shards.set(id, shard);
             shard.on(WebSocketShardEvents.AllReady, (unavailableGuilds) => {
-              this.client.emit(Events3.ShardReady, shard.id, unavailableGuilds);
+              this.client.emit(Events11.ShardReady, shard.id, unavailableGuilds);
               this.checkShardsReady();
             });
             shard.status = Status2.Connecting;
@@ -68648,7 +68648,7 @@ var require_WebSocketManager = __commonJS({
       attachEvents() {
         this._ws.on(WSWebSocketShardEvents.Debug, ({ message, shardId }) => this.debug([message], shardId));
         this._ws.on(WSWebSocketShardEvents.Dispatch, ({ data: data2, shardId }) => {
-          this.client.emit(Events3.Raw, data2, shardId);
+          this.client.emit(Events11.Raw, data2, shardId);
           this.emit(data2.t, data2.d, shardId);
           const shard = this.shards.get(shardId);
           this.handlePacket(data2, shard);
@@ -68664,12 +68664,12 @@ var require_WebSocketManager = __commonJS({
           shard.emit(WebSocketShardEvents.Close, { code, reason: reasonIsDeprecated, wasClean: true });
           if (UNRECOVERABLE_CLOSE_CODES.includes(code)) {
             shard.status = Status2.Disconnected;
-            this.client.emit(Events3.ShardDisconnect, { code, reason: reasonIsDeprecated, wasClean: true }, shardId);
+            this.client.emit(Events11.ShardDisconnect, { code, reason: reasonIsDeprecated, wasClean: true }, shardId);
             this.debug([`Shard not recoverable: ${code} (${GatewayCloseCodes[code] ?? CloseCodes[code]})`], shardId);
             return;
           }
           this.shards.get(shardId).status = Status2.Connecting;
-          this.client.emit(Events3.ShardReconnecting, shardId);
+          this.client.emit(Events11.ShardReconnecting, shardId);
         });
         this._ws.on(WSWebSocketShardEvents.Hello, ({ shardId }) => {
           const shard = this.shards.get(shardId);
@@ -68692,7 +68692,7 @@ var require_WebSocketManager = __commonJS({
           shard.ping = latency;
         });
         this._ws.on(WSWebSocketShardEvents.Error, ({ error, shardId }) => {
-          this.client.emit(Events3.ShardError, error, shardId);
+          this.client.emit(Events11.ShardError, error, shardId);
         });
       }
       /**
@@ -68764,7 +68764,7 @@ var require_WebSocketManager = __commonJS({
             "DeprecationWarning"
           );
         }
-        this.client.emit(Events3.ClientReady, this.client);
+        this.client.emit(Events11.ClientReady, this.client);
         this.handlePacket();
       }
     };
@@ -68860,7 +68860,7 @@ var require_ChannelManager = __commonJS({
     var { BaseChannel } = require_BaseChannel();
     var { createChannel } = require_Channels();
     var { ThreadChannelTypes } = require_Constants();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var cacheWarningEmitted = false;
     var ChannelManager2 = class extends CachedManager {
       constructor(client, iterable) {
@@ -68891,7 +68891,7 @@ var require_ChannelManager = __commonJS({
         }
         const channel = createChannel(this.client, data2, guild, { allowUnknownGuild });
         if (!channel) {
-          this.client.emit(Events3.Debug, `Failed to find guild, or unknown type for channel ${data2.id} ${data2.type}`);
+          this.client.emit(Events11.Debug, `Failed to find guild, or unknown type for channel ${data2.id} ${data2.type}`);
           return null;
         }
         if (cache && !allowUnknownGuild) this.cache.set(channel.id, channel);
@@ -68971,7 +68971,7 @@ var require_ShardClientUtil = __commonJS({
     var process2 = require("node:process");
     var { calculateShardId } = require_dist2();
     var { DiscordjsError: DiscordjsError2, DiscordjsTypeError: DiscordjsTypeError2, ErrorCodes: ErrorCodes2 } = require_errors2();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var { makeError, makePlainError } = require_Util();
     var ShardClientUtil2 = class {
       constructor(client, mode) {
@@ -68981,32 +68981,32 @@ var require_ShardClientUtil = __commonJS({
         switch (mode) {
           case "process":
             process2.on("message", this._handleMessage.bind(this));
-            client.on(Events3.ShardReady, () => {
+            client.on(Events11.ShardReady, () => {
               process2.send({ _ready: true });
             });
-            client.on(Events3.ShardDisconnect, () => {
+            client.on(Events11.ShardDisconnect, () => {
               process2.send({ _disconnect: true });
             });
-            client.on(Events3.ShardReconnecting, () => {
+            client.on(Events11.ShardReconnecting, () => {
               process2.send({ _reconnecting: true });
             });
-            client.on(Events3.ShardResume, () => {
+            client.on(Events11.ShardResume, () => {
               process2.send({ _resume: true });
             });
             break;
           case "worker":
             this.parentPort = require("node:worker_threads").parentPort;
             this.parentPort.on("message", this._handleMessage.bind(this));
-            client.on(Events3.ShardReady, () => {
+            client.on(Events11.ShardReady, () => {
               this.parentPort.postMessage({ _ready: true });
             });
-            client.on(Events3.ShardDisconnect, () => {
+            client.on(Events11.ShardDisconnect, () => {
               this.parentPort.postMessage({ _disconnect: true });
             });
-            client.on(Events3.ShardReconnecting, () => {
+            client.on(Events11.ShardReconnecting, () => {
               this.parentPort.postMessage({ _reconnecting: true });
             });
-            client.on(Events3.ShardResume, () => {
+            client.on(Events11.ShardResume, () => {
               this.parentPort.postMessage({ _resume: true });
             });
             break;
@@ -69158,7 +69158,7 @@ var require_ShardClientUtil = __commonJS({
         this.send(message).catch((err) => {
           const error = new Error(`Error when sending ${type} response to master process: ${err.message}`);
           error.stack = err.stack;
-          this.client.emit(Events3.Error, error);
+          this.client.emit(Events11.Error, error);
         });
       }
       /**
@@ -69172,7 +69172,7 @@ var require_ShardClientUtil = __commonJS({
           this._singleton = new this(client, mode);
         } else {
           client.emit(
-            Events3.Warn,
+            Events11.Warn,
             "Multiple clients created in child process/worker; only the first will handle sharding helpers."
           );
         }
@@ -69555,7 +69555,7 @@ var require_AutoModerationRuleManager = __commonJS({
         enabled,
         exemptRoles,
         exemptChannels,
-        reason
+        reason: reason2
       }) {
         const data2 = await this.client.rest.post(Routes4.guildAutoModerationRules(this.guild.id), {
           body: {
@@ -69582,7 +69582,7 @@ var require_AutoModerationRuleManager = __commonJS({
             exempt_roles: exemptRoles?.map((exemptRole) => this.guild.roles.resolveId(exemptRole)),
             exempt_channels: exemptChannels?.map((exemptChannel) => this.guild.channels.resolveId(exemptChannel))
           },
-          reason
+          reason: reason2
         });
         return this._add(data2);
       }
@@ -69607,7 +69607,7 @@ var require_AutoModerationRuleManager = __commonJS({
        * @param {AutoModerationRuleEditOptions} options Options for editing the auto moderation rule
        * @returns {Promise<AutoModerationRule>}
        */
-      async edit(autoModerationRule, { name, eventType, triggerMetadata, actions, enabled, exemptRoles, exemptChannels, reason }) {
+      async edit(autoModerationRule, { name, eventType, triggerMetadata, actions, enabled, exemptRoles, exemptChannels, reason: reason2 }) {
         const autoModerationRuleId = this.resolveId(autoModerationRule);
         const data2 = await this.client.rest.patch(Routes4.guildAutoModerationRule(this.guild.id, autoModerationRuleId), {
           body: {
@@ -69633,7 +69633,7 @@ var require_AutoModerationRuleManager = __commonJS({
             exempt_roles: exemptRoles?.map((exemptRole) => this.guild.roles.resolveId(exemptRole)),
             exempt_channels: exemptChannels?.map((exemptChannel) => this.guild.channels.resolveId(exemptChannel))
           },
-          reason
+          reason: reason2
         });
         return this._add(data2);
       }
@@ -69704,9 +69704,9 @@ var require_AutoModerationRuleManager = __commonJS({
        * @param {string} [reason] The reason for deleting the auto moderation rule
        * @returns {Promise<void>}
        */
-      async delete(autoModerationRule, reason) {
+      async delete(autoModerationRule, reason2) {
         const autoModerationRuleId = this.resolveId(autoModerationRule);
-        await this.client.rest.delete(Routes4.guildAutoModerationRule(this.guild.id, autoModerationRuleId), { reason });
+        await this.client.rest.delete(Routes4.guildAutoModerationRule(this.guild.id, autoModerationRuleId), { reason: reason2 });
       }
     };
     module2.exports = AutoModerationRuleManager;
@@ -69895,10 +69895,10 @@ var require_GuildBanManager = __commonJS({
        *   .then(user => console.log(`Unbanned ${user.username} from ${guild.name}`))
        *   .catch(console.error);
        */
-      async remove(user, reason) {
+      async remove(user, reason2) {
         const id = this.client.users.resolveId(user);
         if (!id) throw new DiscordjsError2(ErrorCodes2.BanResolveId);
-        await this.client.rest.delete(Routes4.guildBan(this.guild.id, id), { reason });
+        await this.client.rest.delete(Routes4.guildBan(this.guild.id, id), { reason: reason2 });
         return this.client.users.resolve(user);
       }
       /**
@@ -69952,7 +69952,7 @@ var require_GuildChannelManager = __commonJS({
     "use strict";
     var process2 = require("node:process");
     var { Collection: Collection2 } = require_dist7();
-    var { ChannelType: ChannelType5, Routes: Routes4 } = require_v106();
+    var { ChannelType: ChannelType8, Routes: Routes4 } = require_v106();
     var CachedManager = require_CachedManager();
     var GuildTextThreadManager = require_GuildTextThreadManager();
     var { DiscordjsError: DiscordjsError2, DiscordjsTypeError: DiscordjsTypeError2, ErrorCodes: ErrorCodes2 } = require_errors2();
@@ -70040,7 +70040,7 @@ var require_GuildChannelManager = __commonJS({
        * @param {string} [reason] Reason for creating the webhook
        * @returns {Promise<Snowflake>} Returns created target webhook id.
        */
-      async addFollower(channel, targetChannel, reason) {
+      async addFollower(channel, targetChannel, reason2) {
         const channelId = this.resolveId(channel);
         if (!channelId) {
           throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "channel", "NewsChannelResolvable");
@@ -70051,7 +70051,7 @@ var require_GuildChannelManager = __commonJS({
         }
         const { webhook_id } = await this.client.rest.post(Routes4.channelFollowers(channelId), {
           body: { webhook_channel_id: targetChannelId },
-          reason
+          reason: reason2
         });
         return webhook_id;
       }
@@ -70101,7 +70101,7 @@ var require_GuildChannelManager = __commonJS({
         defaultAutoArchiveDuration,
         defaultSortOrder,
         defaultForumLayout,
-        reason
+        reason: reason2
       }) {
         parent &&= this.client.channels.resolveId(parent);
         permissionOverwrites &&= permissionOverwrites.map((overwrite) => PermissionOverwrites.resolve(overwrite, this.guild));
@@ -70126,7 +70126,7 @@ var require_GuildChannelManager = __commonJS({
             default_sort_order: defaultSortOrder,
             default_forum_layout: defaultForumLayout
           },
-          reason
+          reason: reason2
         });
         return this.client.actions.ChannelCreate.handle(data2).channel;
       }
@@ -70150,7 +70150,7 @@ var require_GuildChannelManager = __commonJS({
        *   .then(console.log)
        *   .catch(console.error)
        */
-      async createWebhook({ channel, name, avatar, reason }) {
+      async createWebhook({ channel, name, avatar, reason: reason2 }) {
         const id = this.resolveId(channel);
         if (!id) throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "channel", "GuildChannelResolvable");
         const resolvedImage = await resolveImage(avatar);
@@ -70159,7 +70159,7 @@ var require_GuildChannelManager = __commonJS({
             name,
             avatar: resolvedImage
           },
-          reason
+          reason: reason2
         });
         return new Webhook2(this.client, data2);
       }
@@ -70215,7 +70215,7 @@ var require_GuildChannelManager = __commonJS({
         if (options.lockPermissions) {
           if (parentId) {
             const newParent = this.cache.get(parentId);
-            if (newParent?.type === ChannelType5.GuildCategory) {
+            if (newParent?.type === ChannelType8.GuildCategory) {
               permission_overwrites = newParent.permissionOverwrites.cache.map(
                 (overwrite) => PermissionOverwrites.resolve(overwrite, this.guild)
               );
@@ -70264,7 +70264,7 @@ var require_GuildChannelManager = __commonJS({
        *   .then(newChannel => console.log(`Channel's new position is ${newChannel.position}`))
        *   .catch(console.error);
        */
-      async setPosition(channel, position, { relative, reason } = {}) {
+      async setPosition(channel, position, { relative, reason: reason2 } = {}) {
         channel = this.resolve(channel);
         if (!channel) throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "channel", "GuildChannelResolvable");
         const updatedChannels = await setPosition(
@@ -70274,7 +70274,7 @@ var require_GuildChannelManager = __commonJS({
           this.guild._sortedChannels(channel),
           this.client,
           Routes4.guildChannels(this.guild.id),
-          reason
+          reason2
         );
         this.client.actions.GuildChannelsPositionUpdate.handle({
           guild_id: this.guild.id,
@@ -70405,10 +70405,10 @@ var require_GuildChannelManager = __commonJS({
        *   .then(console.log)
        *   .catch(console.error);
        */
-      async delete(channel, reason) {
+      async delete(channel, reason2) {
         const id = this.resolveId(channel);
         if (!id) throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "channel", "GuildChannelResolvable");
-        await this.client.rest.delete(Routes4.channel(id), { reason });
+        await this.client.rest.delete(Routes4.channel(id), { reason: reason2 });
         this.client.actions.ChannelDelete.handle({ id });
       }
     };
@@ -70421,7 +70421,7 @@ var require_GuildEmojiManager = __commonJS({
   "node_modules/discord.js/src/managers/GuildEmojiManager.js"(exports2, module2) {
     "use strict";
     var { Collection: Collection2 } = require_dist7();
-    var { Routes: Routes4, PermissionFlagsBits: PermissionFlagsBits5 } = require_v106();
+    var { Routes: Routes4, PermissionFlagsBits: PermissionFlagsBits13 } = require_v106();
     var BaseGuildEmojiManager2 = require_BaseGuildEmojiManager();
     var { DiscordjsError: DiscordjsError2, DiscordjsTypeError: DiscordjsTypeError2, ErrorCodes: ErrorCodes2 } = require_errors2();
     var { resolveImage } = require_DataResolver();
@@ -70456,7 +70456,7 @@ var require_GuildEmojiManager = __commonJS({
        *   .then(emoji => console.log(`Created new emoji with name ${emoji.name}!`))
        *   .catch(console.error);
        */
-      async create({ attachment, name, roles, reason }) {
+      async create({ attachment, name, roles, reason: reason2 }) {
         attachment = await resolveImage(attachment);
         if (!attachment) throw new DiscordjsTypeError2(ErrorCodes2.ReqResourceType);
         const body = { image: attachment, name };
@@ -70478,7 +70478,7 @@ var require_GuildEmojiManager = __commonJS({
             body.roles.push(resolvedRole);
           }
         }
-        const emoji = await this.client.rest.post(Routes4.guildEmojis(this.guild.id), { body, reason });
+        const emoji = await this.client.rest.post(Routes4.guildEmojis(this.guild.id), { body, reason: reason2 });
         return this.client.actions.GuildEmojiCreate.handle(this.guild, emoji).emoji;
       }
       /**
@@ -70517,10 +70517,10 @@ var require_GuildEmojiManager = __commonJS({
        * @param {string} [reason] Reason for deleting the emoji
        * @returns {Promise<void>}
        */
-      async delete(emoji, reason) {
+      async delete(emoji, reason2) {
         const id = this.resolveId(emoji);
         if (!id) throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "emoji", "EmojiResolvable", true);
-        await this.client.rest.delete(Routes4.guildEmoji(this.guild.id, id), { reason });
+        await this.client.rest.delete(Routes4.guildEmoji(this.guild.id, id), { reason: reason2 });
       }
       /**
        * Edits an emoji.
@@ -70560,7 +70560,7 @@ var require_GuildEmojiManager = __commonJS({
         }
         const { me } = this.guild.members;
         if (!me) throw new DiscordjsError2(ErrorCodes2.GuildUncachedMe);
-        if (!me.permissions.any(PermissionFlagsBits5.CreateGuildExpressions | PermissionFlagsBits5.ManageGuildExpressions)) {
+        if (!me.permissions.any(PermissionFlagsBits13.CreateGuildExpressions | PermissionFlagsBits13.ManageGuildExpressions)) {
           throw new DiscordjsError2(ErrorCodes2.MissingManageGuildExpressionsPermission, this.guild);
         }
         const data2 = await this.client.rest.get(Routes4.guildEmoji(this.guild.id, emoji.id));
@@ -70751,7 +70751,7 @@ var require_GuildInviteManager = __commonJS({
         targetType,
         roles,
         targetUsersFile,
-        reason
+        reason: reason2
       } = {}) {
         const id = this.guild.channels.resolveId(channel);
         if (!id) throw new DiscordjsError2(ErrorCodes2.GuildChannelResolve);
@@ -70767,7 +70767,7 @@ var require_GuildInviteManager = __commonJS({
         };
         const invite = await this.client.rest.post(Routes4.channelInvites(id), {
           body: options,
-          reason,
+          reason: reason2,
           files: targetUsersFile ? [
             {
               key: "target_users_file",
@@ -70785,9 +70785,9 @@ var require_GuildInviteManager = __commonJS({
        * @param {string} [reason] Reason for deleting the invite
        * @returns {Promise<void>}
        */
-      async delete(invite, reason) {
+      async delete(invite, reason2) {
         const code = resolveInviteCode2(invite);
-        await this.client.rest.delete(Routes4.invite(code), { reason });
+        await this.client.rest.delete(Routes4.invite(code), { reason: reason2 });
       }
       /**
        * Get target users for an invite.
@@ -70854,9 +70854,9 @@ var require_GuildMemberManager = __commonJS({
     var { GuildMember } = require_GuildMember();
     var { Role } = require_Role();
     var { resolveImage } = require_DataResolver();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var { GuildMemberFlagsBitField } = require_GuildMemberFlagsBitField();
-    var Partials = require_Partials();
+    var Partials2 = require_Partials();
     var deprecatedEmittedForEditSoleNickname = false;
     var GuildMemberManager = class extends CachedManager {
       constructor(guild, iterable) {
@@ -70964,7 +70964,7 @@ var require_GuildMemberManager = __commonJS({
        * @readonly
        */
       get me() {
-        return this.cache.get(this.client.user.id) ?? (this.client.options.partials.includes(Partials.GuildMember) ? this._add({ user: { id: this.client.user.id } }, true) : null);
+        return this.cache.get(this.client.user.id) ?? (this.client.options.partials.includes(Partials2.GuildMember) ? this._add({ user: { id: this.client.user.id } }, true) : null);
       }
       /**
        * Options used to fetch a single member from a guild.
@@ -71048,9 +71048,9 @@ var require_GuildMemberManager = __commonJS({
           let i = 0;
           const cleanup = () => {
             clearTimeout2(timeout);
-            this.client.removeListener(Events3.Raw, rateLimitHandler);
+            this.client.removeListener(Events11.Raw, rateLimitHandler);
             this.client.decrementMaxListeners();
-            this.client.removeListener(Events3.GuildMembersChunk, handler);
+            this.client.removeListener(Events11.GuildMembersChunk, handler);
             this.client.decrementMaxListeners();
           };
           const timeout = setTimeout2(() => {
@@ -71084,9 +71084,9 @@ var require_GuildMemberManager = __commonJS({
             }
           };
           this.client.incrementMaxListeners();
-          this.client.on(Events3.Raw, rateLimitHandler);
+          this.client.on(Events11.Raw, rateLimitHandler);
           this.client.incrementMaxListeners();
-          this.client.on(Events3.GuildMembersChunk, handler);
+          this.client.on(Events11.GuildMembersChunk, handler);
           this.guild.shard.send({
             op: GatewayOpcodes.RequestGuildMembers,
             d: requestData
@@ -71157,7 +71157,7 @@ var require_GuildMemberManager = __commonJS({
        * @param {GuildMemberEditOptions} options The options to provide
        * @returns {Promise<GuildMember>}
        */
-      async edit(user, { reason, ...options }) {
+      async edit(user, { reason: reason2, ...options }) {
         const id = this.client.users.resolveId(user);
         if (!id) throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "user", "UserResolvable");
         if (options.channel) {
@@ -71195,7 +71195,7 @@ var require_GuildMemberManager = __commonJS({
           }
         }
         endpoint ??= Routes4.guildMember(this.guild.id, id);
-        const d = await this.client.rest.patch(endpoint, { body: options, reason });
+        const d = await this.client.rest.patch(endpoint, { body: options, reason: reason2 });
         const clone = this.cache.get(id)?._clone();
         clone?._patch(d);
         return clone ?? this._add(d, false);
@@ -71216,14 +71216,14 @@ var require_GuildMemberManager = __commonJS({
        * @param {GuildMemberEditMeOptions} options The options to provide
        * @returns {Promise<GuildMember>}
        */
-      async editMe({ reason, ...options }) {
+      async editMe({ reason: reason2, ...options }) {
         const data2 = await this.client.rest.patch(Routes4.guildMember(this.guild.id, "@me"), {
           body: {
             ...options,
             banner: options.banner && await resolveImage(options.banner),
             avatar: options.avatar && await resolveImage(options.avatar)
           },
-          reason
+          reason: reason2
         });
         const clone = this.me?._clone();
         clone?._patch(data2);
@@ -71260,7 +71260,7 @@ var require_GuildMemberManager = __commonJS({
        *    .then(pruned => console.log(`I just pruned ${pruned} people!`))
        *    .catch(console.error);
        */
-      async prune({ days, dry = false, count: compute_prune_count, roles = [], reason } = {}) {
+      async prune({ days, dry = false, count: compute_prune_count, roles = [], reason: reason2 } = {}) {
         if (typeof days !== "number") throw new DiscordjsTypeError2(ErrorCodes2.PruneDaysType);
         const query = { days };
         const resolvedRoles = [];
@@ -71275,7 +71275,7 @@ var require_GuildMemberManager = __commonJS({
           query.include_roles = dry ? resolvedRoles.join(",") : resolvedRoles;
         }
         const endpoint = Routes4.guildPrune(this.guild.id);
-        const { pruned } = await (dry ? this.client.rest.get(endpoint, { query: makeURLSearchParams2(query), reason }) : this.client.rest.post(endpoint, { body: { ...query, compute_prune_count }, reason }));
+        const { pruned } = await (dry ? this.client.rest.get(endpoint, { query: makeURLSearchParams2(query), reason: reason2 }) : this.client.rest.post(endpoint, { body: { ...query, compute_prune_count }, reason: reason2 }));
         return pruned;
       }
       /**
@@ -71292,10 +71292,10 @@ var require_GuildMemberManager = __commonJS({
        *   .then(kickInfo => console.log(`Kicked ${kickInfo.user?.tag ?? kickInfo.tag ?? kickInfo}`))
        *   .catch(console.error);
        */
-      async kick(user, reason) {
+      async kick(user, reason2) {
         const id = this.client.users.resolveId(user);
         if (!id) throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "user", "UserResolvable");
-        await this.client.rest.delete(Routes4.guildMember(this.guild.id, id), { reason });
+        await this.client.rest.delete(Routes4.guildMember(this.guild.id, id), { reason: reason2 });
         return this.resolve(user) ?? this.client.users.resolve(user) ?? id;
       }
       /**
@@ -71326,8 +71326,8 @@ var require_GuildMemberManager = __commonJS({
        *   .then(user => console.log(`Unbanned ${user.username} from ${guild.name}`))
        *   .catch(console.error);
        */
-      unban(user, reason) {
-        return this.guild.bans.remove(user, reason);
+      unban(user, reason2) {
+        return this.guild.bans.remove(user, reason2);
       }
       /**
        * Bulk ban users from a guild, and optionally delete previous messages sent by them.
@@ -71360,10 +71360,10 @@ var require_GuildMemberManager = __commonJS({
        * @returns {Promise<GuildMember|User|Snowflake>}
        */
       async addRole(options) {
-        const { user, role, reason } = options;
+        const { user, role, reason: reason2 } = options;
         const userId = this.resolveId(user);
         const roleId = this.guild.roles.resolveId(role);
-        await this.client.rest.put(Routes4.guildMemberRole(this.guild.id, userId, roleId), { reason });
+        await this.client.rest.put(Routes4.guildMemberRole(this.guild.id, userId, roleId), { reason: reason2 });
         return this.resolve(user) ?? this.client.users.resolve(user) ?? userId;
       }
       /**
@@ -71372,10 +71372,10 @@ var require_GuildMemberManager = __commonJS({
        * @returns {Promise<GuildMember|User|Snowflake>}
        */
       async removeRole(options) {
-        const { user, role, reason } = options;
+        const { user, role, reason: reason2 } = options;
         const userId = this.resolveId(user);
         const roleId = this.guild.roles.resolveId(role);
-        await this.client.rest.delete(Routes4.guildMemberRole(this.guild.id, userId, roleId), { reason });
+        await this.client.rest.delete(Routes4.guildMemberRole(this.guild.id, userId, roleId), { reason: reason2 });
         return this.resolve(user) ?? this.client.users.resolve(user) ?? userId;
       }
     };
@@ -71465,7 +71465,7 @@ var require_GuildScheduledEventManager = __commonJS({
           description,
           scheduledEndTime,
           entityMetadata,
-          reason,
+          reason: reason2,
           image,
           recurrenceRule
         } = options;
@@ -71491,7 +71491,7 @@ var require_GuildScheduledEventManager = __commonJS({
             image: image && await resolveImage(image),
             recurrence_rule: recurrenceRule && _transformGuildScheduledEventRecurrenceRule(recurrenceRule)
           },
-          reason
+          reason: reason2
         });
         return this._add(data2);
       }
@@ -71574,7 +71574,7 @@ var require_GuildScheduledEventManager = __commonJS({
           description,
           scheduledEndTime,
           entityMetadata,
-          reason,
+          reason: reason2,
           image,
           recurrenceRule
         } = options;
@@ -71598,7 +71598,7 @@ var require_GuildScheduledEventManager = __commonJS({
             entity_metadata,
             recurrence_rule: recurrenceRule && _transformGuildScheduledEventRecurrenceRule(recurrenceRule)
           },
-          reason
+          reason: reason2
         });
         return this._add(data2);
       }
@@ -71774,9 +71774,9 @@ var require_SoundboardSound = __commonJS({
        *   .then(sound => console.log(`Deleted soundboard sound ${sound.name}`))
        *   .catch(console.error);
        */
-      async delete(reason) {
+      async delete(reason2) {
         if (!this.guildId) throw new DiscordjsError2(ErrorCodes2.NotGuildSoundboardSound, "deleted");
-        await this.guild.soundboardSounds.delete(this, reason);
+        await this.guild.soundboardSounds.delete(this, reason2);
         return this;
       }
       /**
@@ -71865,14 +71865,14 @@ var require_GuildSoundboardSoundManager = __commonJS({
        *   .then(sound => console.log(`Created new soundboard sound with name ${sound.name}!`))
        *   .catch(console.error);
        */
-      async create({ contentType, emojiId, emojiName, file, name, reason, volume }) {
+      async create({ contentType, emojiId, emojiName, file, name, reason: reason2, volume }) {
         const resolvedFile = await resolveFile(file);
         const resolvedContentType = contentType ?? resolvedFile.contentType ?? fileTypeMime()(resolvedFile.data)[0];
         const sound = resolveBase64(resolvedFile.data, resolvedContentType);
         const body = { emoji_id: emojiId, emoji_name: emojiName, name, sound, volume };
         const soundboardSound = await this.client.rest.post(Routes4.guildSoundboardSounds(this.guild.id), {
           body,
-          reason
+          reason: reason2
         });
         return this._add(soundboardSound);
       }
@@ -71894,11 +71894,11 @@ var require_GuildSoundboardSoundManager = __commonJS({
       async edit(soundboardSound, options = {}) {
         const soundId = this.resolveId(soundboardSound);
         if (!soundId) throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "soundboardSound", "SoundboardSoundResolvable");
-        const { emojiId, emojiName, name, reason, volume } = options;
+        const { emojiId, emojiName, name, reason: reason2, volume } = options;
         const body = { emoji_id: emojiId, emoji_name: emojiName, name, volume };
         const data2 = await this.client.rest.patch(Routes4.guildSoundboardSound(this.guild.id, soundId), {
           body,
-          reason
+          reason: reason2
         });
         const existing = this.cache.get(soundId);
         if (existing) {
@@ -71914,10 +71914,10 @@ var require_GuildSoundboardSoundManager = __commonJS({
        * @param {string} [reason] Reason for deleting this soundboard sound
        * @returns {Promise<void>}
        */
-      async delete(soundboardSound, reason) {
+      async delete(soundboardSound, reason2) {
         const soundId = this.resolveId(soundboardSound);
         if (!soundId) throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "soundboardSound", "SoundboardSoundResolvable");
-        await this.client.rest.delete(Routes4.guildSoundboardSound(this.guild.id, soundId), { reason });
+        await this.client.rest.delete(Routes4.guildSoundboardSound(this.guild.id, soundId), { reason: reason2 });
       }
       /**
        * Options used to fetch a soundboard sound.
@@ -72017,7 +72017,7 @@ var require_GuildStickerManager = __commonJS({
        *   .then(sticker => console.log(`Created new sticker with name ${sticker.name}!`))
        *   .catch(console.error);
        */
-      async create({ file, name, tags, description, reason } = {}) {
+      async create({ file, name, tags, description, reason: reason2 } = {}) {
         const resolvedFile = await MessagePayload.resolveFile(file);
         if (!resolvedFile) throw new DiscordjsTypeError2(ErrorCodes2.ReqResourceType);
         file = { ...resolvedFile, key: "file" };
@@ -72026,7 +72026,7 @@ var require_GuildStickerManager = __commonJS({
           appendToFormData: true,
           body,
           files: [file],
-          reason
+          reason: reason2
         });
         return this.client.actions.GuildStickerCreate.handle(this.guild, sticker).sticker;
       }
@@ -72079,10 +72079,10 @@ var require_GuildStickerManager = __commonJS({
        * @param {string} [reason] Reason for deleting this sticker
        * @returns {Promise<void>}
        */
-      async delete(sticker, reason) {
+      async delete(sticker, reason2) {
         sticker = this.resolveId(sticker);
         if (!sticker) throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "sticker", "StickerResolvable");
-        await this.client.rest.delete(Routes4.guildSticker(this.guild.id, sticker), { reason });
+        await this.client.rest.delete(Routes4.guildSticker(this.guild.id, sticker), { reason: reason2 });
       }
       /**
        * Obtains one or more stickers from Discord, or the sticker cache if they're already available.
@@ -72550,7 +72550,7 @@ var require_RoleManager = __commonJS({
        */
       async create(options = {}) {
         let { permissions, icon } = options;
-        const { name, color, hoist, position, mentionable, reason, unicodeEmoji } = options;
+        const { name, color, hoist, position, mentionable, reason: reason2, unicodeEmoji } = options;
         if (permissions !== void 0) permissions = new PermissionsBitField2(permissions);
         if (icon) {
           const guildEmojiURL = this.guild.emojis.resolve(icon)?.imageURL();
@@ -72583,13 +72583,13 @@ var require_RoleManager = __commonJS({
             icon,
             unicode_emoji: unicodeEmoji
           },
-          reason
+          reason: reason2
         });
         const { role } = this.client.actions.GuildRoleCreate.handle({
           guild_id: this.guild.id,
           role: data2
         });
-        if (position) return this.setPosition(role, position, { reason });
+        if (position) return this.setPosition(role, position, { reason: reason2 });
         return role;
       }
       /**
@@ -72662,9 +72662,9 @@ var require_RoleManager = __commonJS({
        *   .then(() => console.log('Deleted the role'))
        *   .catch(console.error);
        */
-      async delete(role, reason) {
+      async delete(role, reason2) {
         const id = this.resolveId(role);
-        await this.client.rest.delete(Routes4.guildRole(this.guild.id, id), { reason });
+        await this.client.rest.delete(Routes4.guildRole(this.guild.id, id), { reason: reason2 });
         this.client.actions.GuildRoleDelete.handle({ guild_id: this.guild.id, role_id: id });
       }
       /**
@@ -72679,7 +72679,7 @@ var require_RoleManager = __commonJS({
        *   .then(updated => console.log(`Role position: ${updated.position}`))
        *   .catch(console.error);
        */
-      async setPosition(role, position, { relative, reason } = {}) {
+      async setPosition(role, position, { relative, reason: reason2 } = {}) {
         role = this.resolve(role);
         if (!role) throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "role", "RoleResolvable");
         const updatedRoles = await setPosition(
@@ -72689,7 +72689,7 @@ var require_RoleManager = __commonJS({
           this.guild._sortedRoles(),
           this.client,
           Routes4.guildRoles(this.guild.id),
-          reason
+          reason2
         );
         this.client.actions.GuildRolesPositionUpdate.handle({
           guild_id: this.guild.id,
@@ -72992,7 +72992,7 @@ var require_Guild = __commonJS({
     var { Collection: Collection2 } = require_dist7();
     var { makeURLSearchParams: makeURLSearchParams2 } = require_dist6();
     var { DiscordSnowflake } = require_cjs();
-    var { ChannelType: ChannelType5, GuildPremiumTier, Routes: Routes4, GuildFeature } = require_v106();
+    var { ChannelType: ChannelType8, GuildPremiumTier, Routes: Routes4, GuildFeature } = require_v106();
     var AnonymousGuild = require_AnonymousGuild();
     var GuildAuditLogs = require_GuildAuditLogs();
     var { GuildOnboarding } = require_GuildOnboarding();
@@ -73767,8 +73767,8 @@ var require_Guild = __commonJS({
        * @param {string} [reason] Reason for changing the level of the guild's explicit content filter
        * @returns {Promise<Guild>}
        */
-      setExplicitContentFilter(explicitContentFilter, reason) {
-        return this.edit({ explicitContentFilter, reason });
+      setExplicitContentFilter(explicitContentFilter, reason2) {
+        return this.edit({ explicitContentFilter, reason: reason2 });
       }
       /**
        * Edits the setting of the default message notifications of the guild.
@@ -73777,8 +73777,8 @@ var require_Guild = __commonJS({
        * @param {string} [reason] Reason for changing the setting of the default message notifications
        * @returns {Promise<Guild>}
        */
-      setDefaultMessageNotifications(defaultMessageNotifications, reason) {
-        return this.edit({ defaultMessageNotifications, reason });
+      setDefaultMessageNotifications(defaultMessageNotifications, reason2) {
+        return this.edit({ defaultMessageNotifications, reason: reason2 });
       }
       /**
        * Edits the flags of the default message notifications of the guild.
@@ -73786,8 +73786,8 @@ var require_Guild = __commonJS({
        * @param {string} [reason] Reason for changing the flags of the default message notifications
        * @returns {Promise<Guild>}
        */
-      setSystemChannelFlags(systemChannelFlags, reason) {
-        return this.edit({ systemChannelFlags, reason });
+      setSystemChannelFlags(systemChannelFlags, reason2) {
+        return this.edit({ systemChannelFlags, reason: reason2 });
       }
       /**
        * Edits the name of the guild.
@@ -73800,8 +73800,8 @@ var require_Guild = __commonJS({
        *  .then(updated => console.log(`Updated guild name to ${updated.name}`))
        *  .catch(console.error);
        */
-      setName(name, reason) {
-        return this.edit({ name, reason });
+      setName(name, reason2) {
+        return this.edit({ name, reason: reason2 });
       }
       /**
        * Edits the verification level of the guild.
@@ -73814,8 +73814,8 @@ var require_Guild = __commonJS({
        *  .then(updated => console.log(`Updated guild verification level to ${guild.verificationLevel}`))
        *  .catch(console.error);
        */
-      setVerificationLevel(verificationLevel, reason) {
-        return this.edit({ verificationLevel, reason });
+      setVerificationLevel(verificationLevel, reason2) {
+        return this.edit({ verificationLevel, reason: reason2 });
       }
       /**
        * Edits the AFK channel of the guild.
@@ -73828,8 +73828,8 @@ var require_Guild = __commonJS({
        *  .then(updated => console.log(`Updated guild AFK channel to ${guild.afkChannel.name}`))
        *  .catch(console.error);
        */
-      setAFKChannel(afkChannel, reason) {
-        return this.edit({ afkChannel, reason });
+      setAFKChannel(afkChannel, reason2) {
+        return this.edit({ afkChannel, reason: reason2 });
       }
       /**
        * Edits the system channel of the guild.
@@ -73842,8 +73842,8 @@ var require_Guild = __commonJS({
        *  .then(updated => console.log(`Updated guild system channel to ${guild.systemChannel.name}`))
        *  .catch(console.error);
        */
-      setSystemChannel(systemChannel, reason) {
-        return this.edit({ systemChannel, reason });
+      setSystemChannel(systemChannel, reason2) {
+        return this.edit({ systemChannel, reason: reason2 });
       }
       /**
        * Edits the AFK timeout of the guild.
@@ -73856,8 +73856,8 @@ var require_Guild = __commonJS({
        *  .then(updated => console.log(`Updated guild AFK timeout to ${guild.afkTimeout}`))
        *  .catch(console.error);
        */
-      setAFKTimeout(afkTimeout, reason) {
-        return this.edit({ afkTimeout, reason });
+      setAFKTimeout(afkTimeout, reason2) {
+        return this.edit({ afkTimeout, reason: reason2 });
       }
       /**
        * Sets a new guild icon.
@@ -73870,8 +73870,8 @@ var require_Guild = __commonJS({
        *  .then(updated => console.log('Updated the guild icon'))
        *  .catch(console.error);
        */
-      setIcon(icon, reason) {
-        return this.edit({ icon, reason });
+      setIcon(icon, reason2) {
+        return this.edit({ icon, reason: reason2 });
       }
       /**
        * Sets a new owner of the guild.
@@ -73880,8 +73880,8 @@ var require_Guild = __commonJS({
        * @returns {Promise<Guild>}
        * @deprecated API related to guild ownership may no longer be used.
        */
-      setOwner(owner, reason) {
-        return this.edit({ owner, reason });
+      setOwner(owner, reason2) {
+        return this.edit({ owner, reason: reason2 });
       }
       /**
        * Sets a new guild invite splash image.
@@ -73894,8 +73894,8 @@ var require_Guild = __commonJS({
        *  .then(updated => console.log('Updated the guild splash'))
        *  .catch(console.error);
        */
-      setSplash(splash, reason) {
-        return this.edit({ splash, reason });
+      setSplash(splash, reason2) {
+        return this.edit({ splash, reason: reason2 });
       }
       /**
        * Sets a new guild discovery splash image.
@@ -73908,8 +73908,8 @@ var require_Guild = __commonJS({
        *   .then(updated => console.log('Updated the guild discovery splash'))
        *   .catch(console.error);
        */
-      setDiscoverySplash(discoverySplash, reason) {
-        return this.edit({ discoverySplash, reason });
+      setDiscoverySplash(discoverySplash, reason2) {
+        return this.edit({ discoverySplash, reason: reason2 });
       }
       /**
        * Sets a new guild banner.
@@ -73921,8 +73921,8 @@ var require_Guild = __commonJS({
        *  .then(updated => console.log('Updated the guild banner'))
        *  .catch(console.error);
        */
-      setBanner(banner, reason) {
-        return this.edit({ banner, reason });
+      setBanner(banner, reason2) {
+        return this.edit({ banner, reason: reason2 });
       }
       /**
        * Edits the rules channel of the guild.
@@ -73935,8 +73935,8 @@ var require_Guild = __commonJS({
        *  .then(updated => console.log(`Updated guild rules channel to ${guild.rulesChannel.name}`))
        *  .catch(console.error);
        */
-      setRulesChannel(rulesChannel, reason) {
-        return this.edit({ rulesChannel, reason });
+      setRulesChannel(rulesChannel, reason2) {
+        return this.edit({ rulesChannel, reason: reason2 });
       }
       /**
        * Edits the community updates channel of the guild.
@@ -73949,8 +73949,8 @@ var require_Guild = __commonJS({
        *  .then(updated => console.log(`Updated guild community updates channel to ${guild.publicUpdatesChannel.name}`))
        *  .catch(console.error);
        */
-      setPublicUpdatesChannel(publicUpdatesChannel, reason) {
-        return this.edit({ publicUpdatesChannel, reason });
+      setPublicUpdatesChannel(publicUpdatesChannel, reason2) {
+        return this.edit({ publicUpdatesChannel, reason: reason2 });
       }
       /**
        * Edits the preferred locale of the guild.
@@ -73963,8 +73963,8 @@ var require_Guild = __commonJS({
        *  .then(updated => console.log(`Updated guild preferred locale to ${guild.preferredLocale}`))
        *  .catch(console.error);
        */
-      setPreferredLocale(preferredLocale, reason) {
-        return this.edit({ preferredLocale, reason });
+      setPreferredLocale(preferredLocale, reason2) {
+        return this.edit({ preferredLocale, reason: reason2 });
       }
       /**
        * Edits the enabled state of the guild's premium progress bar
@@ -73972,8 +73972,8 @@ var require_Guild = __commonJS({
        * @param {string} [reason] Reason for changing the state of the guild's premium progress bar
        * @returns {Promise<Guild>}
        */
-      setPremiumProgressBarEnabled(enabled = true, reason) {
-        return this.edit({ premiumProgressBarEnabled: enabled, reason });
+      setPremiumProgressBarEnabled(enabled = true, reason2) {
+        return this.edit({ premiumProgressBarEnabled: enabled, reason: reason2 });
       }
       /**
        * Edits the safety alerts channel of the guild.
@@ -73986,8 +73986,8 @@ var require_Guild = __commonJS({
        *  .then(updated => console.log(`Updated guild safety alerts channel to ${updated.safetyAlertsChannel.name}`))
        *  .catch(console.error);
        */
-      setSafetyAlertsChannel(safetyAlertsChannel, reason) {
-        return this.edit({ safetyAlertsChannel, reason });
+      setSafetyAlertsChannel(safetyAlertsChannel, reason2) {
+        return this.edit({ safetyAlertsChannel, reason: reason2 });
       }
       /**
        * Edits the guild's widget settings.
@@ -73995,13 +73995,13 @@ var require_Guild = __commonJS({
        * @param {string} [reason] Reason for changing the guild's widget settings
        * @returns {Promise<Guild>}
        */
-      async setWidgetSettings(settings, reason) {
+      async setWidgetSettings(settings, reason2) {
         await this.client.rest.patch(Routes4.guildWidgetSettings(this.id), {
           body: {
             enabled: settings.enabled,
             channel_id: this.channels.resolveId(settings.channel)
           },
-          reason
+          reason: reason2
         });
         return this;
       }
@@ -74013,12 +74013,12 @@ var require_Guild = __commonJS({
        * @returns {Promise<Guild>}
        * @deprecated API related to guild ownership may no longer be used.
        */
-      async setMFALevel(level, reason) {
+      async setMFALevel(level, reason2) {
         await this.client.rest.post(Routes4.guildMFA(this.id), {
           body: {
             level
           },
-          reason
+          reason: reason2
         });
         return this;
       }
@@ -74128,7 +74128,7 @@ var require_Guild = __commonJS({
        * @private
        */
       _sortedChannels(channel) {
-        const channelIsCategory = channel.type === ChannelType5.GuildCategory;
+        const channelIsCategory = channel.type === ChannelType8.GuildCategory;
         const types = getSortableGroupTypes(channel.type);
         return discordSort(
           this.channels.cache.filter(
@@ -74178,7 +74178,7 @@ var require_GuildManager = __commonJS({
     var OAuth2Guild = require_OAuth2Guild();
     var { Role } = require_Role();
     var { resolveImage } = require_DataResolver();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var PermissionsBitField2 = require_PermissionsBitField();
     var SystemChannelFlagsBitField = require_SystemChannelFlagsBitField();
     var { _transformAPIIncidentsData } = require_Transformers();
@@ -74364,9 +74364,9 @@ var require_GuildManager = __commonJS({
             }
           };
           this.client.incrementMaxListeners();
-          this.client.once(Events3.GuildCreate, handleGuild);
+          this.client.once(Events11.GuildCreate, handleGuild);
           const timeout = setTimeout2(() => {
-            this.client.removeListener(Events3.GuildCreate, handleGuild);
+            this.client.removeListener(Events11.GuildCreate, handleGuild);
             this.client.decrementMaxListeners();
             resolve3(this.client.guilds._add(data2));
           }, 1e4).unref();
@@ -74450,18 +74450,18 @@ var require_GuildManager = __commonJS({
             remainingGuildIds.delete(guild.id);
             if (remainingGuildIds.size === 0) {
               clearTimeout2(timeout);
-              this.client.removeListener(Events3.SoundboardSounds, handler);
+              this.client.removeListener(Events11.SoundboardSounds, handler);
               this.client.decrementMaxListeners();
               resolve3(fetchedSoundboardSounds);
             }
           };
           const timeout = setTimeout2(() => {
-            this.client.removeListener(Events3.SoundboardSounds, handler);
+            this.client.removeListener(Events11.SoundboardSounds, handler);
             this.client.decrementMaxListeners();
             reject(new DiscordjsError2(ErrorCodes2.GuildSoundboardSoundsTimeout));
           }, time).unref();
           this.client.incrementMaxListeners();
-          this.client.on(Events3.SoundboardSounds, handler);
+          this.client.on(Events11.SoundboardSounds, handler);
         });
       }
       /**
@@ -74510,7 +74510,7 @@ var require_GuildManager = __commonJS({
 var require_UserManager = __commonJS({
   "node_modules/discord.js/src/managers/UserManager.js"(exports2, module2) {
     "use strict";
-    var { ChannelType: ChannelType5, Routes: Routes4 } = require_v106();
+    var { ChannelType: ChannelType8, Routes: Routes4 } = require_v106();
     var CachedManager = require_CachedManager();
     var { DiscordjsError: DiscordjsError2, ErrorCodes: ErrorCodes2 } = require_errors2();
     var { GuildMember } = require_GuildMember();
@@ -74545,7 +74545,7 @@ var require_UserManager = __commonJS({
       dmChannel(userId) {
         const expectedRecipientIds = [userId, this.client.user.id];
         return this.client.channels.cache.find(
-          (channel) => channel.type === ChannelType5.DM && channel.recipientId === userId && channel.recipientIds.every((id) => expectedRecipientIds.includes(id))
+          (channel) => channel.type === ChannelType8.DM && channel.recipientId === userId && channel.recipientIds.every((id) => expectedRecipientIds.includes(id))
         ) ?? null;
       }
       /**
@@ -74890,7 +74890,7 @@ var require_Widget = __commonJS({
 var require_IntentsBitField = __commonJS({
   "node_modules/discord.js/src/util/IntentsBitField.js"(exports2, module2) {
     "use strict";
-    var { GatewayIntentBits: GatewayIntentBits2 } = require_v106();
+    var { GatewayIntentBits: GatewayIntentBits3 } = require_v106();
     var BitField = require_BitField();
     var IntentsBitField2 = class extends BitField {
       /**
@@ -74898,7 +74898,7 @@ var require_IntentsBitField = __commonJS({
        * @type {GatewayIntentBits}
        * @memberof IntentsBitField
        */
-      static Flags = GatewayIntentBits2;
+      static Flags = GatewayIntentBits3;
     };
     module2.exports = IntentsBitField2;
   }
@@ -74910,7 +74910,7 @@ var require_Sweepers = __commonJS({
     "use strict";
     var { setInterval: setInterval2, clearInterval: clearInterval2 } = require("node:timers");
     var { ThreadChannelTypes, SweeperKeys } = require_Constants();
-    var Events3 = require_Events();
+    var Events11 = require_Events();
     var { DiscordjsTypeError: DiscordjsTypeError2, ErrorCodes: ErrorCodes2 } = require_errors2();
     var Sweepers2 = class {
       constructor(client, options) {
@@ -74945,7 +74945,7 @@ var require_Sweepers = __commonJS({
         const { guilds, items: guildCommands } = this._sweepGuildDirectProp("commands", filter, { emit: false });
         const globalCommands = this.client.application?.commands.cache.sweep(filter) ?? 0;
         this.client.emit(
-          Events3.CacheSweep,
+          Events11.CacheSweep,
           `Swept ${globalCommands} global application commands and ${guildCommands} guild commands in ${guilds} guilds.`
         );
         return guildCommands + globalCommands;
@@ -74985,7 +74985,7 @@ var require_Sweepers = __commonJS({
           throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "filter", "function");
         }
         const entitlements = this.client.application.entitlements.cache.sweep(filter);
-        this.client.emit(Events3.CacheSweep, `Swept ${entitlements} entitlements.`);
+        this.client.emit(Events11.CacheSweep, `Swept ${entitlements} entitlements.`);
         return entitlements;
       }
       /**
@@ -75030,7 +75030,7 @@ var require_Sweepers = __commonJS({
           channels++;
           messages += channel.messages.cache.sweep(filter);
         }
-        this.client.emit(Events3.CacheSweep, `Swept ${messages} messages in ${channels} text-based channels.`);
+        this.client.emit(Events11.CacheSweep, `Swept ${messages} messages in ${channels} text-based channels.`);
         return messages;
       }
       /**
@@ -75062,7 +75062,7 @@ var require_Sweepers = __commonJS({
           }
         }
         this.client.emit(
-          Events3.CacheSweep,
+          Events11.CacheSweep,
           `Swept ${reactions} reactions on ${messages} messages in ${channels} text-based channels.`
         );
         return reactions;
@@ -75100,7 +75100,7 @@ var require_Sweepers = __commonJS({
           threads++;
           members += channel.members.cache.sweep(filter);
         }
-        this.client.emit(Events3.CacheSweep, `Swept ${members} thread members in ${threads} threads.`);
+        this.client.emit(Events11.CacheSweep, `Swept ${members} thread members in ${threads} threads.`);
         return members;
       }
       /**
@@ -75129,7 +75129,7 @@ var require_Sweepers = __commonJS({
             this.client.channels._remove(key);
           }
         }
-        this.client.emit(Events3.CacheSweep, `Swept ${threads} threads.`);
+        this.client.emit(Events11.CacheSweep, `Swept ${threads} threads.`);
         return threads;
       }
       /**
@@ -75142,7 +75142,7 @@ var require_Sweepers = __commonJS({
           throw new DiscordjsTypeError2(ErrorCodes2.InvalidType, "filter", "function");
         }
         const users = this.client.users.cache.sweep(filter);
-        this.client.emit(Events3.CacheSweep, `Swept ${users} users.`);
+        this.client.emit(Events11.CacheSweep, `Swept ${users} users.`);
         return users;
       }
       /**
@@ -75267,7 +75267,7 @@ var require_Sweepers = __commonJS({
           items += cache.sweep(filter);
         }
         if (emit) {
-          this.client.emit(Events3.CacheSweep, `Swept ${items} ${outputName ?? key} in ${guilds} guilds.`);
+          this.client.emit(Events11.CacheSweep, `Swept ${items} ${outputName ?? key} in ${guilds} guilds.`);
         }
         return { guilds, items };
       }
@@ -75928,9 +75928,9 @@ var require_Shard = __commonJS({
        * @param {ShardRespawnOptions} [options] Options for respawning the shard
        * @returns {Promise<ChildProcess>}
        */
-      async respawn({ delay: delay2 = 500, timeout = 3e4 } = {}) {
+      async respawn({ delay: delay3 = 500, timeout = 3e4 } = {}) {
         this.kill();
-        if (delay2 > 0) await sleep(delay2);
+        if (delay3 > 0) await sleep(delay3);
         return this.spawn(timeout);
       }
       /**
@@ -76236,7 +76236,7 @@ var require_ShardingManager = __commonJS({
        * @param {MultipleShardSpawnOptions} [options] Options for spawning shards
        * @returns {Promise<Collection<number, Shard>>}
        */
-      async spawn({ amount = this.totalShards, delay: delay2 = 5500, timeout = 3e4 } = {}) {
+      async spawn({ amount = this.totalShards, delay: delay3 = 5500, timeout = 3e4 } = {}) {
         if (amount === "auto") {
           amount = await fetchRecommendedShardCount(this.token);
         } else {
@@ -76266,7 +76266,7 @@ var require_ShardingManager = __commonJS({
           const promises = [];
           const shard = this.createShard(shardId);
           promises.push(shard.spawn(timeout));
-          if (delay2 > 0 && this.shards.size !== this.shardList.length) promises.push(sleep(delay2));
+          if (delay3 > 0 && this.shards.size !== this.shardList.length) promises.push(sleep(delay3));
           await Promise.all(promises);
         }
         return this.shards;
@@ -76370,7 +76370,7 @@ var require_Formatters = __commonJS({
       blockQuote,
       bold,
       channelMention,
-      codeBlock,
+      codeBlock: codeBlock2,
       formatEmoji,
       hideLinkEmbed,
       hyperlink,
@@ -76433,7 +76433,7 @@ var require_Formatters = __commonJS({
        * @deprecated Import this method directly from discord.js instead.
        */
       static codeBlock = deprecate(
-        codeBlock,
+        codeBlock2,
         "Formatters.codeBlock() is deprecated. Import this method directly from discord.js instead."
       );
       /**
@@ -76605,7 +76605,7 @@ var require_EmbedBuilder = __commonJS({
     var { isJSONEncodable } = require_dist2();
     var { toSnakeCase } = require_Transformers();
     var { resolveColor } = require_Util();
-    var EmbedBuilder8 = class extends BuildersEmbed {
+    var EmbedBuilder12 = class extends BuildersEmbed {
       constructor(data2) {
         super(toSnakeCase(data2));
       }
@@ -76634,7 +76634,7 @@ var require_EmbedBuilder = __commonJS({
         return embedLength(this.data);
       }
     };
-    module2.exports = EmbedBuilder8;
+    module2.exports = EmbedBuilder12;
   }
 });
 
@@ -79841,10 +79841,10 @@ var require_bson = __commonJS({
         return false;
       }
       getTimestamp() {
-        const timestamp = /* @__PURE__ */ new Date();
+        const timestamp2 = /* @__PURE__ */ new Date();
         const time = this.i0 * 256 + (this.i1 >>> 16);
-        timestamp.setTime(time * 1e3);
-        return timestamp;
+        timestamp2.setTime(time * 1e3);
+        return timestamp2;
       }
       static createPk() {
         return new _ObjectId();
@@ -81940,11 +81940,11 @@ var require_error = __commonJS({
        * @param label - The error label to check for
        * @returns returns true if the error has the provided error label
        */
-      hasErrorLabel(label) {
-        return this.errorLabelSet.has(label);
+      hasErrorLabel(label2) {
+        return this.errorLabelSet.has(label2);
       }
-      addErrorLabel(label) {
-        this.errorLabelSet.add(label);
+      addErrorLabel(label2) {
+        this.errorLabelSet.add(label2);
       }
     };
     exports2.MongoError = MongoError;
@@ -81963,8 +81963,8 @@ var require_error = __commonJS({
       constructor(message) {
         super(message.message || message.errmsg || message.$err || "n/a");
         if (message.errorLabels) {
-          for (const label of message.errorLabels)
-            this.addErrorLabel(label);
+          for (const label2 of message.errorLabels)
+            this.addErrorLabel(label2);
         }
         this.errorResponse = message;
         for (const name in message) {
@@ -82673,18 +82673,18 @@ var require_error = __commonJS({
        *
        * @public
        **/
-      constructor(message, reason) {
-        if (reason && reason.error) {
-          super(MongoError.buildErrorMessage(reason.error.message || reason.error), {
-            cause: reason.error
+      constructor(message, reason2) {
+        if (reason2 && reason2.error) {
+          super(MongoError.buildErrorMessage(reason2.error.message || reason2.error), {
+            cause: reason2.error
           });
         } else {
           super(message);
         }
-        if (reason) {
-          this.reason = reason;
+        if (reason2) {
+          this.reason = reason2;
         }
-        this.code = reason.error?.code;
+        this.code = reason2.error?.code;
       }
       get name() {
         return "MongoSystemError";
@@ -82703,8 +82703,8 @@ var require_error = __commonJS({
        *
        * @public
        **/
-      constructor(message, reason) {
-        super(message, reason);
+      constructor(message, reason2) {
+        super(message, reason2);
       }
       get name() {
         return "MongoServerSelectionError";
@@ -84101,7 +84101,7 @@ var require_utils2 = __commonJS({
     exports2.isSuperset = isSuperset;
     exports2.isHello = isHello;
     exports2.setDifference = setDifference;
-    exports2.isRecord = isRecord2;
+    exports2.isRecord = isRecord3;
     exports2.emitWarning = emitWarning;
     exports2.emitWarningOnce = emitWarningOnce;
     exports2.enumToString = enumToString;
@@ -84110,7 +84110,7 @@ var require_utils2 = __commonJS({
     exports2.commandSupportsReadConcern = commandSupportsReadConcern;
     exports2.commandSupportsAfterClusterTime = commandSupportsAfterClusterTime;
     exports2.compareObjectId = compareObjectId;
-    exports2.parseInteger = parseInteger;
+    exports2.parseInteger = parseInteger2;
     exports2.parseUnsignedInteger = parseUnsignedInteger;
     exports2.checkParentDomainMatch = checkParentDomainMatch;
     exports2.dnsNameToASCII = dnsNameToASCII;
@@ -84421,7 +84421,7 @@ var require_utils2 = __commonJS({
       return difference;
     }
     var HAS_OWN = (object, prop) => Object.prototype.hasOwnProperty.call(object, prop);
-    function isRecord2(value, requiredKeys = void 0) {
+    function isRecord3(value, requiredKeys = void 0) {
       if (!isObject(value)) {
         return false;
       }
@@ -84759,14 +84759,14 @@ var require_utils2 = __commonJS({
       }
       return bson_1.ByteUtils.compare(oid1.id, oid2.id);
     }
-    function parseInteger(value) {
+    function parseInteger2(value) {
       if (typeof value === "number")
         return Math.trunc(value);
       const parsedValue = Number.parseInt(String(value), 10);
       return Number.isNaN(parsedValue) ? null : parsedValue;
     }
     function parseUnsignedInteger(value) {
-      const parsedInt = parseInteger(value);
+      const parsedInt = parseInteger2(value);
       return parsedInt != null && parsedInt >= 0 ? parsedInt : null;
     }
     function checkParentDomainMatch(normalizedAddress, srvHost) {
@@ -89574,8 +89574,8 @@ var require_sessions = __commonJS({
           cause
         });
         if (cause instanceof error_1.MongoError) {
-          for (const label of cause.errorLabels) {
-            timeoutError.addErrorLabel(label);
+          for (const label2 of cause.errorLabels) {
+            timeoutError.addErrorLabel(label2);
           }
         }
         return timeoutError;
@@ -95159,7 +95159,7 @@ var require_tr46 = __commonJS({
       }
       return processed;
     }
-    function validateLabel(label, {
+    function validateLabel(label2, {
       checkHyphens,
       checkBidi,
       checkJoiners,
@@ -95167,24 +95167,24 @@ var require_tr46 = __commonJS({
       useSTD3ASCIIRules,
       isBidi
     }) {
-      if (label.length === 0) {
+      if (label2.length === 0) {
         return true;
       }
-      if (label.normalize("NFC") !== label) {
+      if (label2.normalize("NFC") !== label2) {
         return false;
       }
-      const codePoints = Array.from(label);
+      const codePoints = Array.from(label2);
       if (checkHyphens) {
-        if (codePoints[2] === "-" && codePoints[3] === "-" || (label.startsWith("-") || label.endsWith("-"))) {
+        if (codePoints[2] === "-" && codePoints[3] === "-" || (label2.startsWith("-") || label2.endsWith("-"))) {
           return false;
         }
       }
       if (!checkHyphens) {
-        if (label.startsWith("xn--")) {
+        if (label2.startsWith("xn--")) {
           return false;
         }
       }
-      if (label.includes(".")) {
+      if (label2.includes(".")) {
         return false;
       }
       if (regexes.combiningMarks.test(codePoints[0])) {
@@ -95237,25 +95237,25 @@ var require_tr46 = __commonJS({
           return false;
         }
         if (rtl) {
-          if (!regexes.bidiS2.test(label) || !regexes.bidiS3.test(label) || regexes.bidiS4EN.test(label) && regexes.bidiS4AN.test(label)) {
+          if (!regexes.bidiS2.test(label2) || !regexes.bidiS3.test(label2) || regexes.bidiS4EN.test(label2) && regexes.bidiS4AN.test(label2)) {
             return false;
           }
-        } else if (!regexes.bidiS5.test(label) || !regexes.bidiS6.test(label)) {
+        } else if (!regexes.bidiS5.test(label2) || !regexes.bidiS6.test(label2)) {
           return false;
         }
       }
       return true;
     }
     function isBidiDomain(labels) {
-      const domain = labels.map((label) => {
-        if (label.startsWith("xn--")) {
+      const domain = labels.map((label2) => {
+        if (label2.startsWith("xn--")) {
           try {
-            return punycode.decode(label.substring(4));
+            return punycode.decode(label2.substring(4));
           } catch {
             return "";
           }
         }
-        return label;
+        return label2;
       }).join(".");
       return regexes.bidiDomain.test(domain);
     }
@@ -95266,23 +95266,23 @@ var require_tr46 = __commonJS({
       const isBidi = isBidiDomain(labels);
       let error = false;
       for (const [i, origLabel] of labels.entries()) {
-        let label = origLabel;
+        let label2 = origLabel;
         let transitionalProcessingForThisLabel = options.transitionalProcessing;
-        if (label.startsWith("xn--")) {
-          if (containsNonASCII(label)) {
+        if (label2.startsWith("xn--")) {
+          if (containsNonASCII(label2)) {
             error = true;
             continue;
           }
           try {
-            label = punycode.decode(label.substring(4));
+            label2 = punycode.decode(label2.substring(4));
           } catch {
             if (!options.ignoreInvalidPunycode) {
               error = true;
               continue;
             }
           }
-          labels[i] = label;
-          if (label === "" || !containsNonASCII(label)) {
+          labels[i] = label2;
+          if (label2 === "" || !containsNonASCII(label2)) {
             error = true;
           }
           transitionalProcessingForThisLabel = false;
@@ -95290,7 +95290,7 @@ var require_tr46 = __commonJS({
         if (error) {
           continue;
         }
-        const validation = validateLabel(label, {
+        const validation = validateLabel(label2, {
           ...options,
           transitionalProcessing: transitionalProcessingForThisLabel,
           isBidi
@@ -101916,11 +101916,11 @@ var require_connection_pool_events = __commonJS({
     exports2.ConnectionReadyEvent = ConnectionReadyEvent;
     var ConnectionClosedEvent = class extends ConnectionPoolMonitoringEvent {
       /** @internal */
-      constructor(pool, connection, reason, error) {
+      constructor(pool, connection, reason2, error) {
         super(pool);
         this.name = constants_1.CONNECTION_CLOSED;
         this.connectionId = connection.id;
-        this.reason = reason;
+        this.reason = reason2;
         this.serviceId = connection.serviceId;
         this.error = error ?? null;
       }
@@ -101936,11 +101936,11 @@ var require_connection_pool_events = __commonJS({
     exports2.ConnectionCheckOutStartedEvent = ConnectionCheckOutStartedEvent;
     var ConnectionCheckOutFailedEvent = class extends ConnectionPoolMonitoringEvent {
       /** @internal */
-      constructor(pool, reason, checkoutTime, error) {
+      constructor(pool, reason2, checkoutTime, error) {
         super(pool);
         this.name = constants_1.CONNECTION_CHECK_OUT_FAILED;
         this.durationMS = (0, utils_1.processTimeMS)() - checkoutTime;
-        this.reason = reason;
+        this.reason = reason2;
         this.error = error;
       }
     };
@@ -102018,8 +102018,8 @@ var require_errors4 = __commonJS({
        * @public
        **/
       constructor(pool, message) {
-        const errorMessage2 = message ? message : `Connection pool for ${pool.address} was cleared because another operation failed with: "${pool.serverError?.message}"`;
-        super(errorMessage2, pool.serverError ? { cause: pool.serverError } : void 0);
+        const errorMessage3 = message ? message : `Connection pool for ${pool.address} was cleared because another operation failed with: "${pool.serverError?.message}"`;
+        super(errorMessage3, pool.serverError ? { cause: pool.serverError } : void 0);
         this.address = pool.address;
         this.addErrorLabel(error_1.MongoErrorLabel.PoolRequestedRetry);
       }
@@ -102291,8 +102291,8 @@ var require_connection_pool = __commonJS({
         this.checkedOut.delete(connection);
         this.emitAndLog(_ConnectionPool.CONNECTION_CHECKED_IN, new connection_pool_events_1.ConnectionCheckedInEvent(this, connection));
         if (willDestroy) {
-          const reason = connection.closed ? "error" : poolClosed ? "poolClosed" : "stale";
-          this.destroyConnection(connection, reason);
+          const reason2 = connection.closed ? "error" : poolClosed ? "poolClosed" : "stale";
+          this.destroyConnection(connection, reason2);
         }
         queueMicrotask(() => this.processWaitQueue());
       }
@@ -102402,8 +102402,8 @@ var require_connection_pool = __commonJS({
           (0, timers_1.clearTimeout)(minPoolSizeTimer);
         }
       }
-      destroyConnection(connection, reason) {
-        this.emitAndLog(_ConnectionPool.CONNECTION_CLOSED, new connection_pool_events_1.ConnectionClosedEvent(this, connection, reason));
+      destroyConnection(connection, reason2) {
+        this.emitAndLog(_ConnectionPool.CONNECTION_CLOSED, new connection_pool_events_1.ConnectionClosedEvent(this, connection, reason2));
         connection.destroy();
       }
       connectionIsStale(connection) {
@@ -102429,8 +102429,8 @@ var require_connection_pool = __commonJS({
         if (!isStale && !isIdle && !connection.closed) {
           return false;
         }
-        const reason = connection.closed ? "error" : isStale ? "stale" : "idle";
-        this.destroyConnection(connection, reason);
+        const reason2 = connection.closed ? "error" : isStale ? "stale" : "idle";
+        this.destroyConnection(connection, reason2);
         return true;
       }
       createConnection(callback) {
@@ -102529,9 +102529,9 @@ var require_connection_pool = __commonJS({
             continue;
           }
           if (this.poolState !== exports2.PoolState.ready) {
-            const reason = this.closed ? "poolClosed" : "connectionError";
+            const reason2 = this.closed ? "poolClosed" : "connectionError";
             const error = this.closed ? new errors_1.PoolClosedError(this) : new errors_1.PoolClearedError(this);
-            this.emitAndLog(_ConnectionPool.CONNECTION_CHECK_OUT_FAILED, new connection_pool_events_1.ConnectionCheckOutFailedEvent(this, reason, waitQueueMember.checkoutTime, error));
+            this.emitAndLog(_ConnectionPool.CONNECTION_CHECK_OUT_FAILED, new connection_pool_events_1.ConnectionCheckOutFailedEvent(this, reason2, waitQueueMember.checkoutTime, error));
             this.waitQueue.shift();
             waitQueueMember.reject(error);
             continue;
@@ -107550,7 +107550,7 @@ var require_mongo_client = __commonJS({
     exports2.ServerApiVersion = Object.freeze({
       v1: "1"
     });
-    var MongoClient3 = class extends mongo_types_1.TypedEventEmitter {
+    var MongoClient4 = class extends mongo_types_1.TypedEventEmitter {
       constructor(url, options) {
         super();
         this.driverInfoList = [];
@@ -107954,7 +107954,7 @@ var require_mongo_client = __commonJS({
         return new change_stream_1.ChangeStream(this, pipeline, (0, utils_1.resolveOptions)(this, options));
       }
     };
-    exports2.MongoClient = MongoClient3;
+    exports2.MongoClient = MongoClient4;
   }
 });
 
@@ -109614,7 +109614,7 @@ var candidates = [
 });
 
 // src/index.ts
-var import_discord22 = __toESM(require_src());
+var import_discord45 = __toESM(require_src());
 
 // src/config.ts
 var SNOWFLAKE = /^\d{17,20}$/;
@@ -109650,6 +109650,40 @@ function parsePort(raw) {
     throw new ConfigError("PORT must be an integer between 1 and 65535.");
   }
   return port;
+}
+function parseBoolean(env, name, fallback) {
+  const value = env[name]?.trim().toLowerCase();
+  if (!value) {
+    return fallback;
+  }
+  if (value === "true" || value === "1" || value === "yes") {
+    return true;
+  }
+  if (value === "false" || value === "0" || value === "no") {
+    return false;
+  }
+  throw new ConfigError(`${name} must be true or false.`);
+}
+function parseInteger(env, name, fallback, min, max) {
+  const value = env[name]?.trim();
+  if (!value) {
+    return fallback;
+  }
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed) || parsed < min || parsed > max) {
+    throw new ConfigError(`${name} must be an integer between ${min} and ${max}.`);
+  }
+  return parsed;
+}
+function parseAntiNukeMode(raw) {
+  const value = raw?.trim().toLowerCase();
+  if (!value) {
+    return "quarantine";
+  }
+  if (value === "alert" || value === "quarantine" || value === "ban") {
+    return value;
+  }
+  throw new ConfigError("ANTINUKE_MODE must be alert, quarantine, or ban.");
 }
 function parseSiteUrl(raw, warnings) {
   const value = raw?.trim();
@@ -109719,23 +109753,24 @@ function parseGroqModel(raw) {
   const value = raw?.trim();
   return value || "openai/gpt-oss-20b";
 }
-function parseStaffRoleIds(raw, warnings) {
+function parseIdListValue(raw, invalidMessage) {
   const value = raw?.trim();
   if (!value) {
-    warnings.push("STAFF_ROLE_IDS is empty; ticket opening will refuse until staff roles are configured.");
     return [];
   }
   const ids = value.split(",").map((part) => part.trim()).filter(Boolean);
-  if (ids.length === 0) {
-    warnings.push("STAFF_ROLE_IDS is empty; ticket opening will refuse until staff roles are configured.");
-    return [];
-  }
   for (const id of ids) {
     if (!SNOWFLAKE.test(id)) {
-      throw new ConfigError("STAFF_ROLE_IDS contains an invalid Discord role ID.");
+      throw new ConfigError(invalidMessage);
     }
   }
   return [...new Set(ids)];
+}
+function parseStaffRoleIds(raw) {
+  return parseIdListValue(raw, "STAFF_ROLE_IDS contains an invalid Discord role ID.");
+}
+function parseOptionalIdList(env, name) {
+  return parseIdListValue(env[name], `${name} contains an invalid Discord ID.`);
 }
 function parseIdList(env, name, warnings, warning) {
   const value = env[name]?.trim();
@@ -109743,13 +109778,7 @@ function parseIdList(env, name, warnings, warning) {
     warnings.push(warning);
     return [];
   }
-  const ids = value.split(",").map((part) => part.trim()).filter(Boolean);
-  for (const id of ids) {
-    if (!SNOWFLAKE.test(id)) {
-      throw new ConfigError(`${name} contains an invalid Discord ID.`);
-    }
-  }
-  return [...new Set(ids)];
+  return parseIdListValue(value, `${name} contains an invalid Discord ID.`);
 }
 function parseLevelRoles(env, warnings) {
   const value = env.LEVEL_ROLE_IDS?.trim();
@@ -109798,6 +109827,16 @@ function loadConfig(env = process.env) {
   const ticketPanelChannelId = snowflake(env, "TICKET_PANEL_CHANNEL_ID", false);
   const ticketLogChannelId = snowflake(env, "TICKET_LOG_CHANNEL_ID", false);
   const ticketCategoryId = snowflake(env, "TICKET_CATEGORY_ID", false);
+  const logCategoryId = snowflake(env, "LOG_CATEGORY_ID", false);
+  const logChannelId = snowflake(env, "LOG_CHANNEL_ID", false);
+  const messageLogChannelId = snowflake(env, "MESSAGE_LOG_CHANNEL_ID", false);
+  const memberLogChannelId = snowflake(env, "MEMBER_LOG_CHANNEL_ID", false);
+  const serverLogChannelId = snowflake(env, "SERVER_LOG_CHANNEL_ID", false);
+  const voiceLogChannelId = snowflake(env, "VOICE_LOG_CHANNEL_ID", false);
+  const securityLogChannelId = snowflake(env, "SECURITY_LOG_CHANNEL_ID", false);
+  const modLogChannelId = snowflake(env, "MOD_LOG_CHANNEL_ID", false);
+  const logMessageContent = parseBoolean(env, "LOG_MESSAGE_CONTENT", true);
+  const auditRetentionDays = parseInteger(env, "AUDIT_RETENTION_DAYS", 0, 0, 3650);
   if (!announcementsChannelId) {
     warnings.push("ANNOUNCEMENTS_CHANNEL_ID is not set; /admin announce needs an explicit channel.");
   }
@@ -109807,7 +109846,21 @@ function loadConfig(env = process.env) {
   if (!ticketLogChannelId) {
     warnings.push("TICKET_LOG_CHANNEL_ID is not set; ticket closures will not be logged to a staff channel.");
   }
-  const staffRoleIds = parseStaffRoleIds(env.STAFF_ROLE_IDS, warnings);
+  const parsedStaffRoleIds = parseStaffRoleIds(env.STAFF_ROLE_IDS);
+  const staffModeratorRoleIds = parseOptionalIdList(env, "STAFF_MODERATOR_ROLE_IDS");
+  const staffStewardRoleIds = parseOptionalIdList(env, "STAFF_STEWARD_ROLE_IDS");
+  const staffAdminRoleIds = parseOptionalIdList(env, "STAFF_ADMIN_ROLE_IDS");
+  const staffFounderRoleIds = parseOptionalIdList(env, "STAFF_FOUNDER_ROLE_IDS");
+  const staffTierRoleIds = [
+    ...staffModeratorRoleIds,
+    ...staffStewardRoleIds,
+    ...staffAdminRoleIds,
+    ...staffFounderRoleIds
+  ];
+  const staffRoleIds = [.../* @__PURE__ */ new Set([...parsedStaffRoleIds, ...staffTierRoleIds])];
+  if (staffRoleIds.length === 0) {
+    warnings.push("STAFF_ROLE_IDS and every staff tier are empty; ticket opening will refuse.");
+  }
   const autoRoleIds = parseIdList(
     env,
     "AUTO_ROLE_IDS",
@@ -109827,6 +109880,28 @@ function loadConfig(env = process.env) {
   const mongoDb = env.MONGODB_DB?.trim() || "wrightyard";
   const groqApiKey = parseGroqApiKey(env.GROQ_API_KEY, warnings);
   const groqModel = parseGroqModel(env.GROQ_MODEL);
+  const antiNukeEnabled = parseBoolean(env, "ANTINUKE_ENABLED", true);
+  const antiNukeMode = parseAntiNukeMode(env.ANTINUKE_MODE);
+  const antiNukeTrustedUserIds = parseIdList(
+    env,
+    "ANTINUKE_TRUSTED_USER_IDS",
+    warnings,
+    "ANTINUKE_TRUSTED_USER_IDS is empty; no users are exempt from anti-nuke rules."
+  );
+  const antiNukeQuarantineRoleId = snowflake(env, "ANTINUKE_QUARANTINE_ROLE_ID", false);
+  const antiNukeRestore = parseBoolean(env, "ANTINUKE_RESTORE", true);
+  const raidGuardEnabled = parseBoolean(env, "RAID_GUARD_ENABLED", true);
+  const raidJoinThreshold = parseInteger(env, "RAID_JOIN_THRESHOLD", 8, 1, 1e3);
+  const raidWindowSeconds = parseInteger(env, "RAID_WINDOW_SECONDS", 60, 1, 86400);
+  const raidMinAccountAgeDays = parseInteger(env, "RAID_MIN_ACCOUNT_AGE_DAYS", 7, 0, 3650);
+  const raidModeMinutes = parseInteger(env, "RAID_MODE_MINUTES", 10, 1, 10080);
+  const snapshotIntervalMinutes = parseInteger(
+    env,
+    "SNAPSHOT_INTERVAL_MINUTES",
+    360,
+    1,
+    10080
+  );
   return {
     config: {
       token,
@@ -109850,7 +109925,32 @@ function loadConfig(env = process.env) {
       groqApiKey,
       groqModel,
       port: parsePort(env.PORT),
-      nodeEnv: env.NODE_ENV?.trim() || "development"
+      nodeEnv: env.NODE_ENV?.trim() || "development",
+      logCategoryId,
+      logChannelId,
+      messageLogChannelId,
+      memberLogChannelId,
+      serverLogChannelId,
+      voiceLogChannelId,
+      securityLogChannelId,
+      modLogChannelId,
+      logMessageContent,
+      auditRetentionDays,
+      staffModeratorRoleIds,
+      staffStewardRoleIds,
+      staffAdminRoleIds,
+      staffFounderRoleIds,
+      antiNukeEnabled,
+      antiNukeMode,
+      antiNukeTrustedUserIds,
+      antiNukeQuarantineRoleId,
+      antiNukeRestore,
+      raidGuardEnabled,
+      raidJoinThreshold,
+      raidWindowSeconds,
+      raidMinAccountAgeDays,
+      raidModeMinutes,
+      snapshotIntervalMinutes
     },
     warnings
   };
@@ -109899,8 +109999,25 @@ var CooldownStore = class {
   }
 };
 
+// src/intents.ts
+var import_discord = __toESM(require_src());
+var GATEWAY_INTENTS = [
+  import_discord.GatewayIntentBits.Guilds,
+  import_discord.GatewayIntentBits.GuildMembers,
+  import_discord.GatewayIntentBits.GuildMessages,
+  import_discord.GatewayIntentBits.MessageContent,
+  import_discord.GatewayIntentBits.GuildModeration,
+  import_discord.GatewayIntentBits.GuildInvites,
+  import_discord.GatewayIntentBits.GuildVoiceStates,
+  import_discord.GatewayIntentBits.GuildExpressions,
+  import_discord.GatewayIntentBits.GuildWebhooks,
+  import_discord.GatewayIntentBits.GuildScheduledEvents,
+  import_discord.GatewayIntentBits.AutoModerationConfiguration,
+  import_discord.GatewayIntentBits.AutoModerationExecution
+];
+
 // src/interactions/handler.ts
-var import_discord2 = __toESM(require_src());
+var import_discord3 = __toESM(require_src());
 
 // src/logger.ts
 var LEVEL_RANK = {
@@ -110012,6 +110129,40 @@ function hasStaffRole(member, staffRoleIds) {
   return staffRoleIds.some((roleId) => roles.has(roleId));
 }
 
+// src/audit/command.ts
+function errorName(error) {
+  if (error instanceof Error) {
+    return error.name;
+  }
+  return typeof error === "string" ? "Error" : "UnknownError";
+}
+function errorMessage(error) {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return String(error);
+}
+function commandAuditEvent(input) {
+  const failed = input.error !== void 0;
+  return {
+    category: "command",
+    type: failed ? "command.failed" : "command.served",
+    summary: failed ? `Command /${input.command} failed (${errorName(input.error)})` : `Command /${input.command} served`,
+    severity: failed ? "warn" : "info",
+    feed: false,
+    actor: { id: input.userId, tag: input.userId },
+    fields: [
+      { name: "Command", value: `/${input.command}`, inline: true },
+      { name: "Duration", value: `${input.durationMs}ms`, inline: true },
+      { name: "Guild", value: input.guildId, inline: true },
+      ...failed ? [
+        { name: "Error", value: `${errorName(input.error)}: ${errorMessage(input.error)}` }
+      ] : []
+    ],
+    payload: { guildId: input.guildId }
+  };
+}
+
 // src/tickets/ids.ts
 var TICKET_IDS = {
   open: "ticket:open",
@@ -110024,13 +110175,13 @@ var TICKET_IDS = {
 };
 
 // src/interactions/replies.ts
-var import_discord = __toESM(require_src());
+var import_discord2 = __toESM(require_src());
 async function replyEphemeral(interaction, content) {
   try {
     if (interaction.deferred || interaction.replied) {
-      await interaction.followUp({ content, flags: import_discord.MessageFlags.Ephemeral, allowedMentions: { parse: [] } });
+      await interaction.followUp({ content, flags: import_discord2.MessageFlags.Ephemeral, allowedMentions: { parse: [] } });
     } else {
-      await interaction.reply({ content, flags: import_discord.MessageFlags.Ephemeral, allowedMentions: { parse: [] } });
+      await interaction.reply({ content, flags: import_discord2.MessageFlags.Ephemeral, allowedMentions: { parse: [] } });
     }
   } catch {
   }
@@ -110106,7 +110257,7 @@ async function handleCommand(interaction, context) {
   if (!interaction.inCachedGuild()) {
     await interaction.reply({
       content: "The yard lives in a server. Run this there.",
-      flags: import_discord2.MessageFlags.Ephemeral,
+      flags: import_discord3.MessageFlags.Ephemeral,
       allowedMentions: { parse: [] }
     });
     return;
@@ -110114,7 +110265,7 @@ async function handleCommand(interaction, context) {
   if (interaction.guildId !== context.config.guildId) {
     await interaction.reply({
       content: "This bot serves a different yard.",
-      flags: import_discord2.MessageFlags.Ephemeral,
+      flags: import_discord3.MessageFlags.Ephemeral,
       allowedMentions: { parse: [] }
     });
     return;
@@ -110123,7 +110274,7 @@ async function handleCommand(interaction, context) {
   if (!command) {
     await interaction.reply({
       content: "That command is not available. Try /help for the current index.",
-      flags: import_discord2.MessageFlags.Ephemeral,
+      flags: import_discord3.MessageFlags.Ephemeral,
       allowedMentions: { parse: [] }
     });
     return;
@@ -110131,7 +110282,7 @@ async function handleCommand(interaction, context) {
   if (command.ownerOnly && !isOwner(interaction.user.id, context.config)) {
     await interaction.reply({
       content: "Owner only.",
-      flags: import_discord2.MessageFlags.Ephemeral,
+      flags: import_discord3.MessageFlags.Ephemeral,
       allowedMentions: { parse: [] }
     });
     return;
@@ -110141,7 +110292,7 @@ async function handleCommand(interaction, context) {
   if (remaining > 0) {
     await interaction.reply({
       content: `Give it a moment. Try again in ${Math.ceil(remaining / 1e3)}s.`,
-      flags: import_discord2.MessageFlags.Ephemeral,
+      flags: import_discord3.MessageFlags.Ephemeral,
       allowedMentions: { parse: [] }
     });
     return;
@@ -110151,20 +110302,39 @@ async function handleCommand(interaction, context) {
   const startedAt = Date.now();
   try {
     await command.execute(interaction, context);
+    const durationMs = Date.now() - startedAt;
     context.logger.info("Command served", {
       command: interaction.commandName,
       userId: interaction.user.id,
       guildId: interaction.guildId,
-      durationMs: Date.now() - startedAt
+      durationMs
     });
+    context.audit?.record(
+      commandAuditEvent({
+        command: interaction.commandName,
+        userId: interaction.user.id,
+        guildId: interaction.guildId,
+        durationMs
+      })
+    );
   } catch (error) {
+    const durationMs = Date.now() - startedAt;
     context.logger.error("Command failed", {
       command: interaction.commandName,
       userId: interaction.user.id,
       guildId: interaction.guildId,
-      durationMs: Date.now() - startedAt,
+      durationMs,
       error: serializeError(error)
     });
+    context.audit?.record(
+      commandAuditEvent({
+        command: interaction.commandName,
+        userId: interaction.user.id,
+        guildId: interaction.guildId,
+        durationMs,
+        error
+      })
+    );
     await respondWithFailure(interaction);
   }
 }
@@ -110183,14 +110353,14 @@ async function replyWithFailure(interaction) {
     if (interaction.replied) {
       await interaction.followUp({
         content: GENERIC_FAILURE,
-        flags: import_discord2.MessageFlags.Ephemeral,
+        flags: import_discord3.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
     }
     await interaction.reply({
       content: GENERIC_FAILURE,
-      flags: import_discord2.MessageFlags.Ephemeral,
+      flags: import_discord3.MessageFlags.Ephemeral,
       allowedMentions: { parse: [] }
     });
   } catch {
@@ -110198,10 +110368,10 @@ async function replyWithFailure(interaction) {
 }
 
 // src/commands/admin.ts
-var import_discord6 = __toESM(require_src());
+var import_discord7 = __toESM(require_src());
 
 // src/admin/actions.ts
-var import_discord5 = __toESM(require_src());
+var import_discord6 = __toESM(require_src());
 
 // src/errors.ts
 var UserFacingError = class extends Error {
@@ -110212,7 +110382,7 @@ var UserFacingError = class extends Error {
 };
 
 // src/services/presence.ts
-var import_discord3 = __toESM(require_src());
+var import_discord4 = __toESM(require_src());
 var ROTATION_MS = 25e3;
 function isBotStatus(value) {
   return value === "online" || value === "idle" || value === "dnd" || value === "invisible";
@@ -110339,15 +110509,15 @@ var PresenceService = class {
     if (source === "rotation") {
       const current = this.rotationEntries()[this.rotationIndex];
       if (current?.kind === "playing") {
-        return { name: text, type: import_discord3.ActivityType.Playing };
+        return { name: text, type: import_discord4.ActivityType.Playing };
       }
     }
-    return { name: text, type: import_discord3.ActivityType.Watching };
+    return { name: text, type: import_discord4.ActivityType.Watching };
   }
 };
 
 // src/views/admin.ts
-var import_discord4 = __toESM(require_src());
+var import_discord5 = __toESM(require_src());
 
 // src/brand.ts
 var BRAND = {
@@ -110418,7 +110588,7 @@ function truncate(text, max) {
 
 // src/views/admin.ts
 function buildAnnouncement(title, message) {
-  return new import_discord4.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / NOTICE" }).setTitle(title).setDescription(message).setColor(BRAND.colors.red).setFooter({ text: BRAND.footer }).setTimestamp();
+  return new import_discord5.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / NOTICE" }).setTitle(title).setDescription(message).setColor(BRAND.colors.red).setFooter({ text: BRAND.footer }).setTimestamp();
 }
 function buildAdminStatus(view) {
   const heartbeat = view.heartbeat;
@@ -110431,7 +110601,7 @@ function buildAdminStatus(view) {
   if (heartbeat.lastFailureReason) {
     heartbeatLines.push(`Reason: ${heartbeat.lastFailureReason}`);
   }
-  return new import_discord4.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / ENGINE ROOM" }).setTitle("Private readings.").setColor(view.maintenance ? BRAND.colors.red : BRAND.colors.blue).addFields(
+  return new import_discord5.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / ENGINE ROOM" }).setTitle("Private readings.").setColor(view.maintenance ? BRAND.colors.red : BRAND.colors.blue).addFields(
     {
       name: "Process",
       value: [
@@ -110512,12 +110682,12 @@ async function runAdminStatus(interaction, context) {
         presence
       })
     ],
-    flags: import_discord5.MessageFlags.Ephemeral,
+    flags: import_discord6.MessageFlags.Ephemeral,
     allowedMentions: { parse: [] }
   });
 }
 async function runAnnounce(interaction, context) {
-  await interaction.deferReply({ flags: import_discord5.MessageFlags.Ephemeral });
+  await interaction.deferReply({ flags: import_discord6.MessageFlags.Ephemeral });
   const title = interaction.options.getString("title", true).trim();
   const message = interaction.options.getString("message", true).trim();
   if (title.length === 0 || title.length > 100 || message.length === 0 || message.length > 1800) {
@@ -110529,7 +110699,7 @@ async function runAnnounce(interaction, context) {
   if (!target && context.config.announcementsChannelId) {
     target = await context.client.channels.fetch(context.config.announcementsChannelId).catch(() => null);
   }
-  if (!target || target.type !== import_discord5.ChannelType.GuildText && target.type !== import_discord5.ChannelType.GuildAnnouncement) {
+  if (!target || target.type !== import_discord6.ChannelType.GuildText && target.type !== import_discord6.ChannelType.GuildAnnouncement) {
     await interaction.editReply("Choose a text or announcement channel, or set ANNOUNCEMENTS_CHANNEL_ID.");
     return;
   }
@@ -110540,7 +110710,7 @@ async function runAnnounce(interaction, context) {
     return;
   }
   const permissions = target.permissionsFor(me);
-  if (!permissions?.has(import_discord5.PermissionFlagsBits.ViewChannel) || !permissions.has(import_discord5.PermissionFlagsBits.SendMessages) || !permissions.has(import_discord5.PermissionFlagsBits.EmbedLinks)) {
+  if (!permissions?.has(import_discord6.PermissionFlagsBits.ViewChannel) || !permissions.has(import_discord6.PermissionFlagsBits.SendMessages) || !permissions.has(import_discord6.PermissionFlagsBits.EmbedLinks)) {
     await interaction.editReply("I need View Channel, Send Messages, and Embed Links in that channel.");
     return;
   }
@@ -110556,7 +110726,7 @@ async function runPresence(interaction, context) {
   if (text.length === 0 || text.length > 128) {
     await interaction.reply({
       content: "Presence text must be between 1 and 128 characters.",
-      flags: import_discord5.MessageFlags.Ephemeral,
+      flags: import_discord6.MessageFlags.Ephemeral,
       allowedMentions: { parse: [] }
     });
     return;
@@ -110564,7 +110734,7 @@ async function runPresence(interaction, context) {
   if (!isBotStatus(status)) {
     await interaction.reply({
       content: "Choose one of: online, idle, dnd, invisible.",
-      flags: import_discord5.MessageFlags.Ephemeral,
+      flags: import_discord6.MessageFlags.Ephemeral,
       allowedMentions: { parse: [] }
     });
     return;
@@ -110575,7 +110745,7 @@ async function runPresence(interaction, context) {
   const content = applied.source === "website" ? "Saved locally. A website heartbeat override is active, so it takes precedence until the site clears it." : `Presence set: ${status} \xB7 ${text}`;
   await interaction.reply({
     content,
-    flags: import_discord5.MessageFlags.Ephemeral,
+    flags: import_discord6.MessageFlags.Ephemeral,
     allowedMentions: { parse: [] }
   });
 }
@@ -110588,12 +110758,12 @@ async function runMaintenance(interaction, context) {
   const content = websiteControls ? `Local maintenance saved as ${enabled ? "on" : "off"}, but the website override currently holds the gate ${effective ? "closed" : "open"}. Clear the website override to let the local setting take over.` : enabled ? "Maintenance is on. The gate is closed, presence is idle, and the heartbeat will report it." : "Maintenance is off. The gate is open; the presence rotation resumes unless the website is overriding it.";
   await interaction.reply({
     content,
-    flags: import_discord5.MessageFlags.Ephemeral,
+    flags: import_discord6.MessageFlags.Ephemeral,
     allowedMentions: { parse: [] }
   });
 }
 async function runSync(interaction, context) {
-  await interaction.deferReply({ flags: import_discord5.MessageFlags.Ephemeral });
+  await interaction.deferReply({ flags: import_discord6.MessageFlags.Ephemeral });
   const count = await context.syncer.sync("owner");
   await interaction.editReply(`Re-registered ${count} command${count === 1 ? "" : "s"} in this guild.`);
 }
@@ -110602,12 +110772,12 @@ async function runTicketPanel(interaction, context) {
   if (!guild) {
     await interaction.reply({
       content: "The panel can only be posted from inside the yard.",
-      flags: import_discord5.MessageFlags.Ephemeral,
+      flags: import_discord6.MessageFlags.Ephemeral,
       allowedMentions: { parse: [] }
     });
     return;
   }
-  await interaction.deferReply({ flags: import_discord5.MessageFlags.Ephemeral });
+  await interaction.deferReply({ flags: import_discord6.MessageFlags.Ephemeral });
   try {
     const result = await context.tickets.postPanel(guild);
     await interaction.editReply(
@@ -110623,7 +110793,7 @@ async function runTicketPanel(interaction, context) {
 }
 
 // src/commands/admin.ts
-var data = new import_discord6.SlashCommandBuilder().setName("admin").setDescription("Studio controls. Wrightyard owner only.").setDefaultMemberPermissions(import_discord6.PermissionFlagsBits.Administrator).setContexts(import_discord6.InteractionContextType.Guild).addSubcommand(
+var data = new import_discord7.SlashCommandBuilder().setName("admin").setDescription("Studio controls. Wrightyard owner only.").setDefaultMemberPermissions(import_discord7.PermissionFlagsBits.Administrator).setContexts(import_discord7.InteractionContextType.Guild).addSubcommand(
   (subcommand) => subcommand.setName("status").setDescription("Private process, presence, and heartbeat readings.")
 ).addSubcommand(
   (subcommand) => subcommand.setName("announce").setDescription("Post a notice in the announcements channel.").addStringOption(
@@ -110631,7 +110801,7 @@ var data = new import_discord6.SlashCommandBuilder().setName("admin").setDescrip
   ).addStringOption(
     (option) => option.setName("message").setDescription("The notice body.").setMinLength(1).setMaxLength(1800).setRequired(true)
   ).addChannelOption(
-    (option) => option.setName("channel").setDescription("Where to post. Defaults to the announcements channel.").addChannelTypes(import_discord6.ChannelType.GuildText, import_discord6.ChannelType.GuildAnnouncement).setRequired(false)
+    (option) => option.setName("channel").setDescription("Where to post. Defaults to the announcements channel.").addChannelTypes(import_discord7.ChannelType.GuildText, import_discord7.ChannelType.GuildAnnouncement).setRequired(false)
   )
 ).addSubcommand(
   (subcommand) => subcommand.setName("presence").setDescription("Set a local presence override.").addStringOption(
@@ -110661,7 +110831,7 @@ var admin_default = {
     if (!isOwner(interaction.user.id, context.config)) {
       await interaction.reply({
         content: "Owner only.",
-        flags: import_discord6.MessageFlags.Ephemeral,
+        flags: import_discord7.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -110689,7 +110859,7 @@ var admin_default = {
       default:
         await interaction.reply({
           content: "Unknown admin subcommand.",
-          flags: import_discord6.MessageFlags.Ephemeral,
+          flags: import_discord7.MessageFlags.Ephemeral,
           allowedMentions: { parse: [] }
         });
     }
@@ -110697,7 +110867,7 @@ var admin_default = {
 };
 
 // src/commands/ask.ts
-var import_discord8 = __toESM(require_src());
+var import_discord9 = __toESM(require_src());
 
 // src/services/ai.ts
 var GROQ_CHAT_URL = "https://api.groq.com/openai/v1/chat/completions";
@@ -110896,7 +111066,7 @@ var AIService = class {
 };
 
 // src/views/public.ts
-var import_discord7 = __toESM(require_src());
+var import_discord8 = __toESM(require_src());
 
 // src/services/levels.ts
 var import_node_crypto = require("node:crypto");
@@ -111215,7 +111385,7 @@ var LevelStore = class {
 // src/views/public.ts
 function buildStatusEmbed(status) {
   const ping = status.ping >= 0 ? `${Math.round(status.ping)} ms` : "\u2014";
-  return new import_discord7.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / THE YARD" }).setTitle(status.maintenance ? "The yard is closed for maintenance." : "The yard is open.").setDescription(
+  return new import_discord8.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / THE YARD" }).setTitle(status.maintenance ? "The yard is closed for maintenance." : "The yard is open.").setDescription(
     status.maintenance ? "The machinery is being tended. The gate is shut until the work is done; the lights come back on shortly." : "Software, built here. Kept running. A live reading from the yard, taken at the moment you asked."
   ).setColor(status.maintenance ? BRAND.colors.red : BRAND.colors.blue).addFields(
     {
@@ -111236,24 +111406,24 @@ function siteButtonRows(base) {
   const status = siteUrl(base, BRAND.paths.status);
   const buttons = [];
   if (site) {
-    buttons.push(new import_discord7.ButtonBuilder().setLabel("Website").setStyle(import_discord7.ButtonStyle.Link).setURL(site));
+    buttons.push(new import_discord8.ButtonBuilder().setLabel("Website").setStyle(import_discord8.ButtonStyle.Link).setURL(site));
   }
   if (dashboard) {
-    buttons.push(new import_discord7.ButtonBuilder().setLabel("Dashboard").setStyle(import_discord7.ButtonStyle.Link).setURL(dashboard));
+    buttons.push(new import_discord8.ButtonBuilder().setLabel("Dashboard").setStyle(import_discord8.ButtonStyle.Link).setURL(dashboard));
   }
   if (status) {
-    buttons.push(new import_discord7.ButtonBuilder().setLabel("Status page").setStyle(import_discord7.ButtonStyle.Link).setURL(status));
+    buttons.push(new import_discord8.ButtonBuilder().setLabel("Status page").setStyle(import_discord8.ButtonStyle.Link).setURL(status));
   }
   buttons.push(
-    new import_discord7.ButtonBuilder().setLabel("Join the yard").setStyle(import_discord7.ButtonStyle.Link).setURL(BRAND.invite)
+    new import_discord8.ButtonBuilder().setLabel("Join the yard").setStyle(import_discord8.ButtonStyle.Link).setURL(BRAND.invite)
   );
-  return [new import_discord7.ActionRowBuilder().addComponents(buttons)];
+  return [new import_discord8.ActionRowBuilder().addComponents(buttons)];
 }
 function buildStatsEmbed(view) {
   const { guild } = view;
   const boosts = guild.premiumSubscriptionCount ?? 0;
   const members = view.presenceCount === null ? `${formatCount(guild.memberCount)} on the books` : `${formatCount(guild.memberCount)} on the books \xB7 ${formatCount(view.presenceCount)} around now`;
-  return new import_discord7.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / THE LEDGER" }).setTitle("The yard, by the numbers.").setDescription("A reading from the ledger: who is here, what is open, and how long the lights have been on.").setColor(BRAND.colors.brass).addFields(
+  return new import_discord8.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / THE LEDGER" }).setTitle("The yard, by the numbers.").setDescription("A reading from the ledger: who is here, what is open, and how long the lights have been on.").setColor(BRAND.colors.brass).addFields(
     { name: "Members", value: members, inline: false },
     { name: "Channels", value: formatCount(guild.channels.cache.size), inline: true },
     { name: "Roles", value: formatCount(guild.roles.cache.size), inline: true },
@@ -111262,7 +111432,7 @@ function buildStatsEmbed(view) {
     { name: "Open tickets", value: formatCount(view.openTickets), inline: true }
   ).setFooter({ text: BRAND.footer }).setTimestamp();
 }
-function buildHelpEmbed(isOwner2) {
+function buildHelpEmbed(isOwner2, isStaff = false) {
   const yard = [
     "**/status** \u2014 a live reading from the yard.",
     "**/stats** \u2014 the ledger: members, rooms, roles, boosts.",
@@ -111283,12 +111453,24 @@ function buildHelpEmbed(isOwner2) {
     "**/ticket** \u2014 open a private room with the studio.",
     "The public door lives in the ticket channel; one ticket at a time."
   ].join("\n");
-  const embed = new import_discord7.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / THE INDEX" }).setTitle("The yard, in brief.").setDescription("Everything the bot can do, kept short. The gate is staffed when the studio is awake.").setColor(BRAND.colors.ink).addFields(
+  const embed = new import_discord8.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / THE INDEX" }).setTitle("The yard, in brief.").setDescription("Everything the bot can do, kept short. The gate is staffed when the studio is awake.").setColor(BRAND.colors.ink).addFields(
     { name: "The Yard", value: yard },
     { name: "The Ledger", value: ledger },
     { name: "The Bench", value: bench },
     { name: "The Gate", value: gate }
   ).setFooter({ text: BRAND.footer }).setTimestamp();
+  if (isStaff) {
+    embed.addFields({
+      name: "Staff",
+      value: [
+        "**/staff warn \xB7 warnings \xB7 timeout \xB7 untimeout \xB7 kick** \u2014 the day-to-day ledger.",
+        "**/staff ban \xB7 unban \xB7 clearwarnings** \u2014 steward actions.",
+        "**/staff purge \xB7 lock \xB7 unlock \xB7 slowmode** \u2014 channel control.",
+        "**/staff note \xB7 notes \xB7 case \xB7 history \xB7 stats \xB7 duty** \u2014 the written record.",
+        "**/report** \u2014 any member can open a report case."
+      ].join("\n")
+    });
+  }
   if (isOwner2) {
     embed.addFields({
       name: "Owner only",
@@ -111305,7 +111487,7 @@ function buildHelpEmbed(isOwner2) {
   return embed;
 }
 function buildSiteEmbed(base) {
-  return new import_discord7.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / ELSEWHERE" }).setTitle("The same work, on the web.").setDescription(
+  return new import_discord8.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / ELSEWHERE" }).setTitle("The same work, on the web.").setDescription(
     "The site carries the full register: what we build, how a job is scoped, and what it costs. The dashboard and status page keep the lights honest."
   ).setColor(BRAND.colors.brass).addFields(
     { name: "The studio", value: base, inline: false },
@@ -111317,7 +111499,7 @@ function buildRankEmbed(view) {
   const maxed = view.record.level >= MAX_LEVEL;
   const filled = Math.round(progress.percent / 10);
   const bar = `${"\u2588".repeat(filled)}${"\u2591".repeat(10 - filled)}`;
-  return new import_discord7.EmbedBuilder().setAuthor({
+  return new import_discord8.EmbedBuilder().setAuthor({
     name: view.member.displayName,
     iconURL: view.member.displayAvatarURL({ size: 128 })
   }).setTitle(`Level ${view.record.level}`).setDescription(
@@ -111337,7 +111519,7 @@ function buildLeaderboardEmbed(entries) {
     const mark = medals[index] ?? `\`${String(entry.rank).padStart(2, "0")}\``;
     return `${mark} <@${entry.userId}> \xB7 **Lv ${entry.level}** \xB7 ${formatCount(entry.xp)} XP`;
   }).join("\n");
-  return new import_discord7.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / THE LEDGER" }).setTitle("The top of the yard.").setDescription(body).setColor(BRAND.colors.brass).setFooter({ text: BRAND.footer }).setTimestamp();
+  return new import_discord8.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / THE LEDGER" }).setTitle("The top of the yard.").setDescription(body).setColor(BRAND.colors.brass).setFooter({ text: BRAND.footer }).setTimestamp();
 }
 
 // src/commands/ask.ts
@@ -111348,7 +111530,7 @@ function truncate3(value, max) {
   return `${value.slice(0, max - 1).trimEnd()}\u2026`;
 }
 var ask_default = {
-  data: new import_discord8.SlashCommandBuilder().setName("ask").setDescription("Ask the yard about the studio, its services, or how a job starts.").setContexts(import_discord8.InteractionContextType.Guild).addStringOption(
+  data: new import_discord9.SlashCommandBuilder().setName("ask").setDescription("Ask the yard about the studio, its services, or how a job starts.").setContexts(import_discord9.InteractionContextType.Guild).addStringOption(
     (option) => option.setName("question").setDescription("What do you want to know?").setMaxLength(800).setRequired(true)
   ),
   cooldownSeconds: 12,
@@ -111356,7 +111538,7 @@ var ask_default = {
     if (!context.ai.enabled) {
       await interaction.reply({
         content: "The AI bench is not wired on this deployment yet. A studio member can answer in a ticket.",
-        flags: import_discord8.MessageFlags.Ephemeral,
+        flags: import_discord9.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -111365,7 +111547,7 @@ var ask_default = {
     if (question.length < 3) {
       await interaction.reply({
         content: "Give the bench a full question.",
-        flags: import_discord8.MessageFlags.Ephemeral,
+        flags: import_discord9.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -111373,7 +111555,7 @@ var ask_default = {
     await interaction.deferReply();
     try {
       const answer = await context.ai.ask(question);
-      const embed = new import_discord8.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / THE BENCH" }).setTitle("A reading from the bench.").setDescription(truncate3(answer, 3800)).setColor(BRAND.colors.blue).addFields({
+      const embed = new import_discord9.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / THE BENCH" }).setTitle("A reading from the bench.").setDescription(truncate3(answer, 3800)).setColor(BRAND.colors.blue).addFields({
         name: "The question",
         value: truncate3(question, 1e3)
       }).setFooter({ text: "Drafted by AI \xB7 Verify the details with the studio" }).setTimestamp();
@@ -111389,7 +111571,7 @@ var ask_default = {
 };
 
 // src/commands/brief.ts
-var import_discord9 = __toESM(require_src());
+var import_discord10 = __toESM(require_src());
 function truncate4(value, max) {
   if (value.length <= max) {
     return value;
@@ -111397,7 +111579,7 @@ function truncate4(value, max) {
   return `${value.slice(0, max - 1).trimEnd()}\u2026`;
 }
 var brief_default = {
-  data: new import_discord9.SlashCommandBuilder().setName("brief").setDescription("Turn a rough project idea into a short studio brief.").setContexts(import_discord9.InteractionContextType.Guild).addStringOption(
+  data: new import_discord10.SlashCommandBuilder().setName("brief").setDescription("Turn a rough project idea into a short studio brief.").setContexts(import_discord10.InteractionContextType.Guild).addStringOption(
     (option) => option.setName("idea").setDescription("What are you trying to build? A sentence or two is enough.").setMaxLength(1500).setRequired(true)
   ),
   cooldownSeconds: 30,
@@ -111405,7 +111587,7 @@ var brief_default = {
     if (!context.ai.enabled) {
       await interaction.reply({
         content: "The AI bench is not wired on this deployment yet. A studio member can shape the brief in a ticket.",
-        flags: import_discord9.MessageFlags.Ephemeral,
+        flags: import_discord10.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -111414,30 +111596,30 @@ var brief_default = {
     if (idea.length < 10) {
       await interaction.reply({
         content: "Give the bench a little more: what it does, who uses it, and where it lives.",
-        flags: import_discord9.MessageFlags.Ephemeral,
+        flags: import_discord10.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
     }
-    await interaction.deferReply({ flags: import_discord9.MessageFlags.Ephemeral });
+    await interaction.deferReply({ flags: import_discord10.MessageFlags.Ephemeral });
     try {
       const draft = await context.ai.brief(idea);
-      const embed = new import_discord9.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / THE BENCH" }).setTitle("A brief, drafted.").setDescription(truncate4(draft, 3800)).setColor(BRAND.colors.brass).setFooter({ text: "Drafted by AI \xB7 Check it before sending it to the studio" }).setTimestamp();
+      const embed = new import_discord10.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / THE BENCH" }).setTitle("A brief, drafted.").setDescription(truncate4(draft, 3800)).setColor(BRAND.colors.brass).setFooter({ text: "Drafted by AI \xB7 Check it before sending it to the studio" }).setTimestamp();
       const buttons = [];
       if (context.config.ticketPanelChannelId) {
         buttons.push(
-          new import_discord9.ButtonBuilder().setLabel("Open a ticket").setStyle(import_discord9.ButtonStyle.Link).setURL(channelUrl(context.config.guildId, context.config.ticketPanelChannelId))
+          new import_discord10.ButtonBuilder().setLabel("Open a ticket").setStyle(import_discord10.ButtonStyle.Link).setURL(channelUrl(context.config.guildId, context.config.ticketPanelChannelId))
         );
       }
       const site = siteUrl(context.config.siteUrl);
       if (site) {
         buttons.push(
-          new import_discord9.ButtonBuilder().setLabel("Website").setStyle(import_discord9.ButtonStyle.Link).setURL(site)
+          new import_discord10.ButtonBuilder().setLabel("Website").setStyle(import_discord10.ButtonStyle.Link).setURL(site)
         );
       }
       await interaction.editReply({
         embeds: [embed],
-        components: buttons.length > 0 ? [new import_discord9.ActionRowBuilder().addComponents(buttons)] : []
+        components: buttons.length > 0 ? [new import_discord10.ActionRowBuilder().addComponents(buttons)] : []
       });
     } catch (error) {
       const message = error instanceof AIBusyError ? "The AI bench is at capacity. Give it a moment and try again." : "The AI bench could not draft that one. Try again, or open a ticket and a person will shape it.";
@@ -111447,29 +111629,76 @@ var brief_default = {
 };
 
 // src/commands/help.ts
-var import_discord10 = __toESM(require_src());
+var import_discord11 = __toESM(require_src());
+
+// src/staff/ranks.ts
+var RANK_ORDER = [
+  "none",
+  "moderator",
+  "steward",
+  "admin",
+  "founder"
+];
+function atLeast(rank, minimum) {
+  return RANK_ORDER.indexOf(rank) >= RANK_ORDER.indexOf(minimum);
+}
+function memberId(member) {
+  return "id" in member && typeof member.id === "string" ? member.id : member.user.id;
+}
+function hasAny(roles, roleIds2) {
+  return roleIds2.some((roleId) => roles.has(roleId));
+}
+function resolveStaffRank(member, config, ownerId) {
+  if (!member) {
+    return "none";
+  }
+  if (memberId(member) === (ownerId ?? config.ownerId)) {
+    return "founder";
+  }
+  const roles = memberRoleIds(member);
+  if (hasAny(roles, config.staffFounderRoleIds)) {
+    return "founder";
+  }
+  if (hasAny(roles, config.staffAdminRoleIds)) {
+    return "admin";
+  }
+  if (hasAny(roles, config.staffStewardRoleIds)) {
+    return "steward";
+  }
+  if (hasAny(roles, config.staffModeratorRoleIds)) {
+    return "moderator";
+  }
+  const tiersConfigured = config.staffFounderRoleIds.length + config.staffAdminRoleIds.length + config.staffStewardRoleIds.length + config.staffModeratorRoleIds.length > 0;
+  if (!tiersConfigured && hasAny(roles, config.staffRoleIds)) {
+    return "moderator";
+  }
+  return "none";
+}
+
+// src/commands/help.ts
 var help_default = {
-  data: new import_discord10.SlashCommandBuilder().setName("help").setDescription("The short index of everything this bot can do.").setContexts(import_discord10.InteractionContextType.Guild),
+  data: new import_discord11.SlashCommandBuilder().setName("help").setDescription("The short index of everything this bot can do.").setContexts(import_discord11.InteractionContextType.Guild),
   cooldownSeconds: 5,
   async execute(interaction, context) {
+    const isStaff = resolveStaffRank(interaction.member, context.config) !== "none";
     await interaction.reply({
-      embeds: [buildHelpEmbed(isOwner(interaction.user.id, context.config))],
-      flags: import_discord10.MessageFlags.Ephemeral,
+      embeds: [buildHelpEmbed(isOwner(interaction.user.id, context.config), isStaff)],
+      flags: import_discord11.MessageFlags.Ephemeral,
       allowedMentions: { parse: [] }
     });
   }
 };
 
 // src/commands/leaderboard.ts
-var import_discord11 = __toESM(require_src());
+var import_discord12 = __toESM(require_src());
 var leaderboard_default = {
-  data: new import_discord11.SlashCommandBuilder().setName("leaderboard").setDescription("The top of the yard XP ledger.").setContexts(import_discord11.InteractionContextType.Guild),
+  data: new import_discord12.SlashCommandBuilder().setName("leaderboard").setDescription("The top of the yard XP ledger.").setContexts(import_discord12.InteractionContextType.Guild),
   cooldownSeconds: 10,
   async execute(interaction, context) {
     if (!interaction.inCachedGuild()) {
       await interaction.reply({
         content: "The yard lives in a server. Run this there.",
-        flags: import_discord11.MessageFlags.Ephemeral,
+        flags: import_discord12.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -111484,9 +111713,9 @@ var leaderboard_default = {
 };
 
 // src/commands/rank.ts
-var import_discord12 = __toESM(require_src());
+var import_discord13 = __toESM(require_src());
 var rank_default = {
-  data: new import_discord12.SlashCommandBuilder().setName("rank").setDescription("Your yard level, XP, message count, and standing.").setContexts(import_discord12.InteractionContextType.Guild).addUserOption(
+  data: new import_discord13.SlashCommandBuilder().setName("rank").setDescription("Your yard level, XP, message count, and standing.").setContexts(import_discord13.InteractionContextType.Guild).addUserOption(
     (option) => option.setName("member").setDescription("Whose rank to read. Defaults to you.").setRequired(false)
   ),
   cooldownSeconds: 5,
@@ -111494,7 +111723,7 @@ var rank_default = {
     if (!interaction.inCachedGuild()) {
       await interaction.reply({
         content: "The yard lives in a server. Run this there.",
-        flags: import_discord12.MessageFlags.Ephemeral,
+        flags: import_discord13.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -111517,17 +111746,408 @@ var rank_default = {
   }
 };
 
+// src/commands/report.ts
+var import_discord14 = __toESM(require_src());
+var report_default = {
+  data: new import_discord14.SlashCommandBuilder().setName("report").setDescription("Report a member to the studio staff.").setDMPermission(false).setContexts(import_discord14.InteractionContextType.Guild).addUserOption(
+    (option) => option.setName("member").setDescription("The member you are reporting.").setRequired(true)
+  ).addStringOption(
+    (option) => option.setName("reason").setDescription("What happened, and when.").setMinLength(1).setMaxLength(1500).setRequired(true)
+  ),
+  cooldownSeconds: 60,
+  async execute(interaction, context) {
+    if (!interaction.inCachedGuild()) {
+      await interaction.reply({
+        content: "The yard lives in a server. Run this there.",
+        flags: import_discord14.MessageFlags.Ephemeral,
+        allowedMentions: { parse: [] }
+      });
+      return;
+    }
+    const runtime = context.runtime;
+    if (!runtime) {
+      await interaction.reply({
+        content: "Staff services are not ready.",
+        flags: import_discord14.MessageFlags.Ephemeral,
+        allowedMentions: { parse: [] }
+      });
+      return;
+    }
+    const target = interaction.options.getMember("member");
+    if (!target) {
+      await interaction.reply({
+        content: "Pick a member who is still in this server.",
+        flags: import_discord14.MessageFlags.Ephemeral,
+        allowedMentions: { parse: [] }
+      });
+      return;
+    }
+    if (target.id === interaction.user.id) {
+      await interaction.reply({
+        content: "You cannot report yourself.",
+        flags: import_discord14.MessageFlags.Ephemeral,
+        allowedMentions: { parse: [] }
+      });
+      return;
+    }
+    try {
+      const record = await runtime.staff.report(
+        interaction.member,
+        target,
+        interaction.options.getString("reason", true)
+      );
+      await interaction.reply({
+        content: `Report filed as case #${String(record.caseId).padStart(4, "0")}. Staff will review it.`,
+        flags: import_discord14.MessageFlags.Ephemeral,
+        allowedMentions: { parse: [] }
+      });
+    } catch (error) {
+      context.logger.warn("Report failed", {
+        userId: interaction.user.id,
+        targetId: target.id,
+        error: error instanceof Error ? `${error.name}: ${error.message}` : String(error)
+      });
+      await interaction.reply({
+        content: "The report did not go through. Try again in a moment.",
+        flags: import_discord14.MessageFlags.Ephemeral,
+        allowedMentions: { parse: [] }
+      });
+    }
+  }
+};
+
+// src/commands/security.ts
+var import_discord16 = __toESM(require_src());
+
+// src/security/rules.ts
+var SECURITY_RULES = [
+  { kind: "channelDelete", windowSeconds: 60, alertAt: 2, quarantineAt: 3, banAt: 6 },
+  { kind: "roleDelete", windowSeconds: 60, alertAt: 2, quarantineAt: 3, banAt: 6 },
+  { kind: "ban", windowSeconds: 60, alertAt: 3, quarantineAt: 5, banAt: 10 },
+  { kind: "kick", windowSeconds: 60, alertAt: 3, quarantineAt: 5, banAt: 10 },
+  { kind: "webhookCreate", windowSeconds: 60, alertAt: 2, quarantineAt: 3, banAt: 6 },
+  { kind: "channelCreate", windowSeconds: 60, alertAt: 3, quarantineAt: 5, banAt: 10 },
+  { kind: "roleCreate", windowSeconds: 60, alertAt: 3, quarantineAt: 5, banAt: 10 },
+  { kind: "memberRoleUpdate", windowSeconds: 60, alertAt: 5, quarantineAt: 10, banAt: 20 },
+  { kind: "emojiDelete", windowSeconds: 60, alertAt: 5, quarantineAt: 10, banAt: 20 },
+  { kind: "stickerDelete", windowSeconds: 60, alertAt: 5, quarantineAt: 10, banAt: 20 },
+  { kind: "inviteCreate", windowSeconds: 60, alertAt: 5, quarantineAt: 10, banAt: 20 },
+  { kind: "guildUpdate", windowSeconds: 300, alertAt: 1, quarantineAt: 2, banAt: 3 },
+  { kind: "bulkDelete", windowSeconds: 60, alertAt: 2, quarantineAt: 3, banAt: 6 },
+  { kind: "threadDelete", windowSeconds: 60, alertAt: 3, quarantineAt: 5, banAt: 10 }
+];
+var NONE = { action: "none", kind: null, rule: null, count: 0 };
+var SEVERITY = {
+  none: 0,
+  alert: 1,
+  quarantine: 2,
+  ban: 3
+};
+function actionFor(rule, count) {
+  if (count >= rule.banAt) {
+    return "ban";
+  }
+  if (count >= rule.quarantineAt) {
+    return "quarantine";
+  }
+  if (count >= rule.alertAt) {
+    return "alert";
+  }
+  return "none";
+}
+function applyMode(action, mode) {
+  if (action === "none") {
+    return "none";
+  }
+  if (mode === "alert") {
+    return "alert";
+  }
+  if (mode === "quarantine" && action === "ban") {
+    return "quarantine";
+  }
+  return action;
+}
+function evaluateSecurity(actions, now, mode) {
+  let best = NONE;
+  const nowMs = now.getTime();
+  for (const rule of SECURITY_RULES) {
+    const windowStart = nowMs - rule.windowSeconds * 1e3;
+    let count = 0;
+    for (const action2 of actions) {
+      if (action2.kind !== rule.kind) {
+        continue;
+      }
+      const at = action2.at.getTime();
+      if (at >= windowStart && at <= nowMs) {
+        count += 1;
+      }
+    }
+    const action = applyMode(actionFor(rule, count), mode);
+    if (action === "none" || SEVERITY[action] <= SEVERITY[best.action]) {
+      continue;
+    }
+    best = { action, kind: rule.kind, rule, count };
+  }
+  return best;
+}
+
+// src/views/security-status.ts
+var import_discord15 = __toESM(require_src());
+function modeLabel(view) {
+  if (!view.enabled) {
+    return "disarmed";
+  }
+  return view.mode;
+}
+function buildSecurityStatus(view) {
+  const thresholds = `${view.ruleCount} rules`;
+  return new import_discord15.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / SECURITY" }).setTitle("Yard watch").setColor(view.enabled ? BRAND.colors.brass : BRAND.colors.ink).addFields(
+    {
+      name: "Anti-nuke",
+      value: `${modeLabel(view)} \xB7 ${thresholds}`,
+      inline: true
+    },
+    {
+      name: "Raid guard",
+      value: view.raidMode ? "Active \u2014 joins contained" : "Standing by",
+      inline: true
+    },
+    {
+      name: "Snapshot",
+      value: view.snapshotAge,
+      inline: true
+    },
+    {
+      name: "Stores",
+      value: `archive ${view.auditStore} \xB7 cases ${view.caseStore}`,
+      inline: true
+    },
+    {
+      name: "Last alert",
+      value: view.lastAlert ?? "No alerts since startup",
+      inline: true
+    }
+  ).setFooter({ text: BRAND.footer }).setTimestamp();
+}
+function buildSecuritySimulation(view) {
+  const rule = view.decision.rule;
+  const thresholds = rule ? `alert ${rule.alertAt} \xB7 quarantine ${rule.quarantineAt} \xB7 ban ${rule.banAt}` : "no rule";
+  return new import_discord15.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / SECURITY" }).setTitle(truncate(`Simulation: ${view.kind}`, 256)).setColor(view.decision.action === "none" ? BRAND.colors.blue : BRAND.colors.red).setDescription("Simulation only. No member was quarantined, banned, or restored.").addFields(
+    {
+      name: "Mode",
+      value: view.mode,
+      inline: true
+    },
+    {
+      name: "Synthetic decision",
+      value: view.decision.action,
+      inline: true
+    },
+    {
+      name: "Burst",
+      value: `${view.decision.count} \xD7 ${view.decision.kind ?? view.kind}`,
+      inline: true
+    },
+    {
+      name: "Thresholds",
+      value: thresholds
+    }
+  ).setFooter({ text: BRAND.footer }).setTimestamp();
+}
+
+// src/commands/security.ts
+var SIMULATED_ACTOR_ID = "simulation";
+var SIMULATED_ACTOR_TAG = "simulation";
+var DESTRUCTIVE_KINDS = [
+  "channelDelete",
+  "roleDelete",
+  "ban",
+  "kick",
+  "webhookCreate",
+  "channelCreate",
+  "roleCreate",
+  "memberRoleUpdate",
+  "emojiDelete",
+  "stickerDelete",
+  "inviteCreate",
+  "guildUpdate",
+  "bulkDelete",
+  "threadDelete"
+];
+function storeLabel(durable) {
+  return durable ? "mongodb" : "json";
+}
+function snapshotAge(capturedAt, now) {
+  if (!capturedAt) {
+    return "No snapshot yet";
+  }
+  return `${formatDuration((now.getTime() - capturedAt.getTime()) / 1e3)} ago`;
+}
+function statusView(runtime, now) {
+  const security = runtime.security.snapshot();
+  return {
+    enabled: security.enabled,
+    mode: security.mode,
+    ruleCount: security.ruleCount,
+    raidMode: runtime.raid.snapshot().active,
+    snapshotAge: snapshotAge(runtime.snapshots.last()?.capturedAt ?? null, now),
+    auditStore: storeLabel(runtime.auditStore.durable),
+    caseStore: storeLabel(runtime.cases.durable),
+    lastAlert: security.lastAlertAt ? formatTimestamp(security.lastAlertAt, "R") : null
+  };
+}
+function ruleFor(kind) {
+  const rule = SECURITY_RULES.find((entry) => entry.kind === kind);
+  if (!rule) {
+    throw new Error(`No security rule exists for ${kind}.`);
+  }
+  return rule;
+}
+function simulateBurst(kind, now, mode) {
+  const rule = ruleFor(kind);
+  const actions = Array.from({ length: rule.banAt }, (_, index) => ({
+    kind,
+    guildId: "simulation",
+    actorId: SIMULATED_ACTOR_ID,
+    actorTag: SIMULATED_ACTOR_TAG,
+    targetId: null,
+    targetName: null,
+    at: new Date(now.getTime() - index * 1e3)
+  }));
+  return evaluateSecurity(actions, now, mode);
+}
+async function replyNotReady(interaction) {
+  await interaction.reply({
+    content: "Security services are not ready.",
+    flags: import_discord16.MessageFlags.Ephemeral,
+    allowedMentions: { parse: [] }
+  });
+}
+var security_default = {
+  data: new import_discord16.SlashCommandBuilder().setName("security").setDescription("Anti-nuke, raid, and snapshot controls. Wrightyard owner only.").setDefaultMemberPermissions(import_discord16.PermissionFlagsBits.Administrator).setDMPermission(false).setContexts(import_discord16.InteractionContextType.Guild).addSubcommand(
+    (subcommand) => subcommand.setName("status").setDescription("Read the anti-nuke mode, raid state, snapshot age, and stores.")
+  ).addSubcommand(
+    (subcommand) => subcommand.setName("raid").setDescription("Open or close the raid window by hand.").addStringOption(
+      (option) => option.setName("state").setDescription("Whether the raid guard should contain joins.").setRequired(true).addChoices({ name: "on", value: "on" }, { name: "off", value: "off" })
+    )
+  ).addSubcommand(
+    (subcommand) => subcommand.setName("snapshot").setDescription("Capture a restorable guild snapshot right now.")
+  ).addSubcommand(
+    (subcommand) => subcommand.setName("simulate").setDescription("Preview the decision a destructive burst would trigger. No enforcement.").addStringOption(
+      (option) => option.setName("action").setDescription("The destructive action to simulate.").setRequired(true).addChoices(
+        ...DESTRUCTIVE_KINDS.map((kind) => ({ name: kind, value: kind }))
+      )
+    )
+  ),
+  cooldownSeconds: 2,
+  async execute(interaction, context) {
+    const runtime = context.runtime;
+    if (!runtime) {
+      await replyNotReady(interaction);
+      return;
+    }
+    const rank = resolveStaffRank(interaction.member, context.config);
+    if (!atLeast(rank, "founder")) {
+      await interaction.reply({
+        content: "Only the Wrightyard owner can use /security.",
+        flags: import_discord16.MessageFlags.Ephemeral,
+        allowedMentions: { parse: [] }
+      });
+      return;
+    }
+    const subcommand = interaction.options.getSubcommand(true);
+    if (subcommand === "status") {
+      await interaction.reply({
+        embeds: [buildSecurityStatus(statusView(runtime, /* @__PURE__ */ new Date()))],
+        flags: import_discord16.MessageFlags.Ephemeral,
+        allowedMentions: { parse: [] }
+      });
+      return;
+    }
+    if (subcommand === "raid") {
+      const state = interaction.options.getString("state", true);
+      await runtime.raid.setActive(state === "on", `requested by ${interaction.user.tag}`);
+      await interaction.reply({
+        embeds: [buildSecurityStatus(statusView(runtime, /* @__PURE__ */ new Date()))],
+        flags: import_discord16.MessageFlags.Ephemeral,
+        allowedMentions: { parse: [] }
+      });
+      return;
+    }
+    if (subcommand === "snapshot") {
+      const snapshot = await runtime.snapshots.captureNow();
+      const embed = new import_discord16.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / SECURITY" }).setTitle("Snapshot captured").setColor(BRAND.colors.blue).addFields(
+        { name: "Roles", value: String(snapshot.roles.length), inline: true },
+        { name: "Channels", value: String(snapshot.channels.length), inline: true },
+        {
+          name: "Captured",
+          value: formatTimestamp(snapshot.capturedAt, "T"),
+          inline: true
+        }
+      ).setFooter({ text: BRAND.footer }).setTimestamp();
+      await interaction.reply({
+        embeds: [embed],
+        flags: import_discord16.MessageFlags.Ephemeral,
+        allowedMentions: { parse: [] }
+      });
+      return;
+    }
+    const kind = interaction.options.getString("action", true);
+    const now = /* @__PURE__ */ new Date();
+    const decision = simulateBurst(kind, now, context.config.antiNukeMode);
+    const rule = ruleFor(kind);
+    runtime.audit.record({
+      category: "security",
+      type: "security.alert",
+      summary: `Simulated ${kind} burst \u2014 ${decision.action}`,
+      severity: "info",
+      actor: { id: interaction.user.id, tag: interaction.user.tag },
+      fields: [
+        { name: "Simulated", value: "yes", inline: true },
+        { name: "Decision", value: decision.action, inline: true },
+        {
+          name: "Thresholds",
+          value: `alert ${rule.alertAt} \xB7 quarantine ${rule.quarantineAt} \xB7 ban ${rule.banAt}`
+        }
+      ],
+      payload: {
+        simulated: true,
+        kind,
+        mode: context.config.antiNukeMode,
+        decision: {
+          action: decision.action,
+          kind: decision.kind,
+          count: decision.count,
+          rule: decision.rule?.kind ?? null
+        }
+      },
+      feed: true
+    });
+    await interaction.reply({
+      embeds: [
+        buildSecuritySimulation({
+          kind,
+          mode: context.config.antiNukeMode,
+          decision
+        })
+      ],
+      flags: import_discord16.MessageFlags.Ephemeral,
+      allowedMentions: { parse: [] }
+    });
+  }
+};
+
 // src/commands/site.ts
-var import_discord13 = __toESM(require_src());
+var import_discord17 = __toESM(require_src());
 var site_default = {
-  data: new import_discord13.SlashCommandBuilder().setName("site").setDescription("Links to the studio, dashboard, and status page.").setContexts(import_discord13.InteractionContextType.Guild),
+  data: new import_discord17.SlashCommandBuilder().setName("site").setDescription("Links to the studio, dashboard, and status page.").setContexts(import_discord17.InteractionContextType.Guild),
   cooldownSeconds: 5,
   async execute(interaction, context) {
     const site = context.config.siteUrl;
     if (!site) {
       await interaction.reply({
         content: "The website address is not configured on this deployment yet.",
-        flags: import_discord13.MessageFlags.Ephemeral,
+        flags: import_discord17.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -111540,16 +112160,1031 @@ var site_default = {
   }
 };
 
+// src/commands/staff.ts
+var import_discord20 = __toESM(require_src());
+
+// src/staff/actions.ts
+var import_discord18 = __toESM(require_src());
+
+// src/staff/guard.ts
+function holdsPermission(holder, permission) {
+  if (!holder) {
+    return false;
+  }
+  if (Array.isArray(holder)) {
+    return holder.includes(permission);
+  }
+  return holder.has(permission);
+}
+function canModerate(input) {
+  if (!atLeast(input.actorRank, input.minimumRank)) {
+    return {
+      ok: false,
+      reason: `You need ${input.minimumRank} rank or higher for this action.`
+    };
+  }
+  if (input.skipHierarchy) {
+    if (input.requiredPermission !== void 0 && !holdsPermission(input.botPermissions, input.requiredPermission)) {
+      return { ok: false, reason: "I do not have the permission required for this action." };
+    }
+    return { ok: true };
+  }
+  if (input.actorId === input.targetId) {
+    return { ok: false, reason: "You cannot moderate yourself." };
+  }
+  const guildOwnerId = input.guildOwnerId ?? input.config?.ownerId;
+  if (guildOwnerId && input.targetId === guildOwnerId) {
+    return { ok: false, reason: "You cannot moderate the server owner." };
+  }
+  if (input.targetIsBot || input.botId && input.targetId === input.botId) {
+    return { ok: false, reason: "You cannot moderate a bot." };
+  }
+  if (input.botPosition <= input.targetPosition) {
+    return {
+      ok: false,
+      reason: "Bot hierarchy: my highest role is not above the target's highest role."
+    };
+  }
+  if (input.actorRank !== "founder" && input.actorPosition <= input.targetPosition) {
+    return {
+      ok: false,
+      reason: "Role hierarchy: your highest role is not above the target's highest role."
+    };
+  }
+  if (input.requiredPermission !== void 0 && !holdsPermission(input.botPermissions, input.requiredPermission)) {
+    return { ok: false, reason: "I do not have the permission required for this action." };
+  }
+  return { ok: true };
+}
+
+// src/staff/actions.ts
+var MAX_TIMEOUT_MS = 28 * 864e5;
+var MAX_BAN_DELETE_SECONDS = 604800;
+var StaffGuardError = class extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "StaffGuardError";
+  }
+};
+function parseDuration(raw) {
+  const match = /^(\d+)\s*([smhd])$/i.exec(raw.trim());
+  if (!match) {
+    return null;
+  }
+  const amount = Number(match[1]);
+  if (!Number.isSafeInteger(amount) || amount <= 0) {
+    return null;
+  }
+  const unit = match[2]?.toLowerCase();
+  const multiplier = unit === "s" ? 1e3 : unit === "m" ? 6e4 : unit === "h" ? 36e5 : 864e5;
+  const duration = amount * multiplier;
+  if (duration > MAX_TIMEOUT_MS) {
+    return null;
+  }
+  return duration;
+}
+function tagOf(member) {
+  return member.user.tag ?? member.user.username ?? member.id;
+}
+function positionOf(member) {
+  return member.roles?.highest?.position ?? 0;
+}
+var StaffActions = class {
+  client;
+  config;
+  cases;
+  audit;
+  logger;
+  constructor(options) {
+    this.client = options.client;
+    this.config = options.config;
+    this.cases = options.cases;
+    this.audit = options.audit;
+    this.logger = options.logger;
+  }
+  async warn(actor, target, reason2) {
+    return this.runAction(
+      { actor, target, minimumRank: "moderator" },
+      { action: "warn", reason: reason2 },
+      async () => {
+        await this.notify(
+          target,
+          `You were warned in ${BRAND.name}: ${truncate(reason2, 1500)}`
+        );
+        return void 0;
+      }
+    );
+  }
+  async timeout(actor, target, durationMs, reason2) {
+    if (!Number.isFinite(durationMs) || durationMs <= 0 || durationMs > MAX_TIMEOUT_MS) {
+      throw new Error("Timeout duration must be between 1 second and 28 days.");
+    }
+    return this.runAction(
+      {
+        actor,
+        target,
+        minimumRank: "moderator",
+        requiredPermission: import_discord18.PermissionFlagsBits.ModerateMembers
+      },
+      {
+        action: "timeout",
+        reason: reason2,
+        durationMs,
+        expiresAt: new Date(Date.now() + durationMs)
+      },
+      async () => {
+        await target.timeout(durationMs, reason2);
+      }
+    );
+  }
+  async untimeout(actor, target, reason2) {
+    const record = await this.runAction(
+      {
+        actor,
+        target,
+        minimumRank: "moderator",
+        requiredPermission: import_discord18.PermissionFlagsBits.ModerateMembers
+      },
+      { action: "untimeout", reason: reason2 },
+      async () => {
+        await target.timeout(null, reason2);
+      }
+    );
+    await this.revokeLatest(target.guild.id, target.id, "timeout", actor.id, reason2);
+    return record;
+  }
+  async kick(actor, target, reason2, notify) {
+    return this.runAction(
+      {
+        actor,
+        target,
+        minimumRank: "moderator",
+        requiredPermission: import_discord18.PermissionFlagsBits.KickMembers
+      },
+      { action: "kick", reason: reason2 },
+      async () => {
+        if (notify) {
+          await this.notify(
+            target,
+            `You were removed from ${BRAND.name}: ${truncate(reason2, 1500)}`
+          );
+        }
+        await target.kick(reason2);
+      }
+    );
+  }
+  async ban(actor, target, reason2, deleteSeconds, notify) {
+    const clamped = Math.min(
+      MAX_BAN_DELETE_SECONDS,
+      Math.max(0, Math.trunc(deleteSeconds))
+    );
+    return this.runAction(
+      {
+        actor,
+        target,
+        minimumRank: "steward",
+        requiredPermission: import_discord18.PermissionFlagsBits.BanMembers
+      },
+      {
+        action: "ban",
+        reason: reason2,
+        metadata: { deleteSeconds: clamped }
+      },
+      async () => {
+        if (notify) {
+          await this.notify(
+            target,
+            `You were banned from ${BRAND.name}: ${truncate(reason2, 1500)}`
+          );
+        }
+        await target.ban({ reason: reason2, deleteMessageSeconds: clamped });
+      }
+    );
+  }
+  async unban(actor, userId, reason2) {
+    const guild = this.guild();
+    this.assertGuard({
+      actorId: actor.id,
+      actorRank: resolveStaffRank(actor, this.config),
+      actorPosition: positionOf(actor),
+      targetId: userId,
+      targetPosition: 0,
+      guildOwnerId: guild.ownerId,
+      botId: this.client.user?.id,
+      botPosition: this.botPosition(guild),
+      botPermissions: guild.members.me?.permissions,
+      config: this.config,
+      minimumRank: "steward",
+      requiredPermission: import_discord18.PermissionFlagsBits.BanMembers,
+      skipHierarchy: true
+    });
+    try {
+      await guild.bans.remove(userId, reason2);
+    } catch (error) {
+      this.recordFailure("unban", actor, userId, error);
+      throw error;
+    }
+    const record = await this.cases.create({
+      guildId: guild.id,
+      action: "unban",
+      targetId: userId,
+      targetTag: userId,
+      moderatorId: actor.id,
+      moderatorTag: tagOf(actor),
+      reason: reason2
+    });
+    await this.revokeLatest(guild.id, userId, "ban", actor.id, reason2);
+    this.audit.record(this.actionEvent(record, actor));
+    return record;
+  }
+  async clearWarnings(actor, target, reason2) {
+    this.assertGuard(this.guardInput(actor, target, "steward"));
+    const warnings = await this.cases.list(target.guild.id, {
+      targetId: target.id,
+      action: "warn",
+      status: "open",
+      limit: 100
+    });
+    for (const warning of warnings) {
+      await this.cases.updateStatus(
+        target.guild.id,
+        warning.caseId,
+        "revoked",
+        actor.id,
+        reason2
+      );
+    }
+    const record = await this.cases.create({
+      guildId: target.guild.id,
+      action: "warnClear",
+      targetId: target.id,
+      targetTag: tagOf(target),
+      moderatorId: actor.id,
+      moderatorTag: tagOf(actor),
+      reason: reason2,
+      metadata: { cleared: warnings.map((warning) => warning.caseId) }
+    });
+    this.audit.record(this.actionEvent(record, actor));
+    return record;
+  }
+  listWarnings(target) {
+    return this.cases.list(target.guild.id, {
+      targetId: target.id,
+      action: "warn",
+      status: "open",
+      limit: 100
+    });
+  }
+  note(actor, target, text) {
+    return this.runAction(
+      { actor, target, minimumRank: "moderator" },
+      { action: "note", reason: text },
+      async () => void 0
+    );
+  }
+  listNotes(target) {
+    return this.cases.list(target.guild.id, {
+      targetId: target.id,
+      action: "note",
+      limit: 100
+    });
+  }
+  async report(reporter, target, reason2) {
+    const record = await this.cases.create({
+      guildId: target.guild.id,
+      action: "report",
+      targetId: target.id,
+      targetTag: tagOf(target),
+      moderatorId: reporter.id,
+      moderatorTag: tagOf(reporter),
+      reason: reason2,
+      metadata: { reporterId: reporter.id }
+    });
+    this.audit.record({
+      category: "moderation",
+      type: "moderation.report",
+      summary: `Report against ${tagOf(target)} (case #${String(record.caseId).padStart(4, "0")})`,
+      severity: "warn",
+      actor: { id: reporter.id, tag: tagOf(reporter) },
+      target: { id: target.id, name: tagOf(target) },
+      fields: [
+        { name: "Case", value: `#${String(record.caseId).padStart(4, "0")}`, inline: true },
+        { name: "Target", value: `${tagOf(target)} (${target.id})`, inline: true },
+        { name: "Reporter", value: `${tagOf(reporter)} (${reporter.id})`, inline: true },
+        { name: "Reason", value: truncate(reason2 || "No reason provided", 1e3) }
+      ],
+      payload: { caseId: record.caseId, reporterId: reporter.id }
+    });
+    return record;
+  }
+  async resolveCase(actor, caseId, note) {
+    const guild = this.guild();
+    this.assertGuard({
+      actorId: actor.id,
+      actorRank: resolveStaffRank(actor, this.config),
+      actorPosition: positionOf(actor),
+      targetId: "",
+      targetPosition: 0,
+      guildOwnerId: guild.ownerId,
+      botId: this.client.user?.id,
+      botPosition: this.botPosition(guild),
+      botPermissions: guild.members.me?.permissions,
+      config: this.config,
+      minimumRank: "moderator",
+      skipHierarchy: true
+    });
+    const existing = await this.cases.get(guild.id, caseId);
+    if (!existing) {
+      throw new Error(`Case #${String(caseId).padStart(4, "0")} was not found.`);
+    }
+    if (existing.status !== "open") {
+      throw new Error(
+        `Case #${String(caseId).padStart(4, "0")} is ${existing.status}, not open.`
+      );
+    }
+    await this.cases.updateStatus(guild.id, caseId, "closed", actor.id, note);
+    const record = await this.cases.create({
+      guildId: guild.id,
+      action: "caseResolve",
+      targetId: existing.targetId,
+      targetTag: existing.targetTag,
+      moderatorId: actor.id,
+      moderatorTag: tagOf(actor),
+      reason: note ?? `Case #${String(caseId).padStart(4, "0")} resolved`,
+      metadata: { resolvedCaseId: caseId }
+    });
+    this.audit.record(this.actionEvent(record, actor));
+    return record;
+  }
+  async runAction(context, details, call) {
+    this.assertGuard(this.guardInput(context.actor, context.target, context.minimumRank, context.requiredPermission));
+    try {
+      await call();
+    } catch (error) {
+      this.recordFailure(details.action, context.actor, context.target.id, error);
+      throw error;
+    }
+    const record = await this.cases.create({
+      guildId: context.target.guild.id,
+      action: details.action,
+      targetId: context.target.id,
+      targetTag: tagOf(context.target),
+      moderatorId: context.actor.id,
+      moderatorTag: tagOf(context.actor),
+      reason: details.reason,
+      ...details.durationMs !== void 0 ? { durationMs: details.durationMs } : {},
+      ...details.expiresAt ? { expiresAt: details.expiresAt } : {},
+      ...details.metadata ? { metadata: details.metadata } : {}
+    });
+    this.audit.record(this.actionEvent(record, context.actor));
+    return record;
+  }
+  guardInput(actor, target, minimumRank, requiredPermission) {
+    const guild = target.guild;
+    return {
+      actorId: actor.id,
+      actorRank: resolveStaffRank(actor, this.config),
+      actorPosition: positionOf(actor),
+      targetId: target.id,
+      targetPosition: positionOf(target),
+      targetIsBot: Boolean(target.user.bot),
+      guildOwnerId: guild.ownerId,
+      botId: this.client.user?.id,
+      botPosition: this.botPosition(guild),
+      botPermissions: guild.members.me?.permissions,
+      config: this.config,
+      minimumRank,
+      ...requiredPermission !== void 0 ? { requiredPermission } : {}
+    };
+  }
+  assertGuard(input) {
+    const result = canModerate(input);
+    if (!result.ok) {
+      throw new StaffGuardError(result.reason);
+    }
+  }
+  botPosition(guild) {
+    return guild.members.me?.roles?.highest?.position ?? 0;
+  }
+  guild() {
+    const guild = this.client.guilds.cache.get(this.config.guildId);
+    if (!guild) {
+      throw new Error("Guild is not cached; cannot perform this action.");
+    }
+    return guild;
+  }
+  async revokeLatest(guildId, targetId, action, actorId, note) {
+    const [open] = await this.cases.list(guildId, {
+      targetId,
+      action,
+      status: "open",
+      limit: 1
+    });
+    if (!open) {
+      return;
+    }
+    await this.cases.updateStatus(guildId, open.caseId, "revoked", actorId, note);
+  }
+  actionEvent(record, actor) {
+    return {
+      category: "moderation",
+      type: "moderation.action",
+      summary: `${record.action}: ${record.targetTag ?? record.targetId ?? "unknown"} (case #${String(record.caseId).padStart(4, "0")})`,
+      severity: record.action === "ban" || record.action === "kick" ? "warn" : "info",
+      actor: { id: actor.id, tag: tagOf(actor) },
+      ...record.targetId ? { target: { id: record.targetId, ...record.targetTag ? { name: record.targetTag } : {} } } : {},
+      fields: [
+        { name: "Case", value: `#${String(record.caseId).padStart(4, "0")}`, inline: true },
+        { name: "Action", value: record.action, inline: true },
+        { name: "Target", value: record.targetTag ?? record.targetId ?? "unknown", inline: true },
+        { name: "Reason", value: truncate(record.reason || "No reason provided", 1e3) },
+        ...record.durationMs ? [{ name: "Duration", value: formatDuration(record.durationMs / 1e3), inline: true }] : []
+      ],
+      payload: { caseId: record.caseId, action: record.action }
+    };
+  }
+  recordFailure(action, actor, targetId, error) {
+    this.logger.warn("Staff action failed", {
+      action,
+      actorId: actor.id,
+      targetId,
+      error: serializeError(error)
+    });
+    this.audit.record({
+      category: "moderation",
+      type: "moderation.failed",
+      summary: `${action} failed for ${targetId}: ${error instanceof Error ? error.name : "UnknownError"}`,
+      severity: "warn",
+      actor: { id: actor.id, tag: tagOf(actor) },
+      target: { id: targetId },
+      fields: [
+        { name: "Action", value: action, inline: true },
+        {
+          name: "Error",
+          value: error instanceof Error ? `${error.name}: ${error.message}` : String(error)
+        }
+      ],
+      payload: { action, targetId }
+    });
+  }
+  async notify(target, content) {
+    try {
+      await target.send({ content, allowedMentions: { parse: [] } });
+    } catch (error) {
+      this.logger.warn("Staff DM failed", {
+        targetId: target.id,
+        error: serializeError(error)
+      });
+    }
+  }
+};
+
+// src/staff/stats.ts
+function dayKey(date) {
+  return date.toISOString().slice(0, 10);
+}
+async function buildStaffStats(input) {
+  const days = Math.max(1, Math.trunc(input.days));
+  const now = input.now ?? /* @__PURE__ */ new Date();
+  const since = new Date(now.getTime() - days * 864e5);
+  const guildId = input.guildId ?? "";
+  const records = await input.cases.list(guildId, {
+    moderatorId: input.moderatorId,
+    since,
+    limit: 1e3
+  });
+  const actions = {};
+  for (const record of records) {
+    actions[record.action] = (actions[record.action] ?? 0) + 1;
+  }
+  const activeDays = new Set(records.map((record) => dayKey(record.createdAt))).size;
+  return {
+    moderatorId: input.moderatorId,
+    days,
+    actions,
+    totalActions: records.length,
+    dutyMinutes: await input.duty.minutesSince(guildId, input.moderatorId, since),
+    activeDays
+  };
+}
+
+// src/views/staff.ts
+var import_discord19 = __toESM(require_src());
+var ACTION_LABEL = {
+  warn: "Warning",
+  timeout: "Timeout",
+  untimeout: "Timeout removed",
+  kick: "Kick",
+  ban: "Ban",
+  unban: "Unban",
+  purge: "Purge",
+  lock: "Channel locked",
+  unlock: "Channel unlocked",
+  slowmode: "Slowmode",
+  note: "Note",
+  warnClear: "Warnings cleared",
+  caseResolve: "Case resolved",
+  report: "Report",
+  quarantine: "Quarantine",
+  securityBan: "Security ban"
+};
+function caseNumber(value) {
+  return `#${String(value).padStart(4, "0")}`;
+}
+function colorFor(record) {
+  if (record.action === "ban" || record.action === "kick" || record.action === "securityBan" || record.action === "quarantine") {
+    return BRAND.colors.red;
+  }
+  if (record.status === "revoked" || record.status === "expired") {
+    return BRAND.colors.blue;
+  }
+  return BRAND.colors.brass;
+}
+function buildCaseEmbed(record) {
+  const embed = new import_discord19.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / MODERATION" }).setTitle(`${caseNumber(record.caseId)} \xB7 ${ACTION_LABEL[record.action]}`).setColor(colorFor(record)).addFields(
+    {
+      name: "Target",
+      value: record.targetTag ? `${record.targetTag} (${record.targetId ?? "unknown"})` : record.targetId ?? "unknown",
+      inline: true
+    },
+    {
+      name: "Moderator",
+      value: record.moderatorTag ? `${record.moderatorTag} (${record.moderatorId})` : record.moderatorId,
+      inline: true
+    },
+    { name: "Status", value: record.status, inline: true }
+  ).setFooter({ text: BRAND.footer });
+  if (record.reason) {
+    embed.addFields({ name: "Reason", value: truncate(record.reason, 1024) });
+  }
+  if (record.durationMs) {
+    embed.addFields({
+      name: "Duration",
+      value: formatDuration(record.durationMs / 1e3),
+      inline: true
+    });
+  }
+  if (record.expiresAt) {
+    embed.addFields({
+      name: "Expires",
+      value: formatTimestamp(record.expiresAt),
+      inline: true
+    });
+  }
+  embed.addFields({
+    name: "Created",
+    value: formatTimestamp(record.createdAt),
+    inline: true
+  });
+  return embed;
+}
+function buildWarningsEmbed(target, cases) {
+  const description = cases.length === 0 ? "No active warnings. The ledger is clear." : cases.map(
+    (record) => `**${caseNumber(record.caseId)}** \xB7 ${formatTimestamp(record.createdAt, "d")} \xB7 ${truncate(
+      record.reason || "No reason provided",
+      200
+    )}`
+  ).join("\n");
+  return new import_discord19.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / MODERATION" }).setTitle(`Warnings \xB7 ${target.tag ?? target.id}`).setDescription(description).setColor(cases.length > 0 ? BRAND.colors.brass : BRAND.colors.blue).setFooter({ text: `${cases.length} active warning${cases.length === 1 ? "" : "s"} \xB7 ${BRAND.footer}` });
+}
+function buildNotesEmbed(target, cases) {
+  const description = cases.length === 0 ? "No notes on file. The ledger is quiet." : cases.map(
+    (record) => `**${caseNumber(record.caseId)}** \xB7 ${formatTimestamp(record.createdAt, "d")} \xB7 ${truncate(
+      record.reason || "No note text",
+      200
+    )}`
+  ).join("\n");
+  return new import_discord19.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / MODERATION" }).setTitle(`Notes \xB7 ${target.tag ?? target.id}`).setDescription(description).setColor(BRAND.colors.ink).setFooter({ text: `${cases.length} note${cases.length === 1 ? "" : "s"} \xB7 ${BRAND.footer}` });
+}
+function buildStaffStatsEmbed(view) {
+  const breakdown = Object.entries(view.actions).sort(([, left], [, right]) => right - left).map(([action, count]) => `**${action}** ${count}`).join(" \xB7 ") || "No recorded actions in this window.";
+  const hours = Math.floor(view.dutyMinutes / 60);
+  const minutes = view.dutyMinutes % 60;
+  const duty = hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+  return new import_discord19.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / MODERATION" }).setTitle(`Staff stats \xB7 ${view.moderatorTag ?? view.moderatorId}`).setDescription(breakdown).setColor(BRAND.colors.brass).addFields(
+    { name: "Window", value: `${view.days} days`, inline: true },
+    { name: "Actions", value: String(view.totalActions), inline: true },
+    { name: "Duty", value: duty, inline: true },
+    { name: "Active days", value: String(view.activeDays), inline: true }
+  ).setFooter({ text: BRAND.footer });
+}
+
+// src/commands/staff.ts
+var STAFF_SUBCOMMAND_RANK = {
+  warn: "moderator",
+  warnings: "moderator",
+  clearwarnings: "steward",
+  timeout: "moderator",
+  untimeout: "moderator",
+  kick: "moderator",
+  ban: "steward",
+  unban: "steward",
+  purge: "moderator",
+  lock: "moderator",
+  unlock: "moderator",
+  slowmode: "moderator",
+  note: "moderator",
+  notes: "moderator",
+  case: "moderator",
+  history: "moderator",
+  stats: "moderator",
+  duty: "moderator"
+};
+var ACCEPTED_DURATION = "Duration like 10m, 1h, or 7d (maximum 28 days).";
+function targetMember(interaction) {
+  const member = interaction.options.getMember("member");
+  if (!member) {
+    throw new Error("Pick a member who is still in this server.");
+  }
+  return member;
+}
+function reason(interaction, name = "reason") {
+  return interaction.options.getString(name, true);
+}
+function caseNumber2(caseId) {
+  return `#${String(caseId).padStart(4, "0")}`;
+}
+function parseCaseId(raw) {
+  const normalized = raw.trim().replace(/^#/, "");
+  if (!/^\d+$/.test(normalized)) {
+    throw new Error("Case IDs look like #0001 or 1.");
+  }
+  const value = Number(normalized);
+  if (!Number.isSafeInteger(value) || value <= 0) {
+    throw new Error("Case IDs look like #0001 or 1.");
+  }
+  return value;
+}
+function actionChannel(interaction, optionName = "channel") {
+  const channel = interaction.options.getChannel(optionName) ?? interaction.channel;
+  if (!channel) {
+    throw new Error("That action needs a text channel.");
+  }
+  return channel;
+}
+function currentChannel(interaction) {
+  if (!interaction.channel) {
+    throw new Error("That action needs a text channel.");
+  }
+  return interaction.channel;
+}
+function errorContent(error) {
+  if (error instanceof StaffGuardError) {
+    return error.message;
+  }
+  if (error instanceof Error) {
+    if (error.name === "Error") {
+      return error.message;
+    }
+    return `${error.name}. The action did not complete; the error is logged.`;
+  }
+  return "The action did not complete; the error is logged.";
+}
+async function handle(interaction, runtime, actor, subcommand) {
+  switch (subcommand) {
+    case "warn": {
+      const record = await runtime.staff.warn(actor, targetMember(interaction), reason(interaction));
+      return { embeds: [buildCaseEmbed(record)] };
+    }
+    case "warnings": {
+      const target = targetMember(interaction);
+      const cases = await runtime.staff.listWarnings(target);
+      return {
+        embeds: [buildWarningsEmbed({ id: target.id, tag: target.user.username }, cases)]
+      };
+    }
+    case "clearwarnings": {
+      const record = await runtime.staff.clearWarnings(
+        actor,
+        targetMember(interaction),
+        reason(interaction)
+      );
+      const cleared = Array.isArray(record.metadata.cleared) ? record.metadata.cleared.length : 0;
+      return {
+        content: `Cleared ${cleared} warning${cleared === 1 ? "" : "s"} \xB7 case ${caseNumber2(record.caseId)}.`
+      };
+    }
+    case "timeout": {
+      const durationMs = parseDuration(interaction.options.getString("duration", true));
+      if (durationMs === null) {
+        throw new Error(`That duration is not valid. ${ACCEPTED_DURATION}`);
+      }
+      const record = await runtime.staff.timeout(
+        actor,
+        targetMember(interaction),
+        durationMs,
+        reason(interaction)
+      );
+      return { embeds: [buildCaseEmbed(record)] };
+    }
+    case "untimeout": {
+      const record = await runtime.staff.untimeout(
+        actor,
+        targetMember(interaction),
+        reason(interaction)
+      );
+      return { embeds: [buildCaseEmbed(record)] };
+    }
+    case "kick": {
+      const record = await runtime.staff.kick(
+        actor,
+        targetMember(interaction),
+        reason(interaction),
+        interaction.options.getBoolean("notify") ?? true
+      );
+      return { embeds: [buildCaseEmbed(record)] };
+    }
+    case "ban": {
+      const days = interaction.options.getInteger("delete_messages") ?? 0;
+      const record = await runtime.staff.ban(
+        actor,
+        targetMember(interaction),
+        reason(interaction),
+        days * 86400,
+        interaction.options.getBoolean("notify") ?? true
+      );
+      return { embeds: [buildCaseEmbed(record)] };
+    }
+    case "unban": {
+      const record = await runtime.staff.unban(
+        actor,
+        interaction.options.getString("user_id", true),
+        reason(interaction)
+      );
+      return { embeds: [buildCaseEmbed(record)] };
+    }
+    case "purge": {
+      const user = interaction.options.getUser("member");
+      const result = await runtime.staffChannels.purge(
+        actor,
+        currentChannel(interaction),
+        interaction.options.getInteger("count", true),
+        {
+          ...user ? { memberId: user.id } : {},
+          ...interaction.options.getString("contains") ? { contains: interaction.options.getString("contains", true) } : {}
+        }
+      );
+      const skipped = result.skipped > 0 ? ` ${result.skipped} skipped as older than 14 days.` : "";
+      return {
+        content: `Purged ${result.deletedIds.length} message${result.deletedIds.length === 1 ? "" : "s"}.${skipped}`
+      };
+    }
+    case "lock": {
+      const record = await runtime.staffChannels.lock(actor, actionChannel(interaction));
+      return { embeds: [buildCaseEmbed(record)] };
+    }
+    case "unlock": {
+      const record = await runtime.staffChannels.unlock(actor, actionChannel(interaction));
+      return { embeds: [buildCaseEmbed(record)] };
+    }
+    case "slowmode": {
+      const record = await runtime.staffChannels.slowmode(
+        actor,
+        actionChannel(interaction),
+        interaction.options.getInteger("seconds", true)
+      );
+      return { embeds: [buildCaseEmbed(record)] };
+    }
+    case "note": {
+      const record = await runtime.staff.note(
+        actor,
+        targetMember(interaction),
+        reason(interaction, "text")
+      );
+      return { embeds: [buildCaseEmbed(record)] };
+    }
+    case "notes": {
+      const target = targetMember(interaction);
+      const notes = await runtime.staff.listNotes(target);
+      return {
+        embeds: [buildNotesEmbed({ id: target.id, tag: target.user.username }, notes)]
+      };
+    }
+    case "case": {
+      const caseId = parseCaseId(interaction.options.getString("case_id", true));
+      const action = interaction.options.getString("action", true);
+      if (action === "resolve") {
+        const record2 = await runtime.staff.resolveCase(actor, caseId);
+        return { embeds: [buildCaseEmbed(record2)] };
+      }
+      const record = await runtime.cases.get(interaction.guildId, caseId);
+      if (!record) {
+        throw new Error(`Case ${caseNumber2(caseId)} was not found.`);
+      }
+      return { embeds: [buildCaseEmbed(record)] };
+    }
+    case "history": {
+      const user = interaction.options.getUser("member", true);
+      const records = await runtime.cases.list(interaction.guildId, {
+        targetId: user.id,
+        limit: 10
+      });
+      if (records.length === 0) {
+        return { content: `No cases on file for ${user.username}.` };
+      }
+      return { embeds: records.map((record) => buildCaseEmbed(record)) };
+    }
+    case "stats": {
+      const user = interaction.options.getUser("member") ?? interaction.user;
+      const days = interaction.options.getInteger("days") ?? 30;
+      const stats = await buildStaffStats({
+        moderatorId: user.id,
+        cases: runtime.cases,
+        duty: runtime.duty,
+        days,
+        guildId: interaction.guildId
+      });
+      return {
+        embeds: [
+          buildStaffStatsEmbed({
+            ...stats,
+            moderatorId: user.id,
+            moderatorTag: user.username
+          })
+        ]
+      };
+    }
+    case "duty": {
+      const state = interaction.options.getString("state", true);
+      if (state === "on") {
+        const session2 = await runtime.duty.start(interaction.guildId, actor.id);
+        return { content: `Duty started ${session2.startedAt.toISOString()}.` };
+      }
+      const session = await runtime.duty.stop(interaction.guildId, actor.id);
+      return {
+        content: session ? "Duty stopped. The ledger is updated." : "No open duty session."
+      };
+    }
+    default:
+      throw new Error("Unknown staff subcommand.");
+  }
+}
+var staff_default = {
+  data: new import_discord20.SlashCommandBuilder().setName("staff").setDescription("Staff moderation: warn, timeout, kick, ban, and the case ledger.").setDefaultMemberPermissions(import_discord20.PermissionFlagsBits.ManageMessages).setDMPermission(false).setContexts(import_discord20.InteractionContextType.Guild).addSubcommand(
+    (subcommand) => subcommand.setName("warn").setDescription("Warn a member and open a case.").addUserOption(
+      (option) => option.setName("member").setDescription("The member to warn.").setRequired(true)
+    ).addStringOption(
+      (option) => option.setName("reason").setDescription("Why this warning is being issued.").setMinLength(1).setMaxLength(1500).setRequired(true)
+    )
+  ).addSubcommand(
+    (subcommand) => subcommand.setName("warnings").setDescription("List a member's active warnings.").addUserOption(
+      (option) => option.setName("member").setDescription("The member to check.").setRequired(true)
+    )
+  ).addSubcommand(
+    (subcommand) => subcommand.setName("clearwarnings").setDescription("Revoke every active warning for a member.").addUserOption(
+      (option) => option.setName("member").setDescription("The member to clear.").setRequired(true)
+    ).addStringOption(
+      (option) => option.setName("reason").setDescription("Why the warnings are being cleared.").setMinLength(1).setMaxLength(1500).setRequired(true)
+    )
+  ).addSubcommand(
+    (subcommand) => subcommand.setName("timeout").setDescription("Apply a Discord timeout and open a case.").addUserOption(
+      (option) => option.setName("member").setDescription("The member to time out.").setRequired(true)
+    ).addStringOption(
+      (option) => option.setName("duration").setDescription(ACCEPTED_DURATION).setMinLength(2).setMaxLength(10).setRequired(true)
+    ).addStringOption(
+      (option) => option.setName("reason").setDescription("Why this timeout is being applied.").setMinLength(1).setMaxLength(1500).setRequired(true)
+    )
+  ).addSubcommand(
+    (subcommand) => subcommand.setName("untimeout").setDescription("Remove a member's timeout.").addUserOption(
+      (option) => option.setName("member").setDescription("The member to release.").setRequired(true)
+    ).addStringOption(
+      (option) => option.setName("reason").setDescription("Why the timeout is being removed.").setMinLength(1).setMaxLength(1500).setRequired(true)
+    )
+  ).addSubcommand(
+    (subcommand) => subcommand.setName("kick").setDescription("Kick a member and open a case.").addUserOption(
+      (option) => option.setName("member").setDescription("The member to kick.").setRequired(true)
+    ).addStringOption(
+      (option) => option.setName("reason").setDescription("Why this member is being kicked.").setMinLength(1).setMaxLength(1500).setRequired(true)
+    ).addBooleanOption(
+      (option) => option.setName("notify").setDescription("Send the member a DM before the kick. Defaults to true.")
+    )
+  ).addSubcommand(
+    (subcommand) => subcommand.setName("ban").setDescription("Ban a member and open a case.").addUserOption(
+      (option) => option.setName("member").setDescription("The member to ban.").setRequired(true)
+    ).addStringOption(
+      (option) => option.setName("reason").setDescription("Why this member is being banned.").setMinLength(1).setMaxLength(1500).setRequired(true)
+    ).addIntegerOption(
+      (option) => option.setName("delete_messages").setDescription("Days of messages to delete (0-7). Defaults to 0.").setMinValue(0).setMaxValue(7)
+    ).addBooleanOption(
+      (option) => option.setName("notify").setDescription("Send the member a DM before the ban. Defaults to true.")
+    )
+  ).addSubcommand(
+    (subcommand) => subcommand.setName("unban").setDescription("Remove a ban and close the open case.").addStringOption(
+      (option) => option.setName("user_id").setDescription("The Discord user ID to unban.").setMinLength(17).setMaxLength(20).setRequired(true)
+    ).addStringOption(
+      (option) => option.setName("reason").setDescription("Why this ban is being lifted.").setMinLength(1).setMaxLength(1500).setRequired(true)
+    )
+  ).addSubcommand(
+    (subcommand) => subcommand.setName("purge").setDescription("Bulk delete up to 100 recent messages.").addIntegerOption(
+      (option) => option.setName("count").setDescription("How many recent messages to scan (1-100).").setMinValue(1).setMaxValue(100).setRequired(true)
+    ).addUserOption(
+      (option) => option.setName("member").setDescription("Only delete messages from this user.")
+    ).addStringOption(
+      (option) => option.setName("contains").setDescription("Only delete messages containing this text.").setMaxLength(200)
+    )
+  ).addSubcommand(
+    (subcommand) => subcommand.setName("lock").setDescription("Deny Send Messages for everyone in a channel.").addChannelOption(
+      (option) => option.setName("channel").setDescription("Channel to lock. Defaults to this one.")
+    )
+  ).addSubcommand(
+    (subcommand) => subcommand.setName("unlock").setDescription("Remove the everyone Send Messages deny.").addChannelOption(
+      (option) => option.setName("channel").setDescription("Channel to unlock. Defaults to this one.")
+    )
+  ).addSubcommand(
+    (subcommand) => subcommand.setName("slowmode").setDescription("Set a channel's slowmode.").addIntegerOption(
+      (option) => option.setName("seconds").setDescription("Seconds between messages (0-21600).").setMinValue(0).setMaxValue(21600).setRequired(true)
+    ).addChannelOption(
+      (option) => option.setName("channel").setDescription("Channel to update. Defaults to this one.")
+    )
+  ).addSubcommand(
+    (subcommand) => subcommand.setName("note").setDescription("Add a private note to a member's ledger.").addUserOption(
+      (option) => option.setName("member").setDescription("The member this note is about.").setRequired(true)
+    ).addStringOption(
+      (option) => option.setName("text").setDescription("The note text.").setMinLength(1).setMaxLength(1500).setRequired(true)
+    )
+  ).addSubcommand(
+    (subcommand) => subcommand.setName("notes").setDescription("List a member's private notes.").addUserOption(
+      (option) => option.setName("member").setDescription("The member to check.").setRequired(true)
+    )
+  ).addSubcommand(
+    (subcommand) => subcommand.setName("case").setDescription("View or resolve a case.").addStringOption(
+      (option) => option.setName("case_id").setDescription("The case number, like #0001 or 1.").setMinLength(1).setMaxLength(10).setRequired(true)
+    ).addStringOption(
+      (option) => option.setName("action").setDescription("View the case or resolve it.").addChoices({ name: "View", value: "view" }, { name: "Resolve", value: "resolve" }).setRequired(true)
+    )
+  ).addSubcommand(
+    (subcommand) => subcommand.setName("history").setDescription("List the latest cases for a member.").addUserOption(
+      (option) => option.setName("member").setDescription("The member to check.").setRequired(true)
+    )
+  ).addSubcommand(
+    (subcommand) => subcommand.setName("stats").setDescription("Action counts and duty minutes for a staff member.").addUserOption(
+      (option) => option.setName("member").setDescription("Staff member. Defaults to you.")
+    ).addIntegerOption(
+      (option) => option.setName("days").setDescription("Window in days (1-365). Defaults to 30.").setMinValue(1).setMaxValue(365)
+    )
+  ).addSubcommand(
+    (subcommand) => subcommand.setName("duty").setDescription("Start or stop a duty session.").addStringOption(
+      (option) => option.setName("state").setDescription("Clock on or off.").addChoices({ name: "On", value: "on" }, { name: "Off", value: "off" }).setRequired(true)
+    )
+  ),
+  cooldownSeconds: 2,
+  async execute(interaction, context) {
+    if (!interaction.inCachedGuild()) {
+      await interaction.reply({
+        content: "The yard lives in a server. Run this there.",
+        flags: import_discord20.MessageFlags.Ephemeral,
+        allowedMentions: { parse: [] }
+      });
+      return;
+    }
+    const runtime = context.runtime;
+    if (!runtime) {
+      await interaction.reply({
+        content: "Staff services are not ready.",
+        flags: import_discord20.MessageFlags.Ephemeral,
+        allowedMentions: { parse: [] }
+      });
+      return;
+    }
+    const subcommand = interaction.options.getSubcommand(true);
+    const minimum = STAFF_SUBCOMMAND_RANK[subcommand] ?? "moderator";
+    const rank = resolveStaffRank(interaction.member, context.config);
+    if (!atLeast(rank, minimum)) {
+      await interaction.reply({
+        content: `You need ${minimum} rank or higher for /staff ${subcommand}.`,
+        flags: import_discord20.MessageFlags.Ephemeral,
+        allowedMentions: { parse: [] }
+      });
+      return;
+    }
+    await interaction.deferReply({ flags: import_discord20.MessageFlags.Ephemeral });
+    try {
+      const payload = await handle(interaction, runtime, interaction.member, subcommand);
+      await interaction.editReply(payload);
+    } catch (error) {
+      context.logger.warn("Staff command failed", {
+        subcommand,
+        userId: interaction.user.id,
+        error: error instanceof Error ? `${error.name}: ${error.message}` : String(error)
+      });
+      await interaction.editReply({
+        content: errorContent(error),
+        allowedMentions: { parse: [] }
+      });
+    }
+  }
+};
+
 // src/commands/stats.ts
-var import_discord14 = __toESM(require_src());
+var import_discord21 = __toESM(require_src());
 var stats_default = {
-  data: new import_discord14.SlashCommandBuilder().setName("stats").setDescription("The yard by the numbers: people, rooms, roles, boosts, and age.").setContexts(import_discord14.InteractionContextType.Guild),
+  data: new import_discord21.SlashCommandBuilder().setName("stats").setDescription("The yard by the numbers: people, rooms, roles, boosts, and age.").setContexts(import_discord21.InteractionContextType.Guild),
   cooldownSeconds: 10,
   async execute(interaction, context) {
     if (!interaction.inCachedGuild()) {
       await interaction.reply({
         content: "The yard lives in a server. Run this there.",
-        flags: import_discord14.MessageFlags.Ephemeral,
+        flags: import_discord21.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -111558,7 +113193,7 @@ var stats_default = {
     const { guild } = interaction;
     let presenceCount = null;
     try {
-      const data2 = await context.client.rest.get(import_discord14.Routes.guild(guild.id), {
+      const data2 = await context.client.rest.get(import_discord21.Routes.guild(guild.id), {
         query: new URLSearchParams({ with_counts: "true" })
       });
       presenceCount = typeof data2.approximate_presence_count === "number" ? data2.approximate_presence_count : null;
@@ -111582,15 +113217,15 @@ var stats_default = {
 };
 
 // src/commands/status.ts
-var import_discord15 = __toESM(require_src());
+var import_discord22 = __toESM(require_src());
 var status_default = {
-  data: new import_discord15.SlashCommandBuilder().setName("status").setDescription("A live reading from the yard: uptime, latency, members, and open tickets.").setContexts(import_discord15.InteractionContextType.Guild),
+  data: new import_discord22.SlashCommandBuilder().setName("status").setDescription("A live reading from the yard: uptime, latency, members, and open tickets.").setContexts(import_discord22.InteractionContextType.Guild),
   cooldownSeconds: 5,
   async execute(interaction, context) {
     if (!interaction.inCachedGuild()) {
       await interaction.reply({
         content: "The yard lives in a server. Run this there.",
-        flags: import_discord15.MessageFlags.Ephemeral,
+        flags: import_discord22.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -111612,17 +113247,17 @@ var status_default = {
 };
 
 // src/commands/ticket.ts
-var import_discord17 = __toESM(require_src());
+var import_discord24 = __toESM(require_src());
 
 // src/views/tickets.ts
-var import_discord16 = __toESM(require_src());
+var import_discord23 = __toESM(require_src());
 var TICKET_PANEL_FOOTER = "Wrightyard \xB7 The gate";
 var TICKET_INTRO_FOOTER_PREFIX = "Wrightyard \xB7 Ticket";
 function ticketIntroFooter(ticketNumber2) {
   return `${TICKET_INTRO_FOOTER_PREFIX} #${String(ticketNumber2).padStart(4, "0")}`;
 }
 function buildTicketPanel() {
-  return new import_discord16.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / THE GATE" }).setTitle("Open a ticket.").setDescription(
+  return new import_discord23.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / THE GATE" }).setTitle("Open a ticket.").setDescription(
     [
       "A private room, a real person, and a written record.",
       "Tell us what you are building, what is in the way, and what a good outcome looks like. We will take it from there."
@@ -111651,14 +113286,14 @@ function buildTicketPanel() {
   ).setFooter({ text: TICKET_PANEL_FOOTER });
 }
 function ticketPanelRow() {
-  return new import_discord16.ActionRowBuilder().addComponents(
-    new import_discord16.ButtonBuilder().setCustomId(TICKET_IDS.open).setLabel("Open a ticket").setStyle(import_discord16.ButtonStyle.Secondary)
+  return new import_discord23.ActionRowBuilder().addComponents(
+    new import_discord23.ButtonBuilder().setCustomId(TICKET_IDS.open).setLabel("Open a ticket").setStyle(import_discord23.ButtonStyle.Secondary)
   );
 }
 function buildTicketIntro(view) {
   const status = view.closed ? "Closed" : view.claimedById ? "Claimed" : "Open";
   const claimed = view.claimedById ? `<@${view.claimedById}>` : "Not yet";
-  return new import_discord16.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / THE GATE" }).setTitle(`Ticket #${String(view.number).padStart(4, "0")}`).setDescription(
+  return new import_discord23.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / THE GATE" }).setTitle(`Ticket #${String(view.number).padStart(4, "0")}`).setDescription(
     view.closed ? "This room is closed. The ledger entry remains for reference." : "A private room for the job. A studio member will claim it when they pick up the work."
   ).setColor(view.closed ? BRAND.colors.ink : BRAND.colors.brass).addFields(
     { name: "Opened by", value: `<@${view.openerId}>`, inline: true },
@@ -111672,31 +113307,31 @@ function ticketIntroRow(view) {
     return [];
   }
   return [
-    new import_discord16.ActionRowBuilder().addComponents(
-      new import_discord16.ButtonBuilder().setCustomId(TICKET_IDS.claim).setLabel(view.claimedById ? "Claimed" : "Claim ticket").setStyle(import_discord16.ButtonStyle.Secondary).setDisabled(Boolean(view.claimedById)),
-      new import_discord16.ButtonBuilder().setCustomId(TICKET_IDS.close).setLabel("Close ticket").setStyle(import_discord16.ButtonStyle.Secondary)
+    new import_discord23.ActionRowBuilder().addComponents(
+      new import_discord23.ButtonBuilder().setCustomId(TICKET_IDS.claim).setLabel(view.claimedById ? "Claimed" : "Claim ticket").setStyle(import_discord23.ButtonStyle.Secondary).setDisabled(Boolean(view.claimedById)),
+      new import_discord23.ButtonBuilder().setCustomId(TICKET_IDS.close).setLabel("Close ticket").setStyle(import_discord23.ButtonStyle.Secondary)
     )
   ];
 }
 function closeConfirmRow() {
-  return new import_discord16.ActionRowBuilder().addComponents(
-    new import_discord16.ButtonBuilder().setCustomId(TICKET_IDS.confirmClose).setLabel("Close ticket").setStyle(import_discord16.ButtonStyle.Danger),
-    new import_discord16.ButtonBuilder().setCustomId(TICKET_IDS.cancel).setLabel("Keep it open").setStyle(import_discord16.ButtonStyle.Secondary)
+  return new import_discord23.ActionRowBuilder().addComponents(
+    new import_discord23.ButtonBuilder().setCustomId(TICKET_IDS.confirmClose).setLabel("Close ticket").setStyle(import_discord23.ButtonStyle.Danger),
+    new import_discord23.ButtonBuilder().setCustomId(TICKET_IDS.cancel).setLabel("Keep it open").setStyle(import_discord23.ButtonStyle.Secondary)
   );
 }
 function deleteConfirmRow() {
-  return new import_discord16.ActionRowBuilder().addComponents(
-    new import_discord16.ButtonBuilder().setCustomId(TICKET_IDS.confirmDelete).setLabel("Delete channel").setStyle(import_discord16.ButtonStyle.Danger),
-    new import_discord16.ButtonBuilder().setCustomId(TICKET_IDS.cancel).setLabel("Keep the record").setStyle(import_discord16.ButtonStyle.Secondary)
+  return new import_discord23.ActionRowBuilder().addComponents(
+    new import_discord23.ButtonBuilder().setCustomId(TICKET_IDS.confirmDelete).setLabel("Delete channel").setStyle(import_discord23.ButtonStyle.Danger),
+    new import_discord23.ButtonBuilder().setCustomId(TICKET_IDS.cancel).setLabel("Keep the record").setStyle(import_discord23.ButtonStyle.Secondary)
   );
 }
 function closedNoteRow() {
-  return new import_discord16.ActionRowBuilder().addComponents(
-    new import_discord16.ButtonBuilder().setCustomId(TICKET_IDS.delete).setLabel("Delete channel").setStyle(import_discord16.ButtonStyle.Secondary)
+  return new import_discord23.ActionRowBuilder().addComponents(
+    new import_discord23.ButtonBuilder().setCustomId(TICKET_IDS.delete).setLabel("Delete channel").setStyle(import_discord23.ButtonStyle.Secondary)
   );
 }
 function buildTicketClosedNote(number, closedById) {
-  return new import_discord16.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / THE LEDGER" }).setTitle("Ticket closed.").setDescription(
+  return new import_discord23.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / THE LEDGER" }).setTitle("Ticket closed.").setDescription(
     "The ledger entry is closed. The room stays until a studio member removes it; the record is kept for reference."
   ).setColor(BRAND.colors.ink).addFields(
     { name: "Ticket", value: `#${String(number).padStart(4, "0")}`, inline: true },
@@ -111704,7 +113339,7 @@ function buildTicketClosedNote(number, closedById) {
   ).setFooter({ text: BRAND.footer }).setTimestamp();
 }
 function buildTicketLog(view) {
-  return new import_discord16.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / TICKET DESK" }).setTitle(`Ticket #${String(view.number).padStart(4, "0")} closed`).setColor(BRAND.colors.brass).addFields(
+  return new import_discord23.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / TICKET DESK" }).setTitle(`Ticket #${String(view.number).padStart(4, "0")} closed`).setColor(BRAND.colors.brass).addFields(
     { name: "Channel", value: `<#${view.channelId}>`, inline: true },
     { name: "Opened by", value: `<@${view.openerId}>`, inline: true },
     { name: "Claimed by", value: view.claimedById ? `<@${view.claimedById}>` : "Not claimed", inline: true },
@@ -111716,13 +113351,13 @@ function buildTicketLog(view) {
 
 // src/commands/ticket.ts
 var ticket_default = {
-  data: new import_discord17.SlashCommandBuilder().setName("ticket").setDescription("Open a private room with the studio.").setContexts(import_discord17.InteractionContextType.Guild),
+  data: new import_discord24.SlashCommandBuilder().setName("ticket").setDescription("Open a private room with the studio.").setContexts(import_discord24.InteractionContextType.Guild),
   cooldownSeconds: 5,
   async execute(interaction, context) {
     if (context.state.maintenance) {
       await interaction.reply({
         content: "The yard is closed for maintenance. The gate reopens when the work is done.",
-        flags: import_discord17.MessageFlags.Ephemeral,
+        flags: import_discord24.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -111730,7 +113365,7 @@ var ticket_default = {
     if (context.config.staffRoleIds.length === 0) {
       await interaction.reply({
         content: "Ticket intake is not configured on this deployment. A studio member can open the gate.",
-        flags: import_discord17.MessageFlags.Ephemeral,
+        flags: import_discord24.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -111738,15 +113373,15 @@ var ticket_default = {
     const components = [ticketPanelRow()];
     if (context.config.ticketPanelChannelId) {
       components.push(
-        new import_discord17.ActionRowBuilder().addComponents(
-          new import_discord17.ButtonBuilder().setLabel("Go to the gate").setStyle(import_discord17.ButtonStyle.Link).setURL(channelUrl(context.config.guildId, context.config.ticketPanelChannelId))
+        new import_discord24.ActionRowBuilder().addComponents(
+          new import_discord24.ButtonBuilder().setLabel("Go to the gate").setStyle(import_discord24.ButtonStyle.Link).setURL(channelUrl(context.config.guildId, context.config.ticketPanelChannelId))
         )
       );
     }
     await interaction.reply({
       embeds: [buildTicketPanel()],
       components,
-      flags: import_discord17.MessageFlags.Ephemeral,
+      flags: import_discord24.MessageFlags.Ephemeral,
       allowedMentions: { parse: [] }
     });
   }
@@ -111760,7 +113395,10 @@ var COMMAND_MODULES = [
   help_default,
   leaderboard_default,
   rank_default,
+  report_default,
+  security_default,
   site_default,
+  staff_default,
   stats_default,
   status_default,
   ticket_default
@@ -111784,7 +113422,7 @@ async function loadCommands() {
     try {
       command.data.toJSON();
     } catch (error) {
-      throw new Error(`Command ${command.data.name} is not serializable: ${errorMessage(error)}`);
+      throw new Error(`Command ${command.data.name} is not serializable: ${errorMessage2(error)}`);
     }
     commands.set(command.data.name, command);
   }
@@ -111793,12 +113431,6156 @@ async function loadCommands() {
   }
   return commands;
 }
-function errorMessage(error) {
+function errorMessage2(error) {
   return error instanceof Error ? error.message : String(error);
 }
 
+// src/runtime.ts
+var import_node_path10 = require("node:path");
+
+// src/db.ts
+var import_mongodb2 = __toESM(require_lib3());
+var CONNECT_TIMEOUT_MS2 = 5e3;
+function createClient(uri) {
+  return new import_mongodb2.MongoClient(uri, {
+    appName: "WrightyardBot",
+    maxPoolSize: 10,
+    serverSelectionTimeoutMS: CONNECT_TIMEOUT_MS2,
+    connectTimeoutMS: CONNECT_TIMEOUT_MS2
+  });
+}
+var BotDatabase = class {
+  uri;
+  dbName;
+  logger;
+  clientFactory;
+  client = null;
+  clientPromise = null;
+  generation = 0;
+  constructor(options) {
+    this.uri = options.uri;
+    this.dbName = options.dbName;
+    this.logger = options.logger;
+    this.clientFactory = options.clientFactory ?? createClient;
+  }
+  get configured() {
+    return Boolean(this.uri);
+  }
+  async collection(name) {
+    if (!this.uri) {
+      throw new Error("MongoDB is not configured");
+    }
+    const client = await this.connect();
+    if (this.client !== client) {
+      throw new Error("MongoDB connection closed before use");
+    }
+    return client.db(this.dbName).collection(name);
+  }
+  async close() {
+    this.generation += 1;
+    const client = this.client;
+    this.client = null;
+    this.clientPromise = null;
+    if (client) {
+      await this.closeClient(client);
+    }
+  }
+  connect() {
+    this.clientPromise ??= this.open();
+    return this.clientPromise;
+  }
+  /**
+   * Opens a client tagged with the current generation. `close()` bumps the
+   * generation, so a connect that settles after a close can neither hand back
+   * a torn-down client nor clear state belonging to a newer connection.
+   */
+  open() {
+    const generation = ++this.generation;
+    const client = this.clientFactory(this.uri);
+    this.client = client;
+    const promise = client.connect().then(
+      async () => {
+        if (this.generation !== generation) {
+          await this.closeClient(client);
+          throw new Error("MongoDB connection closed during connect");
+        }
+        return client;
+      },
+      (error) => {
+        if (this.generation === generation) {
+          this.client = null;
+          this.clientPromise = null;
+        }
+        throw error;
+      }
+    );
+    this.clientPromise = promise;
+    return promise;
+  }
+  async closeClient(client) {
+    await client.close().catch((error) => {
+      this.logger.warn("MongoDB client close failed", {
+        error: error instanceof Error ? error.message : String(error)
+      });
+    });
+  }
+};
+
+// src/audit/attribution.ts
+var DEFAULT_ATTEMPTS = 4;
+var DEFAULT_DELAY_MS = 500;
+var CLOCK_SKEW_MS = 1500;
+var wait = (ms) => new Promise((resolve3) => setTimeout(resolve3, ms));
+var AuditLogResolver = class {
+  client;
+  logger;
+  maxAttempts;
+  retryDelayMs;
+  delay;
+  seen;
+  constructor(options) {
+    this.client = options.client ?? null;
+    this.logger = options.logger;
+    this.maxAttempts = Math.max(1, options.maxAttempts ?? DEFAULT_ATTEMPTS);
+    this.retryDelayMs = Math.max(0, options.retryDelayMs ?? DEFAULT_DELAY_MS);
+    this.delay = options.delay ?? wait;
+    this.seen = options.seen;
+  }
+  async resolve(guild, type, targetId, since) {
+    for (let attempt = 1; attempt <= this.maxAttempts; attempt += 1) {
+      const entries = await this.fetch(guild, type);
+      for (const entry of entries) {
+        if (!this.matches(entry, targetId, since) || !entry.executor) {
+          continue;
+        }
+        if (this.seen && await this.seen.has(entry.id)) {
+          continue;
+        }
+        if (this.seen) {
+          await this.seen.add(entry.id);
+        }
+        return { id: entry.executor.id, tag: entry.executor.tag };
+      }
+      if (attempt < this.maxAttempts) {
+        await this.delay(this.retryDelayMs);
+      }
+    }
+    return null;
+  }
+  async resolveMany(guild, type, targetIds, since) {
+    const wanted = new Set(targetIds);
+    const found = /* @__PURE__ */ new Map();
+    const seenEntries = /* @__PURE__ */ new Set();
+    for (let attempt = 1; attempt <= this.maxAttempts; attempt += 1) {
+      const entries = await this.fetch(guild, type);
+      for (const entry of entries) {
+        if (seenEntries.has(entry.id) || !entry.targetId || !wanted.has(entry.targetId)) {
+          continue;
+        }
+        if (!this.matches(entry, entry.targetId, since) || !entry.executor) {
+          continue;
+        }
+        if (this.seen && await this.seen.has(entry.id)) {
+          continue;
+        }
+        seenEntries.add(entry.id);
+        found.set(entry.targetId, { id: entry.executor.id, tag: entry.executor.tag });
+        if (this.seen) {
+          await this.seen.add(entry.id);
+        }
+      }
+      if (found.size >= wanted.size) {
+        break;
+      }
+      if (attempt < this.maxAttempts) {
+        await this.delay(this.retryDelayMs);
+      }
+    }
+    return found;
+  }
+  matches(entry, targetId, since) {
+    if (entry.createdTimestamp < since.getTime() - CLOCK_SKEW_MS) {
+      return false;
+    }
+    if (targetId !== null && entry.targetId !== targetId) {
+      return false;
+    }
+    if (!entry.executorId || !entry.executor) {
+      return false;
+    }
+    return entry.executorId !== this.client?.user?.id;
+  }
+  async fetch(guild, type) {
+    try {
+      const page = await guild.fetchAuditLogs({ type, limit: 25 });
+      return [...page.entries.values()];
+    } catch (error) {
+      this.logger.debug("Audit log fetch failed", serializeError(error));
+      return [];
+    }
+  }
+};
+function attributionFailureEvent(input) {
+  return {
+    category: "security",
+    type: "security.alert",
+    summary: `Could not attribute ${input.type}${input.targetName ? ` on ${input.targetName}` : ""}`,
+    severity: "critical",
+    feed: true,
+    actor: { id: "unknown", tag: "Unknown" },
+    target: input.targetId ? { id: input.targetId, ...input.targetName ? { name: input.targetName } : {} } : void 0,
+    fields: [
+      { name: "Action", value: input.type, inline: true },
+      {
+        name: "Guild",
+        value: input.guildId,
+        inline: true
+      }
+    ],
+    payload: { attribution: "failed", action: input.type }
+  };
+}
+
+// src/audit/cursors.ts
+var import_promises2 = require("node:fs/promises");
+var import_node_path3 = require("node:path");
+var COLLECTION = "audit_cursors";
+var AuditCursorStore = class {
+  database;
+  jsonPath;
+  logger;
+  cache = /* @__PURE__ */ new Map();
+  jsonMode = false;
+  warned = false;
+  queue = Promise.resolve();
+  constructor(options) {
+    this.database = options.database;
+    this.jsonPath = options.jsonPath;
+    this.logger = options.logger;
+  }
+  async get(type) {
+    if (this.cache.has(type)) {
+      return this.cache.get(type) ?? null;
+    }
+    await this.queue;
+    if (!this.jsonMode && this.database) {
+      try {
+        const collection = await this.database.collection(COLLECTION);
+        const document = await collection.findOne({ _id: type });
+        if (document?.entryId) {
+          this.cache.set(type, document.entryId);
+          return document.entryId;
+        }
+        return null;
+      } catch (error) {
+        this.failMongo(error);
+      }
+    }
+    const all = await this.readJson();
+    const entryId = all[type] ?? null;
+    if (entryId) {
+      this.cache.set(type, entryId);
+    }
+    return entryId;
+  }
+  set(type, entryId) {
+    this.cache.set(type, entryId);
+    const run = this.queue.then(() => this.write(type, entryId));
+    this.queue = run.catch(() => void 0);
+    return run;
+  }
+  async close() {
+    await this.queue;
+  }
+  async write(type, entryId) {
+    if (!this.jsonMode && this.database) {
+      try {
+        const collection = await this.database.collection(COLLECTION);
+        await collection.updateOne(
+          { _id: type },
+          { $set: { entryId, updatedAt: /* @__PURE__ */ new Date() } },
+          { upsert: true }
+        );
+        return;
+      } catch (error) {
+        this.failMongo(error);
+      }
+    }
+    const all = await this.readJson();
+    all[type] = entryId;
+    await this.writeJson(all);
+  }
+  async readJson() {
+    try {
+      const raw = await (0, import_promises2.readFile)(this.jsonPath, "utf8");
+      const parsed = JSON.parse(raw);
+      const result = {};
+      for (const [key, value] of Object.entries(parsed)) {
+        if (typeof value === "string") {
+          result[key] = value;
+        }
+      }
+      return result;
+    } catch (error) {
+      if (error.code === "ENOENT") {
+        return {};
+      }
+      this.warnOnce("Could not read audit cursor file", error);
+      return {};
+    }
+  }
+  async writeJson(all) {
+    await (0, import_promises2.mkdir)((0, import_node_path3.dirname)(this.jsonPath), { recursive: true });
+    const temp = `${this.jsonPath}.tmp`;
+    await (0, import_promises2.writeFile)(temp, `${JSON.stringify(all, null, 2)}
+`, "utf8");
+    await (0, import_promises2.rename)(temp, this.jsonPath);
+  }
+  failMongo(error) {
+    this.jsonMode = true;
+    this.warnOnce("Audit cursor Mongo store unavailable; falling back to JSON", error);
+  }
+  warnOnce(message, error) {
+    if (this.warned) {
+      return;
+    }
+    this.warned = true;
+    this.logger.warn(message, serializeError(error));
+  }
+};
+
+// src/audit/batch.ts
+var BatchQueue = class {
+  maxSize;
+  flushMs;
+  send;
+  logger;
+  items = [];
+  timer = null;
+  chain = Promise.resolve();
+  closed = false;
+  constructor(options) {
+    this.maxSize = Math.max(1, options.maxSize);
+    this.flushMs = Math.max(0, options.flushMs);
+    this.send = options.send;
+    this.logger = options.logger;
+  }
+  push(item) {
+    if (this.closed) {
+      return;
+    }
+    this.items.push(item);
+    if (this.items.length >= this.maxSize) {
+      this.clearTimer();
+      this.scheduleFlush();
+    } else if (!this.timer) {
+      this.timer = setTimeout(() => {
+        this.timer = null;
+        this.scheduleFlush();
+      }, this.flushMs);
+      this.timer.unref();
+    }
+  }
+  flush() {
+    this.clearTimer();
+    this.scheduleFlush();
+    return this.chain;
+  }
+  async close() {
+    this.closed = true;
+    await this.flush();
+  }
+  scheduleFlush() {
+    this.chain = this.chain.then(() => this.flushPending());
+  }
+  async flushPending() {
+    while (this.items.length > 0) {
+      const batch = this.items.splice(0, this.maxSize);
+      try {
+        await this.send(batch);
+      } catch (error) {
+        this.logger.warn("Audit batch send failed; dropping batch", {
+          size: batch.length,
+          ...serializeError(error)
+        });
+      }
+    }
+  }
+  clearTimer() {
+    if (this.timer) {
+      clearTimeout(this.timer);
+      this.timer = null;
+    }
+  }
+};
+
+// src/audit/channels.ts
+var import_discord25 = __toESM(require_src());
+var AUDIT_CATEGORY_ORDER = [
+  "message",
+  "member",
+  "server",
+  "voice",
+  "security",
+  "moderation"
+];
+var DEFAULT_CHANNELS = {
+  message: "log-messages",
+  member: "log-members",
+  server: "log-server",
+  voice: "log-voice",
+  security: "log-security",
+  moderation: "mod-log",
+  automod: "log-server",
+  ticket: "tickets"
+};
+function logChannelName(category) {
+  return DEFAULT_CHANNELS[category] ?? null;
+}
+function auditOverwritePlan(input) {
+  const staffAllow = [
+    import_discord25.PermissionFlagsBits.ViewChannel,
+    import_discord25.PermissionFlagsBits.SendMessages,
+    import_discord25.PermissionFlagsBits.EmbedLinks,
+    import_discord25.PermissionFlagsBits.ReadMessageHistory
+  ];
+  return [
+    { id: input.guildId, deny: [import_discord25.PermissionFlagsBits.ViewChannel] },
+    { id: input.botId, allow: staffAllow },
+    { id: input.ownerId, allow: [import_discord25.PermissionFlagsBits.ViewChannel] },
+    ...input.staffRoleIds.map((id) => ({ id, allow: staffAllow }))
+  ];
+}
+
+// src/audit/format.ts
+var import_discord26 = __toESM(require_src());
+var MAX_TITLE = 256;
+var MAX_FIELD_VALUE = 1024;
+var MAX_FIELDS = 25;
+function actorField(event) {
+  if (!event.actor) {
+    return null;
+  }
+  return {
+    name: "Actor",
+    value: `${event.actor.tag} (${event.actor.id})`,
+    inline: true
+  };
+}
+function targetField(event) {
+  if (!event.target) {
+    return null;
+  }
+  return {
+    name: "Target",
+    value: event.target.name ? `${event.target.name} (${event.target.id})` : event.target.id,
+    inline: true
+  };
+}
+function channelField(event) {
+  if (!event.channelId) {
+    return null;
+  }
+  return {
+    name: "Channel",
+    value: `<#${event.channelId}>`,
+    inline: true
+  };
+}
+function severityColor(severity) {
+  if (severity === "critical") {
+    return BRAND.colors.red;
+  }
+  if (severity === "warn") {
+    return BRAND.colors.brass;
+  }
+  return BRAND.colors.blue;
+}
+function auditEmbedData(event) {
+  const fields = [
+    actorField(event),
+    targetField(event),
+    channelField(event),
+    ...event.fields ?? []
+  ].filter((field) => field !== null).slice(0, MAX_FIELDS).map((field) => ({ ...field, value: truncate(field.value, MAX_FIELD_VALUE) }));
+  return {
+    author: `WRIGHTYARD / AUDIT \xB7 ${event.category.toUpperCase()}`,
+    title: truncate(event.summary, MAX_TITLE),
+    description: null,
+    color: severityColor(event.severity),
+    fields,
+    footer: `${event.id} \xB7 ${BRAND.footer}`,
+    timestamp: event.createdAt
+  };
+}
+function buildAuditEmbed(event) {
+  const data2 = auditEmbedData(event);
+  const embed = new import_discord26.EmbedBuilder().setAuthor({ name: data2.author }).setTitle(data2.title).setColor(data2.color).setFields(data2.fields).setFooter({ text: data2.footer }).setTimestamp(data2.timestamp);
+  if (data2.description !== null) {
+    embed.setDescription(data2.description);
+  }
+  return embed;
+}
+
+// src/audit/dispatcher.ts
+var MAX_BATCH = 10;
+var FLUSH_MS = 1e3;
+function isSendable(channel) {
+  return typeof channel === "object" && channel !== null && typeof channel.send === "function";
+}
+var AuditDispatcher = class {
+  client;
+  config;
+  logger;
+  resolveChannels;
+  queues = /* @__PURE__ */ new Map();
+  warnedMissing = /* @__PURE__ */ new Set();
+  warnedSend = /* @__PURE__ */ new Set();
+  closed = false;
+  constructor(options) {
+    this.client = options.client;
+    this.config = options.config;
+    this.logger = options.logger;
+    this.resolveChannels = options.resolveChannels;
+  }
+  enqueue(event) {
+    if (this.closed || logChannelName(event.category) === null) {
+      return;
+    }
+    const channelId = this.resolveChannels().get(event.category);
+    if (!channelId) {
+      if (!this.warnedMissing.has(event.category)) {
+        this.warnedMissing.add(event.category);
+        this.logger.warn("No audit channel configured for category", {
+          category: event.category
+        });
+      }
+      return;
+    }
+    this.queueFor(channelId).push(event);
+  }
+  async flush() {
+    await Promise.all([...this.queues.values()].map((queue) => queue.flush()));
+  }
+  async close() {
+    this.closed = true;
+    await Promise.all([...this.queues.values()].map((queue) => queue.close()));
+  }
+  queueFor(channelId) {
+    const existing = this.queues.get(channelId);
+    if (existing) {
+      return existing;
+    }
+    const queue = new BatchQueue({
+      maxSize: MAX_BATCH,
+      flushMs: FLUSH_MS,
+      logger: this.logger,
+      send: (events) => this.send(channelId, events)
+    });
+    this.queues.set(channelId, queue);
+    return queue;
+  }
+  async send(channelId, events) {
+    const channel = this.client.channels.cache.get(channelId);
+    if (!isSendable(channel)) {
+      this.warnOnce(channelId, "Audit channel is missing or not sendable", { channelId });
+      return;
+    }
+    const allowedMentions = events.some((event) => event.category === "security") ? { users: [this.config.ownerId] } : { parse: [] };
+    try {
+      await channel.send({
+        embeds: events.map((event) => buildAuditEmbed(event)),
+        allowedMentions
+      });
+    } catch (error) {
+      this.warnOnce(channelId, "Audit channel send failed; dropping batch", {
+        channelId,
+        size: events.length,
+        ...serializeError(error)
+      });
+    }
+  }
+  warnOnce(channelId, message, fields) {
+    if (this.warnedSend.has(channelId)) {
+      return;
+    }
+    this.warnedSend.add(channelId);
+    this.logger.warn(message, fields);
+  }
+};
+
+// src/audit/ensure.ts
+var import_discord27 = __toESM(require_src());
+var CATEGORY_NAME = "audit";
+var TICKET_CHANNEL_NAME = "tickets";
+var MODERATION_CHANNEL_NAME = "mod-log";
+function configuredChannelId(category, config) {
+  switch (category) {
+    case "message":
+      return config.messageLogChannelId;
+    case "member":
+      return config.memberLogChannelId;
+    case "server":
+      return config.serverLogChannelId;
+    case "voice":
+      return config.voiceLogChannelId;
+    case "security":
+      return config.securityLogChannelId;
+    case "moderation":
+      return config.modLogChannelId;
+    default:
+      return null;
+  }
+}
+function channelById(guild, id) {
+  return id ? guild.channels.cache.get(id) ?? null : null;
+}
+function firstNamed(guild, name, parentId) {
+  return guild.channels.cache.find(
+    (channel) => channel.name === name && (parentId === void 0 || channel.parentId === parentId)
+  ) ?? null;
+}
+async function ensureAuditChannels(guild, config, logger) {
+  const warnings = [];
+  const created = [];
+  const channels = /* @__PURE__ */ new Map();
+  let categoryId = config.logCategoryId ?? "";
+  try {
+    const me = guild.members.me;
+    const canManage = !me?.permissions || me.permissions.has(import_discord27.PermissionFlagsBits.ManageChannels);
+    const botId = me?.id ?? guild.client?.user?.id ?? config.clientId;
+    const overwrites = auditOverwritePlan({
+      guildId: guild.id,
+      botId,
+      ownerId: guild.ownerId ?? config.ownerId,
+      staffRoleIds: config.staffRoleIds
+    });
+    if (!canManage) {
+      warnings.push(
+        "Manage Channels is missing; existing audit channels were not discovered and missing ones were not created."
+      );
+      for (const category2 of AUDIT_CATEGORY_ORDER) {
+        const configured = configuredChannelId(category2, config);
+        if (configured && guild.channels.cache.has(configured)) {
+          channels.set(category2, configured);
+        }
+      }
+      if (config.ticketLogChannelId && guild.channels.cache.has(config.ticketLogChannelId)) {
+        channels.set("ticket", config.ticketLogChannelId);
+      }
+      const server2 = channels.get("server");
+      if (server2) {
+        channels.set("automod", server2);
+      }
+      return { categoryId, channels, created, warnings };
+    }
+    let category = channelById(guild, config.logCategoryId);
+    if (category && category.type !== import_discord27.ChannelType.GuildCategory) {
+      warnings.push(
+        `LOG_CATEGORY_ID ${category.id} is not a category; looking for #${CATEGORY_NAME}.`
+      );
+      category = null;
+    }
+    category ??= firstNamed(guild, CATEGORY_NAME);
+    if (category && category.type !== import_discord27.ChannelType.GuildCategory) {
+      warnings.push(`#${CATEGORY_NAME} is not a category; audit channels will use the guild root.`);
+      category = null;
+    }
+    if (!category) {
+      try {
+        category = await guild.channels.create({
+          name: CATEGORY_NAME,
+          type: import_discord27.ChannelType.GuildCategory,
+          permissionOverwrites: overwrites,
+          reason: "Wrightyard audit category"
+        });
+      } catch (error) {
+        logger.warn("Could not create the audit category", serializeError(error));
+        warnings.push("Could not create the audit category; audit channels will use the guild root.");
+        category = null;
+      }
+    }
+    if (category) {
+      categoryId = category.id;
+    } else if (!categoryId) {
+      warnings.push("No audit category is available; audit channels will use the guild root.");
+    }
+    const fallbackChannelId = config.logChannelId && guild.channels.cache.has(config.logChannelId) ? config.logChannelId : null;
+    for (const auditCategory of AUDIT_CATEGORY_ORDER) {
+      const name = logChannelName(auditCategory);
+      if (!name) {
+        continue;
+      }
+      let channel = channelById(guild, configuredChannelId(auditCategory, config));
+      if (!channel && category) {
+        channel = firstNamed(guild, name, category.id);
+      }
+      if (!channel && auditCategory === "moderation") {
+        channel = firstNamed(guild, MODERATION_CHANNEL_NAME);
+      }
+      if (!channel && fallbackChannelId) {
+        channels.set(auditCategory, fallbackChannelId);
+        continue;
+      }
+      if (!channel) {
+        try {
+          channel = await guild.channels.create({
+            name,
+            type: import_discord27.ChannelType.GuildText,
+            ...category ? { parent: category.id } : {},
+            topic: `Wrightyard audit: ${auditCategory}. Staff only.`,
+            permissionOverwrites: overwrites,
+            reason: "Wrightyard audit channel provisioning"
+          });
+          created.push(name);
+        } catch (error) {
+          logger.warn("Could not create an audit channel", {
+            category: auditCategory,
+            error: serializeError(error)
+          });
+          warnings.push(`Could not create #${name}; ${auditCategory} events will stay in the archive.`);
+          continue;
+        }
+      }
+      channels.set(auditCategory, channel.id);
+    }
+    const server = channels.get("server");
+    if (server) {
+      channels.set("automod", server);
+    }
+    let ticket = channelById(guild, config.ticketLogChannelId);
+    if (!ticket) {
+      ticket = firstNamed(guild, TICKET_CHANNEL_NAME);
+    }
+    if (ticket) {
+      channels.set("ticket", ticket.id);
+    } else {
+      warnings.push(
+        "No ticket log channel is configured or named #tickets; ticket events will stay in the archive."
+      );
+    }
+  } catch (error) {
+    logger.warn("Audit channel provisioning failed", serializeError(error));
+    warnings.push(
+      `Audit channel provisioning failed: ${error instanceof Error ? error.message : String(error)}`
+    );
+  }
+  return { categoryId, channels, created, warnings };
+}
+
+// src/audit/reconcile.ts
+var import_discord28 = __toESM(require_src());
+var PAGE_SIZE = 25;
+var STAGGER_MS = 250;
+var RECONCILED_TYPES = [
+  import_discord28.AuditLogEvent.ChannelCreate,
+  import_discord28.AuditLogEvent.ChannelDelete,
+  import_discord28.AuditLogEvent.RoleCreate,
+  import_discord28.AuditLogEvent.RoleDelete,
+  import_discord28.AuditLogEvent.MemberRoleUpdate,
+  import_discord28.AuditLogEvent.MemberBanAdd,
+  import_discord28.AuditLogEvent.MemberBanRemove,
+  import_discord28.AuditLogEvent.MemberKick,
+  import_discord28.AuditLogEvent.WebhookCreate,
+  import_discord28.AuditLogEvent.WebhookDelete,
+  import_discord28.AuditLogEvent.EmojiDelete,
+  import_discord28.AuditLogEvent.StickerDelete,
+  import_discord28.AuditLogEvent.InviteCreate,
+  import_discord28.AuditLogEvent.ThreadDelete,
+  import_discord28.AuditLogEvent.GuildUpdate,
+  import_discord28.AuditLogEvent.MessageBulkDelete
+];
+var MAPPING = {
+  [import_discord28.AuditLogEvent.ChannelCreate]: { type: "channel.create", category: "server" },
+  [import_discord28.AuditLogEvent.ChannelDelete]: { type: "channel.delete", category: "server" },
+  [import_discord28.AuditLogEvent.RoleCreate]: { type: "role.create", category: "server" },
+  [import_discord28.AuditLogEvent.RoleDelete]: { type: "role.delete", category: "server" },
+  [import_discord28.AuditLogEvent.MemberRoleUpdate]: { type: "member.roles", category: "moderation" },
+  [import_discord28.AuditLogEvent.MemberBanAdd]: { type: "member.ban", category: "moderation" },
+  [import_discord28.AuditLogEvent.MemberBanRemove]: { type: "member.unban", category: "moderation" },
+  [import_discord28.AuditLogEvent.MemberKick]: { type: "member.kick", category: "moderation" },
+  [import_discord28.AuditLogEvent.WebhookCreate]: { type: "webhook.create", category: "server" },
+  [import_discord28.AuditLogEvent.WebhookDelete]: { type: "webhook.delete", category: "server" },
+  [import_discord28.AuditLogEvent.EmojiDelete]: { type: "emoji.delete", category: "server" },
+  [import_discord28.AuditLogEvent.StickerDelete]: { type: "sticker.delete", category: "server" },
+  [import_discord28.AuditLogEvent.InviteCreate]: { type: "invite.create", category: "server" },
+  [import_discord28.AuditLogEvent.ThreadDelete]: { type: "thread.delete", category: "server" },
+  [import_discord28.AuditLogEvent.GuildUpdate]: { type: "guild.update", category: "server" },
+  [import_discord28.AuditLogEvent.MessageBulkDelete]: { type: "message.bulkDelete", category: "message" }
+};
+function newer(a, b) {
+  if (b === null) {
+    return true;
+  }
+  try {
+    return BigInt(a) > BigInt(b);
+  } catch {
+    return a > b;
+  }
+}
+function newestId(entries) {
+  let newest = null;
+  for (const entry of entries) {
+    if (newest === null || newer(entry.id, newest)) {
+      newest = entry.id;
+    }
+  }
+  return newest;
+}
+function oldestId(entries) {
+  let oldest = null;
+  for (const entry of entries) {
+    if (oldest === null || newer(oldest, entry.id)) {
+      oldest = entry.id;
+    }
+  }
+  return oldest;
+}
+var delay2 = (ms) => new Promise((resolve3) => {
+  const timer = setTimeout(resolve3, ms);
+  timer.unref();
+});
+var AuditReconciler = class {
+  client;
+  config;
+  audit;
+  logger;
+  cursors;
+  seen;
+  intervalMs;
+  staggerMs;
+  timer = null;
+  running = false;
+  constructor(options) {
+    this.client = options.client;
+    this.config = options.config;
+    this.audit = options.audit;
+    this.logger = options.logger;
+    this.cursors = options.cursors;
+    this.seen = options.seen;
+    this.intervalMs = Math.max(1e3, options.intervalMs ?? 6e4);
+    this.staggerMs = Math.max(0, options.staggerMs ?? STAGGER_MS);
+  }
+  start() {
+    if (this.timer) {
+      return;
+    }
+    this.timer = setInterval(() => {
+      void this.pollOnce();
+    }, this.intervalMs);
+    this.timer.unref();
+  }
+  stop() {
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+  }
+  async pollOnce() {
+    if (this.running) {
+      return;
+    }
+    this.running = true;
+    try {
+      const guild = this.client.guilds.cache.get(this.config.guildId);
+      if (!guild) {
+        return;
+      }
+      for (const [index, type] of RECONCILED_TYPES.entries()) {
+        await this.pollType(guild, type);
+        if (index < RECONCILED_TYPES.length - 1) {
+          await delay2(this.staggerMs);
+        }
+      }
+    } catch (error) {
+      this.logger.warn("Audit reconciliation failed", serializeError(error));
+    } finally {
+      this.running = false;
+    }
+  }
+  async pollType(guild, type) {
+    const key = String(type);
+    const mapping = MAPPING[type];
+    if (!mapping) {
+      return;
+    }
+    try {
+      const cursor = await this.cursors.get(key);
+      let before;
+      let newest = cursor;
+      let pages = 0;
+      while (pages < 10) {
+        pages += 1;
+        const page = await guild.fetchAuditLogs({
+          type,
+          limit: PAGE_SIZE,
+          ...cursor ? { after: cursor } : {},
+          ...before ? { before } : {}
+        });
+        const entries = [...page.entries.values()];
+        if (entries.length === 0) {
+          break;
+        }
+        const pageNewest = newestId(entries);
+        if (cursor === null) {
+          newest = pageNewest;
+          break;
+        }
+        for (const entry of entries) {
+          if (!newer(entry.id, cursor)) {
+            continue;
+          }
+          if (await this.isDuplicate(entry.id)) {
+            continue;
+          }
+          const event = this.toEvent(entry, mapping);
+          if (event) {
+            this.audit.record(event);
+            await this.markSeen(entry.id);
+          }
+        }
+        if (pageNewest && (newest === null || newer(pageNewest, newest))) {
+          newest = pageNewest;
+        }
+        if (entries.length < PAGE_SIZE) {
+          break;
+        }
+        const oldest = oldestId(entries);
+        if (!oldest || oldest === before) {
+          break;
+        }
+        before = oldest;
+      }
+      if (newest && newest !== cursor) {
+        await this.cursors.set(key, newest);
+      }
+    } catch (error) {
+      this.logger.warn("Audit reconciliation failed for type", {
+        type,
+        ...serializeError(error)
+      });
+    }
+  }
+  toEvent(entry, mapping) {
+    if (entry.executorId && entry.executorId === this.client.user?.id) {
+      return null;
+    }
+    return {
+      category: mapping.category,
+      type: mapping.type,
+      summary: `Native audit: ${mapping.type} (${entry.id})`,
+      severity: "warn",
+      feed: false,
+      ...entry.executor ? { actor: { id: entry.executor.id, tag: entry.executor.tag } } : {},
+      ...entry.targetId ? { target: { id: entry.targetId } } : {},
+      fields: [
+        { name: "Entry", value: entry.id, inline: true },
+        ...entry.targetId ? [{ name: "Target", value: entry.targetId, inline: true }] : [],
+        ...entry.reason ? [{ name: "Reason", value: entry.reason }] : []
+      ],
+      payload: { reconciled: true, entryId: entry.id, action: entry.action }
+    };
+  }
+  async isDuplicate(entryId) {
+    if (!this.seen) {
+      return false;
+    }
+    return this.seen.has(entryId);
+  }
+  async markSeen(entryId) {
+    if (this.seen) {
+      await this.seen.add(entryId);
+    }
+  }
+};
+
+// src/audit/recorder.ts
+var import_discord37 = __toESM(require_src());
+
+// src/audit/webhooks.ts
+var import_discord29 = __toESM(require_src());
+var WebhookTracker = class {
+  resolver;
+  security;
+  logger;
+  baseline = /* @__PURE__ */ new Map();
+  warnedPermissions = /* @__PURE__ */ new Set();
+  warnedFetch = /* @__PURE__ */ new Set();
+  constructor(options) {
+    this.resolver = options.resolver;
+    this.security = options.security;
+    this.logger = options.logger;
+  }
+  async warm(guild) {
+    const source = guild;
+    for (const channel of source.channels.cache.values()) {
+      if (channel.isTextBased && !channel.isTextBased()) {
+        continue;
+      }
+      if (!this.canInspect(channel, source)) {
+        if (!this.warnedPermissions.has(channel.id)) {
+          this.warnedPermissions.add(channel.id);
+          this.logger.warn("Skipping webhook baseline without ManageWebhooks", {
+            channelId: channel.id
+          });
+        }
+        continue;
+      }
+      try {
+        const webhooks = await channel.fetchWebhooks();
+        this.baseline.set(channel.id, new Set([...webhooks.values()].map((hook) => hook.id)));
+      } catch (error) {
+        this.logFetchFailure(channel.id, error);
+      }
+    }
+  }
+  async handle(channel) {
+    const target = channel;
+    try {
+      const webhooks = await target.fetchWebhooks();
+      const current = new Set([...webhooks.values()].map((hook) => hook.id));
+      const previous = this.baseline.get(target.id);
+      if (!previous) {
+        this.baseline.set(target.id, current);
+        return;
+      }
+      const added = [...current].filter((id) => !previous.has(id));
+      this.baseline.set(target.id, current);
+      for (const webhookId of added) {
+        await this.observeCreate(target, webhookId);
+      }
+    } catch (error) {
+      this.logFetchFailure(target.id, error);
+    }
+  }
+  forget(channelId) {
+    this.baseline.delete(channelId);
+  }
+  async observeCreate(channel, webhookId) {
+    if (!this.security) {
+      return;
+    }
+    const guild = channel.guild;
+    if (!guild) {
+      return;
+    }
+    const actor = await this.resolver.resolve(
+      guild,
+      import_discord29.AuditLogEvent.WebhookCreate,
+      webhookId,
+      new Date(Date.now() - 1e4)
+    ) ?? { id: "unknown", tag: "Unknown" };
+    this.security.observe({
+      kind: "webhookCreate",
+      guildId: guild.id,
+      actorId: actor.id,
+      actorTag: actor.tag,
+      targetId: webhookId,
+      targetName: channel.name ?? null,
+      at: /* @__PURE__ */ new Date(),
+      payload: { channelId: channel.id }
+    });
+  }
+  canInspect(channel, guild) {
+    if (!channel.permissionsFor || !guild.members?.me) {
+      return true;
+    }
+    return channel.permissionsFor(guild.members.me)?.has(import_discord29.PermissionFlagsBits.ManageWebhooks) ?? false;
+  }
+  logFetchFailure(channelId, error) {
+    if (this.warnedFetch.has(channelId)) {
+      return;
+    }
+    this.warnedFetch.add(channelId);
+    this.logger.warn("Could not read webhooks for channel", {
+      channelId,
+      ...serializeError(error)
+    });
+  }
+};
+
+// src/audit/recorders/automod.ts
+var import_discord30 = __toESM(require_src());
+function label(value) {
+  return value === void 0 ? "unknown" : String(value);
+}
+function actionLabel(action) {
+  if (action === void 0) {
+    return "unknown";
+  }
+  return typeof action === "object" ? label(action.type) : label(action);
+}
+function automodExecutionEvent(execution, guildId) {
+  const ruleName = execution.ruleName ?? execution.ruleId;
+  const author = execution.messageAuthor ?? null;
+  const fields = [
+    { name: "Rule", value: ruleName, inline: true },
+    { name: "Trigger", value: label(execution.ruleTriggerType), inline: true },
+    { name: "Action", value: actionLabel(execution.action), inline: true }
+  ];
+  if (execution.channelId) {
+    fields.push({ name: "Channel", value: `<#${execution.channelId}>`, inline: true });
+  }
+  if (author) {
+    fields.push({
+      name: "Author",
+      value: `${author.tag ?? author.username ?? author.id} (${author.id})`,
+      inline: true
+    });
+  } else if (execution.userId) {
+    fields.push({ name: "Author", value: `<@${execution.userId}>`, inline: true });
+  }
+  if (execution.matchedKeyword) {
+    fields.push({ name: "Matched keyword", value: truncate(execution.matchedKeyword, 200) });
+  }
+  if (execution.matchedContent) {
+    fields.push({ name: "Matched content", value: truncate(execution.matchedContent, 500) });
+  } else if (execution.content) {
+    fields.push({ name: "Content", value: truncate(execution.content, 500) });
+  }
+  return {
+    category: "automod",
+    type: "automod.execution",
+    summary: `AutoMod fired: ${ruleName}`,
+    severity: "warn",
+    ...author ? { actor: { id: author.id, tag: author.tag ?? author.username ?? author.id } } : {},
+    ...execution.channelId ? { channelId: execution.channelId } : {},
+    fields,
+    payload: { guildId, ruleId: execution.ruleId }
+  };
+}
+function automodRuleEvent(kind, rule, guildId, actor) {
+  const actions = (rule.actions ?? []).map((action) => label(action.type));
+  return {
+    category: "automod",
+    type: `automod.rule${kind === "create" ? "Create" : kind === "update" ? "Update" : "Delete"}`,
+    summary: `AutoMod rule ${rule.name} ${kind === "create" ? "created" : `${kind}d`}`,
+    severity: kind === "delete" ? "warn" : "info",
+    ...actor ? { actor } : {},
+    target: { id: rule.id, name: rule.name },
+    fields: [
+      { name: "Rule", value: rule.name, inline: true },
+      { name: "Trigger", value: label(rule.triggerType), inline: true },
+      { name: "Enabled", value: rule.enabled ? "yes" : "no", inline: true },
+      { name: "Actions", value: actions.length > 0 ? actions.join(", ") : "none" },
+      { name: "Exempt roles", value: String(rule.exemptRoles?.size ?? 0), inline: true },
+      { name: "Exempt channels", value: String(rule.exemptChannels?.size ?? 0), inline: true }
+    ],
+    payload: { guildId }
+  };
+}
+function registerAutomodRecorder(client, deps) {
+  const { config, audit, resolver, logger } = deps;
+  const recent = () => new Date(Date.now() - 1e4);
+  client.on(import_discord30.Events.AutoModerationActionExecution, (execution) => {
+    void (async () => {
+      if (execution.guild.id !== config.guildId) {
+        return;
+      }
+      audit.record(
+        automodExecutionEvent(execution, config.guildId)
+      );
+    })().catch((error) => {
+      logger.warn("AutoMod execution recorder failed", serializeError(error));
+    });
+  });
+  client.on(import_discord30.Events.AutoModerationRuleCreate, (value) => {
+    void (async () => {
+      const guild = client.guilds.cache.get(config.guildId);
+      if (!guild || value.guild.id !== config.guildId) {
+        return;
+      }
+      const actor = await resolver.resolve(
+        guild,
+        import_discord30.AuditLogEvent.AutoModerationRuleCreate,
+        value.id,
+        recent()
+      );
+      audit.record(
+        automodRuleEvent("create", value, config.guildId, actor)
+      );
+    })().catch((error) => {
+      logger.warn("AutoMod rule create recorder failed", serializeError(error));
+    });
+  });
+  client.on(import_discord30.Events.AutoModerationRuleUpdate, (before, after) => {
+    void (async () => {
+      const guild = client.guilds.cache.get(config.guildId);
+      if (!guild || after.guild.id !== config.guildId) {
+        return;
+      }
+      const actor = await resolver.resolve(
+        guild,
+        import_discord30.AuditLogEvent.AutoModerationRuleUpdate,
+        after.id,
+        recent()
+      );
+      audit.record(
+        automodRuleEvent("update", after, config.guildId, actor)
+      );
+      if (before?.enabled !== after.enabled) {
+        audit.record({
+          category: "automod",
+          type: "automod.ruleState",
+          summary: `AutoMod rule ${after.name} ${after.enabled ? "enabled" : "disabled"}`,
+          severity: "warn",
+          ...actor ? { actor } : {},
+          target: { id: after.id, name: after.name },
+          fields: [
+            { name: "Rule", value: after.name, inline: true },
+            { name: "Enabled", value: after.enabled ? "yes" : "no", inline: true }
+          ],
+          payload: { guildId: config.guildId }
+        });
+      }
+    })().catch((error) => {
+      logger.warn("AutoMod rule update recorder failed", serializeError(error));
+    });
+  });
+  client.on(import_discord30.Events.AutoModerationRuleDelete, (value) => {
+    void (async () => {
+      const guild = client.guilds.cache.get(config.guildId);
+      if (!guild || value.guild.id !== config.guildId) {
+        return;
+      }
+      const actor = await resolver.resolve(
+        guild,
+        import_discord30.AuditLogEvent.AutoModerationRuleDelete,
+        value.id,
+        recent()
+      );
+      audit.record(
+        automodRuleEvent("delete", value, config.guildId, actor)
+      );
+    })().catch((error) => {
+      logger.warn("AutoMod rule delete recorder failed", serializeError(error));
+    });
+  });
+}
+
+// src/audit/recorders/server-channels.ts
+var import_discord31 = __toESM(require_src());
+function channelName(channel) {
+  return channel.name ?? channel.id;
+}
+function typeName(type) {
+  return import_discord31.ChannelType[type] ?? String(type);
+}
+function overwritesOf(channel) {
+  return channel.permissionOverwrites ? [...channel.permissionOverwrites.cache.values()] : [];
+}
+function overwriteKey(overwrite) {
+  return `${overwrite.allow}:${overwrite.deny}`;
+}
+function channelFields(channel) {
+  return [
+    { name: "Name", value: channelName(channel), inline: true },
+    { name: "Type", value: typeName(channel.type), inline: true },
+    { name: "Parent", value: channel.parentId ? `<#${channel.parentId}>` : "none", inline: true },
+    { name: "Position", value: String(channel.position ?? 0), inline: true },
+    { name: "Topic", value: channel.topic ?? "none" },
+    { name: "NSFW", value: channel.nsfw ? "yes" : "no", inline: true },
+    { name: "Slowmode", value: `${channel.rateLimitPerUser ?? 0}s`, inline: true }
+  ];
+}
+function restorePayload(channel) {
+  return {
+    name: channelName(channel),
+    type: channel.type,
+    parentId: channel.parentId ?? null,
+    position: channel.position ?? 0,
+    topic: channel.topic ?? null,
+    nsfw: channel.nsfw ?? false,
+    rateLimitPerUser: channel.rateLimitPerUser ?? 0,
+    bitrate: channel.bitrate ?? null,
+    userLimit: channel.userLimit ?? null,
+    overwrites: overwritesOf(channel).map((overwrite) => ({
+      id: overwrite.id,
+      type: overwrite.type ?? 0,
+      allow: overwrite.allow.toString(),
+      deny: overwrite.deny.toString()
+    }))
+  };
+}
+function channelCreateEvent(channel, guildId, actor) {
+  return {
+    category: "server",
+    type: "channel.create",
+    summary: `Channel ${channelName(channel)} created`,
+    ...actor ? { actor } : {},
+    target: { id: channel.id, name: channelName(channel) },
+    channelId: channel.id,
+    fields: channelFields(channel),
+    payload: { guildId }
+  };
+}
+function channelDeleteEvent(channel, guildId, actor) {
+  return {
+    category: "server",
+    type: "channel.delete",
+    summary: `Channel ${channelName(channel)} deleted`,
+    severity: "warn",
+    ...actor ? { actor } : {},
+    target: { id: channel.id, name: channelName(channel) },
+    channelId: channel.id,
+    fields: channelFields(channel),
+    payload: { guildId, ...restorePayload(channel) }
+  };
+}
+function renderOverwrites(overwrites) {
+  return overwrites.length > 0 ? overwrites.map(
+    (overwrite) => `<@${overwrite.id}> allow ${overwrite.allow.toString()} deny ${overwrite.deny.toString()}`
+  ).join("\n") : "none";
+}
+function channelUpdateEvents(before, after, guildId, actor) {
+  const events = [];
+  const changes = [];
+  const properties = [
+    ["name", before.name, after.name],
+    ["type", before.type, after.type],
+    ["parent", before.parentId, after.parentId],
+    ["position", before.position, after.position],
+    ["topic", before.topic, after.topic],
+    ["nsfw", before.nsfw, after.nsfw],
+    ["slowmode", before.rateLimitPerUser, after.rateLimitPerUser],
+    ["bitrate", before.bitrate, after.bitrate],
+    ["user limit", before.userLimit, after.userLimit]
+  ];
+  for (const [label2, previous, next] of properties) {
+    if (previous !== next) {
+      changes.push(`${label2}: ${String(previous ?? "none")} \u2192 ${String(next ?? "none")}`);
+    }
+  }
+  if (changes.length > 0) {
+    events.push({
+      category: "server",
+      type: "channel.update",
+      summary: `Channel ${channelName(after)} updated`,
+      ...actor ? { actor } : {},
+      target: { id: after.id, name: channelName(after) },
+      channelId: after.id,
+      fields: [
+        { name: "Name", value: channelName(after), inline: true },
+        { name: "Changes", value: changes.join("\n") }
+      ],
+      payload: { guildId }
+    });
+  }
+  const oldOverwrites = new Map(overwritesOf(before).map((overwrite) => [overwrite.id, overwrite]));
+  const newOverwrites = new Map(overwritesOf(after).map((overwrite) => [overwrite.id, overwrite]));
+  const changed2 = [];
+  for (const id of /* @__PURE__ */ new Set([...oldOverwrites.keys(), ...newOverwrites.keys()])) {
+    const oldValue = oldOverwrites.get(id);
+    const newValue = newOverwrites.get(id);
+    if (!oldValue || !newValue || overwriteKey(oldValue) !== overwriteKey(newValue)) {
+      changed2.push(id);
+    }
+  }
+  if (changed2.length > 0) {
+    events.push({
+      category: "server",
+      type: "channel.overwrites",
+      summary: `Permissions updated for ${channelName(after)}`,
+      severity: "warn",
+      ...actor ? { actor } : {},
+      target: { id: after.id, name: channelName(after) },
+      channelId: after.id,
+      fields: [
+        { name: "Channel", value: `<#${after.id}>`, inline: true },
+        { name: "Before", value: renderOverwrites(overwritesOf(before)) },
+        { name: "After", value: renderOverwrites(overwritesOf(after)) }
+      ],
+      payload: { guildId, changed: changed2 }
+    });
+  }
+  return events;
+}
+function threadCreateEvent(thread, guildId, actor) {
+  return {
+    category: "server",
+    type: "thread.create",
+    summary: `Thread ${channelName(thread)} created`,
+    ...actor ? { actor } : {},
+    target: { id: thread.id, name: channelName(thread) },
+    channelId: thread.id,
+    fields: [
+      { name: "Name", value: channelName(thread), inline: true },
+      { name: "Parent", value: thread.parentId ? `<#${thread.parentId}>` : "none", inline: true },
+      { name: "Archived", value: thread.archived ? "yes" : "no", inline: true }
+    ],
+    payload: { guildId }
+  };
+}
+function threadDeleteEvent(thread, guildId, actor) {
+  return {
+    category: "server",
+    type: "thread.delete",
+    summary: `Thread ${channelName(thread)} deleted`,
+    severity: "warn",
+    ...actor ? { actor } : {},
+    target: { id: thread.id, name: channelName(thread) },
+    channelId: thread.id,
+    fields: [
+      { name: "Name", value: channelName(thread), inline: true },
+      { name: "Parent", value: thread.parentId ? `<#${thread.parentId}>` : "none", inline: true }
+    ],
+    payload: { guildId, ...restorePayload(thread) }
+  };
+}
+function threadUpdateEvents(before, after, guildId, actor) {
+  const changes = [];
+  const properties = [
+    ["name", before.name, after.name],
+    ["archived", before.archived, after.archived],
+    ["locked", before.locked, after.locked],
+    ["slowmode", before.rateLimitPerUser, after.rateLimitPerUser]
+  ];
+  for (const [label2, previous, next] of properties) {
+    if (previous !== next) {
+      changes.push(`${label2}: ${String(previous ?? "none")} \u2192 ${String(next ?? "none")}`);
+    }
+  }
+  if (changes.length === 0) {
+    return [];
+  }
+  return [
+    {
+      category: "server",
+      type: "thread.update",
+      summary: `Thread ${channelName(after)} updated`,
+      ...actor ? { actor } : {},
+      target: { id: after.id, name: channelName(after) },
+      channelId: after.id,
+      fields: [
+        { name: "Thread", value: `<#${after.id}>`, inline: true },
+        { name: "Changes", value: changes.join("\n") }
+      ],
+      payload: { guildId }
+    }
+  ];
+}
+function guildOf(channel) {
+  return channel.guildId ?? channel.guild?.id ?? null;
+}
+function registerChannelRecorder(client, deps) {
+  const { config, audit, resolver, security, logger } = deps;
+  const recent = () => new Date(Date.now() - 1e4);
+  client.on(import_discord31.Events.ChannelCreate, (channel) => {
+    void (async () => {
+      const guildId = guildOf(channel);
+      const guild = client.guilds.cache.get(config.guildId);
+      if (guildId !== config.guildId || !guild) {
+        return;
+      }
+      const actor = await resolver.resolve(guild, import_discord31.AuditLogEvent.ChannelCreate, channel.id, recent());
+      audit.record(channelCreateEvent(channel, config.guildId, actor));
+      if (actor && security) {
+        security.observe({
+          kind: "channelCreate",
+          guildId: config.guildId,
+          actorId: actor.id,
+          actorTag: actor.tag,
+          targetId: channel.id,
+          targetName: "name" in channel ? channel.name : null,
+          at: /* @__PURE__ */ new Date(),
+          payload: channel
+        });
+      }
+    })().catch((error) => {
+      logger.warn("Channel create recorder failed", serializeError(error));
+    });
+  });
+  client.on(import_discord31.Events.ChannelUpdate, (before, after) => {
+    void (async () => {
+      const guildId = guildOf(after);
+      const guild = client.guilds.cache.get(config.guildId);
+      if (guildId !== config.guildId || !guild) {
+        return;
+      }
+      const actor = await resolver.resolve(guild, import_discord31.AuditLogEvent.ChannelUpdate, after.id, recent());
+      const events = channelUpdateEvents(
+        before,
+        after,
+        config.guildId,
+        actor
+      );
+      for (const event of events) {
+        audit.record(event);
+      }
+    })().catch((error) => {
+      logger.warn("Channel update recorder failed", serializeError(error));
+    });
+  });
+  client.on(import_discord31.Events.ChannelDelete, (channel) => {
+    void (async () => {
+      const guildId = guildOf(channel);
+      const guild = client.guilds.cache.get(config.guildId);
+      if (guildId !== config.guildId || !guild) {
+        return;
+      }
+      const actor = await resolver.resolve(guild, import_discord31.AuditLogEvent.ChannelDelete, channel.id, recent());
+      const snapshot = channel;
+      audit.record(channelDeleteEvent(snapshot, config.guildId, actor));
+      if (!actor) {
+        audit.record(
+          attributionFailureEvent({
+            guildId: config.guildId,
+            type: "channelDelete",
+            targetId: channel.id,
+            targetName: "name" in channel ? channel.name : null
+          })
+        );
+        return;
+      }
+      security?.observe({
+        kind: "channelDelete",
+        guildId: config.guildId,
+        actorId: actor.id,
+        actorTag: actor.tag,
+        targetId: channel.id,
+        targetName: "name" in channel ? channel.name : null,
+        at: /* @__PURE__ */ new Date(),
+        payload: snapshot
+      });
+    })().catch((error) => {
+      logger.warn("Channel delete recorder failed", serializeError(error));
+    });
+  });
+  client.on(import_discord31.Events.ThreadCreate, (thread) => {
+    void (async () => {
+      const guildId = guildOf(thread);
+      const guild = client.guilds.cache.get(config.guildId);
+      if (guildId !== config.guildId || !guild) {
+        return;
+      }
+      const actor = await resolver.resolve(guild, import_discord31.AuditLogEvent.ThreadCreate, thread.id, recent());
+      audit.record(threadCreateEvent(thread, config.guildId, actor));
+      if (actor && security) {
+        security.observe({
+          kind: "channelCreate",
+          guildId: config.guildId,
+          actorId: actor.id,
+          actorTag: actor.tag,
+          targetId: thread.id,
+          targetName: thread.name,
+          at: /* @__PURE__ */ new Date(),
+          payload: thread
+        });
+      }
+    })().catch((error) => {
+      logger.warn("Thread create recorder failed", serializeError(error));
+    });
+  });
+  client.on(import_discord31.Events.ThreadUpdate, (before, after) => {
+    void (async () => {
+      const guildId = guildOf(after);
+      const guild = client.guilds.cache.get(config.guildId);
+      if (guildId !== config.guildId || !guild) {
+        return;
+      }
+      const actor = await resolver.resolve(guild, import_discord31.AuditLogEvent.ThreadUpdate, after.id, recent());
+      const events = threadUpdateEvents(
+        before,
+        after,
+        config.guildId,
+        actor
+      );
+      for (const event of events) {
+        audit.record(event);
+      }
+    })().catch((error) => {
+      logger.warn("Thread update recorder failed", serializeError(error));
+    });
+  });
+  client.on(import_discord31.Events.ThreadDelete, (thread) => {
+    void (async () => {
+      const guildId = guildOf(thread);
+      const guild = client.guilds.cache.get(config.guildId);
+      if (guildId !== config.guildId || !guild) {
+        return;
+      }
+      const actor = await resolver.resolve(guild, import_discord31.AuditLogEvent.ThreadDelete, thread.id, recent());
+      audit.record(threadDeleteEvent(thread, config.guildId, actor));
+      if (!actor) {
+        audit.record(
+          attributionFailureEvent({
+            guildId: config.guildId,
+            type: "threadDelete",
+            targetId: thread.id,
+            targetName: thread.name
+          })
+        );
+        return;
+      }
+      security?.observe({
+        kind: "threadDelete",
+        guildId: config.guildId,
+        actorId: actor.id,
+        actorTag: actor.tag,
+        targetId: thread.id,
+        targetName: thread.name,
+        at: /* @__PURE__ */ new Date(),
+        payload: thread
+      });
+    })().catch((error) => {
+      logger.warn("Thread delete recorder failed", serializeError(error));
+    });
+  });
+}
+
+// src/audit/recorders/members.ts
+var import_discord32 = __toESM(require_src());
+function tagOf2(user) {
+  return user.tag ?? user.username ?? user.id;
+}
+function memberName(member) {
+  return member.nickname ? `${member.nickname} (${tagOf2(member.user)})` : tagOf2(member.user);
+}
+function roleIds(member) {
+  return new Set(member.roles.cache.keys());
+}
+function roleMentions(ids) {
+  const list = [...ids];
+  return list.length > 0 ? list.map((id) => `<@&${id}>`).join(", ") : "none";
+}
+function accountAgeDays(user) {
+  return Math.max(0, Math.floor((Date.now() - user.createdTimestamp) / 864e5));
+}
+function baseMemberFields(member) {
+  return [
+    { name: "Member", value: `${memberName(member)} (${member.id})`, inline: true },
+    { name: "Bot", value: member.user.bot ? "yes" : "no", inline: true },
+    { name: "Account age", value: `${accountAgeDays(member.user)} days` },
+    { name: "Roles", value: roleMentions(roleIds(member)) }
+  ];
+}
+function memberJoinEvent(member, guildId) {
+  const joined = member.joinedTimestamp !== void 0 && member.joinedTimestamp !== null ? formatTimestamp(new Date(member.joinedTimestamp)) : "unknown";
+  return {
+    category: "member",
+    type: "member.join",
+    summary: `${memberName(member)} joined`,
+    actor: { id: member.id, tag: tagOf2(member.user) },
+    target: { id: member.id, name: tagOf2(member.user) },
+    fields: [
+      ...baseMemberFields(member),
+      { name: "Joined", value: joined }
+    ],
+    payload: { guildId }
+  };
+}
+function memberLeaveEvent(member, guildId, actor) {
+  return {
+    category: "member",
+    type: actor ? "member.kick" : "member.leave",
+    summary: actor ? `${memberName(member)} was kicked by ${actor.tag}` : `${memberName(member)} left`,
+    severity: actor ? "warn" : "info",
+    ...actor ? { actor } : {},
+    target: { id: member.id, name: tagOf2(member.user) },
+    fields: [
+      { name: "Member", value: `${memberName(member)} (${member.id})`, inline: true },
+      { name: "Bot", value: member.user.bot ? "yes" : "no", inline: true },
+      { name: "Roles", value: roleMentions(roleIds(member)) }
+    ],
+    payload: { guildId }
+  };
+}
+function memberUpdateEvents(before, after, guildId, actor) {
+  const events = [];
+  const previousRoles = roleIds(before);
+  const nextRoles = roleIds(after);
+  const added = [...nextRoles].filter((id) => !previousRoles.has(id));
+  const removed = [...previousRoles].filter((id) => !nextRoles.has(id));
+  if (added.length > 0 || removed.length > 0) {
+    events.push({
+      category: "member",
+      type: "member.roles",
+      summary: `Roles updated for ${memberName(after)}`,
+      severity: "warn",
+      ...actor ? { actor } : {},
+      target: { id: after.id, name: tagOf2(after.user) },
+      fields: [
+        { name: "Member", value: `${memberName(after)} (${after.id})`, inline: true },
+        { name: "Added", value: roleMentions(added) },
+        { name: "Removed", value: roleMentions(removed) }
+      ],
+      payload: { added, removed, guildId }
+    });
+  }
+  const changes = [];
+  const beforeNick = before.nickname ?? "(none)";
+  const afterNick = after.nickname ?? "(none)";
+  if (beforeNick !== afterNick) {
+    changes.push({ label: "Nickname", before: beforeNick, after: afterNick });
+  }
+  const beforeTimeout = Boolean(before.communicationDisabledUntilTimestamp);
+  const afterTimeout = Boolean(after.communicationDisabledUntilTimestamp);
+  if (beforeTimeout !== afterTimeout) {
+    changes.push({
+      label: "Timed out",
+      before: beforeTimeout ? "yes" : "no",
+      after: afterTimeout ? "yes" : "no"
+    });
+  }
+  const beforeUsername = before.user.username ?? before.user.id;
+  const afterUsername = after.user.username ?? after.user.id;
+  if (beforeUsername !== afterUsername) {
+    changes.push({ label: "Username", before: beforeUsername, after: afterUsername });
+  }
+  const beforeAvatar = before.avatarURL?.() ?? null;
+  const afterAvatar = after.avatarURL?.() ?? null;
+  if (beforeAvatar !== afterAvatar) {
+    changes.push({
+      label: "Avatar",
+      before: beforeAvatar ?? "(none)",
+      after: afterAvatar ?? "(none)"
+    });
+  }
+  if (changes.length > 0) {
+    events.push({
+      category: "member",
+      type: "member.update",
+      summary: `${memberName(after)} profile updated`,
+      ...actor ? { actor } : {},
+      target: { id: after.id, name: tagOf2(after.user) },
+      fields: [
+        { name: "Member", value: `${memberName(after)} (${after.id})`, inline: true },
+        {
+          name: "Before",
+          value: truncate(changes.map((change) => `${change.label}: ${change.before}`).join("\n"), 1024)
+        },
+        {
+          name: "After",
+          value: truncate(changes.map((change) => `${change.label}: ${change.after}`).join("\n"), 1024)
+        }
+      ],
+      payload: { guildId }
+    });
+  }
+  return events;
+}
+function memberBanEvent(user, guildId, actor, reason2) {
+  return {
+    category: "member",
+    type: "member.ban",
+    summary: `${tagOf2(user)} was banned${actor ? ` by ${actor.tag}` : ""}`,
+    severity: "warn",
+    ...actor ? { actor } : {},
+    target: { id: user.id, name: tagOf2(user) },
+    fields: [
+      { name: "User", value: `${tagOf2(user)} (${user.id})`, inline: true },
+      { name: "Reason", value: reason2 ?? "no reason supplied" }
+    ],
+    payload: { guildId }
+  };
+}
+function memberUnbanEvent(user, guildId, actor) {
+  return {
+    category: "member",
+    type: "member.unban",
+    summary: `${tagOf2(user)} was unbanned${actor ? ` by ${actor.tag}` : ""}`,
+    severity: "warn",
+    ...actor ? { actor } : {},
+    target: { id: user.id, name: tagOf2(user) },
+    fields: [{ name: "User", value: `${tagOf2(user)} (${user.id})`, inline: true }],
+    payload: { guildId }
+  };
+}
+function registerMemberRecorder(client, deps) {
+  const { config, audit, resolver, security, logger } = deps;
+  const recent = () => new Date(Date.now() - 1e4);
+  client.on(import_discord32.Events.GuildMemberAdd, (member) => {
+    void (async () => {
+      if (member.guild.id !== config.guildId) {
+        return;
+      }
+      audit.record(memberJoinEvent(member, config.guildId));
+    })().catch((error) => {
+      logger.warn("Member join recorder failed", serializeError(error));
+    });
+  });
+  client.on(import_discord32.Events.GuildMemberRemove, (member) => {
+    void (async () => {
+      if (member.guild.id !== config.guildId) {
+        return;
+      }
+      const actor = await resolver.resolve(
+        member.guild,
+        import_discord32.AuditLogEvent.MemberKick,
+        member.id,
+        recent()
+      );
+      audit.record(
+        memberLeaveEvent(member, config.guildId, actor)
+      );
+      if (actor && security) {
+        security.observe({
+          kind: "kick",
+          guildId: config.guildId,
+          actorId: actor.id,
+          actorTag: actor.tag,
+          targetId: member.id,
+          targetName: tagOf2(member.user),
+          at: /* @__PURE__ */ new Date()
+        });
+      }
+    })().catch((error) => {
+      logger.warn("Member leave recorder failed", serializeError(error));
+    });
+  });
+  client.on(import_discord32.Events.GuildMemberUpdate, (before, after) => {
+    void (async () => {
+      if (after.guild.id !== config.guildId) {
+        return;
+      }
+      const beforeRoles = roleIds(before);
+      const afterRoles = roleIds(after);
+      const rolesChanged = beforeRoles.size !== afterRoles.size || [...afterRoles].some((id) => !beforeRoles.has(id));
+      const actor = rolesChanged ? await resolver.resolve(
+        after.guild,
+        import_discord32.AuditLogEvent.MemberRoleUpdate,
+        after.id,
+        recent()
+      ) : null;
+      const events = memberUpdateEvents(
+        before,
+        after,
+        config.guildId,
+        actor
+      );
+      for (const event of events) {
+        audit.record(event);
+      }
+      if (rolesChanged && actor && security) {
+        security.observe({
+          kind: "memberRoleUpdate",
+          guildId: config.guildId,
+          actorId: actor.id,
+          actorTag: actor.tag,
+          targetId: after.id,
+          targetName: tagOf2(after.user),
+          at: /* @__PURE__ */ new Date()
+        });
+      }
+    })().catch((error) => {
+      logger.warn("Member update recorder failed", serializeError(error));
+    });
+  });
+  client.on(import_discord32.Events.GuildBanAdd, (ban) => {
+    void (async () => {
+      if (ban.guild.id !== config.guildId) {
+        return;
+      }
+      const actor = await resolver.resolve(
+        ban.guild,
+        import_discord32.AuditLogEvent.MemberBanAdd,
+        ban.user.id,
+        recent()
+      );
+      audit.record(
+        memberBanEvent(ban.user, config.guildId, actor, null)
+      );
+      if (!actor) {
+        audit.record(
+          attributionFailureEvent({
+            guildId: config.guildId,
+            type: "ban",
+            targetId: ban.user.id,
+            targetName: tagOf2(ban.user)
+          })
+        );
+        return;
+      }
+      security?.observe({
+        kind: "ban",
+        guildId: config.guildId,
+        actorId: actor.id,
+        actorTag: actor.tag,
+        targetId: ban.user.id,
+        targetName: tagOf2(ban.user),
+        at: /* @__PURE__ */ new Date()
+      });
+    })().catch((error) => {
+      logger.warn("Member ban recorder failed", serializeError(error));
+    });
+  });
+  client.on(import_discord32.Events.GuildBanRemove, (ban) => {
+    void (async () => {
+      if (ban.guild.id !== config.guildId) {
+        return;
+      }
+      const actor = await resolver.resolve(
+        ban.guild,
+        import_discord32.AuditLogEvent.MemberBanRemove,
+        ban.user.id,
+        recent()
+      );
+      audit.record(
+        memberUnbanEvent(ban.user, config.guildId, actor)
+      );
+    })().catch((error) => {
+      logger.warn("Member unban recorder failed", serializeError(error));
+    });
+  });
+}
+
+// src/audit/recorders/messages.ts
+var import_discord33 = __toESM(require_src());
+var MAX_CONTENT = 1e3;
+var MAX_ATTACHMENTS = 10;
+function authorTag(author) {
+  return author.tag ?? author.username ?? author.id;
+}
+function codeBlock(text) {
+  const safe = text.replace(/```/g, "``\u200B`");
+  return `\`\`\`
+${safe.slice(0, MAX_CONTENT)}
+\`\`\``;
+}
+function attachmentList(message) {
+  const attachments = [...message.attachments.values()].slice(0, MAX_ATTACHMENTS);
+  if (attachments.length === 0) {
+    return null;
+  }
+  return attachments.map((attachment) => `${attachment.name} (${attachment.size} B) ${attachment.url}`).join("\n");
+}
+function embedList(message) {
+  if (message.embeds.length === 0) {
+    return null;
+  }
+  const titles = message.embeds.map((embed) => embed.title).filter((title) => Boolean(title));
+  return `${message.embeds.length} embed${message.embeds.length === 1 ? "" : "s"}${titles.length > 0 ? `: ${titles.join(", ")}` : ""}`;
+}
+function baseFields(message, includeContent) {
+  const fields = [
+    {
+      name: "Author",
+      value: `${authorTag(message.author)} (${message.author.id})`,
+      inline: true
+    },
+    { name: "Channel", value: `<#${message.channelId}>`, inline: true }
+  ];
+  fields.push({
+    name: "Content",
+    value: includeContent ? codeBlock(message.content) : "Content unavailable (logging disabled)."
+  });
+  const attachments = attachmentList(message);
+  if (attachments) {
+    fields.push({ name: "Attachments", value: attachments });
+  }
+  const embeds = embedList(message);
+  if (embeds) {
+    fields.push({ name: "Embeds", value: embeds });
+  }
+  return fields;
+}
+function messageCreateEvent(message, guildId, includeContent, feed = false) {
+  return {
+    category: "message",
+    type: "message.create",
+    summary: `Message from ${authorTag(message.author)} in <#${message.channelId}>`,
+    feed,
+    actor: { id: message.author.id, tag: authorTag(message.author) },
+    target: { id: message.channelId },
+    channelId: message.channelId,
+    fields: baseFields(message, includeContent),
+    payload: { messageId: message.id }
+  };
+}
+function attachmentSignature(message) {
+  return [...message.attachments.values()].map((attachment) => `${attachment.name}:${attachment.size}:${attachment.url}`).join("|");
+}
+function embedSignature(message) {
+  return message.embeds.map((embed) => embed.title ?? "").join("|");
+}
+function messageUpdateEvents(before, after, guildId, includeContent) {
+  const contentChanged = before.content !== after.content;
+  const attachmentsChanged = attachmentSignature(before) !== attachmentSignature(after);
+  const embedsChanged = embedSignature(before) !== embedSignature(after);
+  if (!contentChanged && !attachmentsChanged && !embedsChanged) {
+    return [];
+  }
+  const render = (message) => includeContent ? codeBlock(message.content) : "Content unavailable (logging disabled).";
+  const fields = [
+    {
+      name: "Author",
+      value: `${authorTag(after.author)} (${after.author.id})`,
+      inline: true
+    },
+    { name: "Channel", value: `<#${after.channelId}>`, inline: true },
+    { name: "Before", value: render(before) },
+    { name: "After", value: render(after) }
+  ];
+  const attachments = attachmentList(after);
+  if (attachments) {
+    fields.push({ name: "Attachments", value: attachments });
+  }
+  return [
+    {
+      category: "message",
+      type: "message.update",
+      summary: `Message edited in <#${after.channelId}>`,
+      feed: true,
+      actor: { id: after.author.id, tag: authorTag(after.author) },
+      target: { id: after.channelId },
+      channelId: after.channelId,
+      fields,
+      payload: { messageId: after.id }
+    }
+  ];
+}
+function messageDeleteEvent(message, guildId, includeContent) {
+  return {
+    category: "message",
+    type: "message.delete",
+    summary: `Message deleted in <#${message.channelId}>`,
+    feed: true,
+    actor: { id: message.author.id, tag: authorTag(message.author) },
+    target: { id: message.channelId },
+    channelId: message.channelId,
+    fields: baseFields(message, includeContent),
+    payload: { messageId: message.id }
+  };
+}
+function messageBulkDeleteEvent(messages, channelId, guildId) {
+  const ids = [...messages.values()].slice(0, 20).map((message) => message.id);
+  return {
+    category: "message",
+    type: "message.bulkDelete",
+    summary: `${messages.size} messages bulk deleted in <#${channelId}>`,
+    severity: "warn",
+    feed: true,
+    target: { id: channelId },
+    channelId,
+    fields: [
+      { name: "Channel", value: `<#${channelId}>`, inline: true },
+      { name: "Messages", value: String(messages.size), inline: true },
+      { name: "Message IDs", value: ids.join(", ") || "none" }
+    ],
+    payload: { count: messages.size, ids, guildId }
+  };
+}
+function registerMessageRecorder(client, deps) {
+  const { config, audit, resolver, security, logger } = deps;
+  client.on(import_discord33.Events.MessageCreate, (message) => {
+    void (async () => {
+      if (message.guildId !== config.guildId || message.author.bot) {
+        return;
+      }
+      audit.record(messageCreateEvent(message, config.guildId, config.logMessageContent));
+    })().catch((error) => {
+      logger.warn("Message create recorder failed", serializeError(error));
+    });
+  });
+  client.on(import_discord33.Events.MessageUpdate, (before, after) => {
+    void (async () => {
+      if (after.guildId !== config.guildId || after.author?.bot) {
+        return;
+      }
+      const events = messageUpdateEvents(
+        before,
+        after,
+        config.guildId,
+        config.logMessageContent
+      );
+      for (const event of events) {
+        audit.record(event);
+      }
+    })().catch((error) => {
+      logger.warn("Message update recorder failed", serializeError(error));
+    });
+  });
+  client.on(import_discord33.Events.MessageDelete, (message) => {
+    void (async () => {
+      if (message.guildId !== config.guildId) {
+        return;
+      }
+      audit.record(
+        messageDeleteEvent(
+          message,
+          config.guildId,
+          config.logMessageContent
+        )
+      );
+    })().catch((error) => {
+      logger.warn("Message delete recorder failed", serializeError(error));
+    });
+  });
+  client.on(import_discord33.Events.MessageBulkDelete, (messages, channel) => {
+    void (async () => {
+      if (channel.guildId !== config.guildId) {
+        return;
+      }
+      const first = messages.first();
+      audit.record(
+        messageBulkDeleteEvent(
+          messages,
+          channel.id,
+          config.guildId
+        )
+      );
+      const guild = client.guilds.cache.get(config.guildId);
+      const actor = resolver && guild ? await resolver.resolve(
+        guild,
+        import_discord33.AuditLogEvent.MessageBulkDelete,
+        null,
+        new Date(Date.now() - 1e4)
+      ) : null;
+      if (!actor) {
+        audit.record(
+          attributionFailureEvent({
+            guildId: config.guildId,
+            type: "bulkDelete",
+            targetId: channel.id,
+            targetName: "name" in channel ? channel.name : null
+          })
+        );
+        return;
+      }
+      security?.observe({
+        kind: "bulkDelete",
+        guildId: config.guildId,
+        actorId: actor.id,
+        actorTag: actor.tag,
+        targetId: channel.id,
+        targetName: "name" in channel ? channel.name : null,
+        at: /* @__PURE__ */ new Date(),
+        payload: { count: messages.size, sampleId: first?.id ?? null }
+      });
+    })().catch((error) => {
+      logger.warn("Bulk message delete recorder failed", serializeError(error));
+    });
+  });
+}
+
+// src/audit/recorders/scheduled-events.ts
+var import_discord34 = __toESM(require_src());
+function valueLabel(value) {
+  return value === void 0 ? "unknown" : String(value);
+}
+function timestamp(value) {
+  return value ? formatTimestamp(new Date(value)) : "none";
+}
+function scheduledEventEvent(kind, event, guildId, user) {
+  const verb = kind === "create" ? "created" : kind === "update" ? "updated" : kind === "delete" ? "deleted" : kind === "userAdd" ? "joined by a member" : "left by a member";
+  const type = `scheduledEvent.${kind}`;
+  const fields = [
+    { name: "Event", value: event.name, inline: true },
+    { name: "Start", value: timestamp(event.scheduledStartTimestamp), inline: true },
+    { name: "End", value: timestamp(event.scheduledEndTimestamp), inline: true },
+    { name: "Status", value: valueLabel(event.status), inline: true },
+    { name: "Entity", value: valueLabel(event.entityType), inline: true }
+  ];
+  if (event.description) {
+    fields.push({ name: "Description", value: event.description });
+  }
+  if (event.channelId) {
+    fields.push({ name: "Channel", value: `<#${event.channelId}>`, inline: true });
+  } else if (event.entityMetadata?.location) {
+    fields.push({ name: "Location", value: event.entityMetadata.location, inline: true });
+  }
+  if (user) {
+    fields.push({
+      name: "User",
+      value: `${user.tag ?? user.username ?? user.id} (${user.id})`,
+      inline: true
+    });
+  }
+  return {
+    category: "server",
+    type,
+    summary: `Scheduled event ${event.name} ${verb}`,
+    severity: kind === "delete" ? "warn" : "info",
+    ...user ? { actor: { id: user.id, tag: user.tag ?? user.username ?? user.id } } : {},
+    target: { id: event.id, name: event.name },
+    ...event.channelId ? { channelId: event.channelId } : {},
+    fields,
+    payload: { guildId }
+  };
+}
+function registerScheduledEventRecorder(client, deps) {
+  const { config, audit, resolver, logger } = deps;
+  const recent = () => new Date(Date.now() - 1e4);
+  client.on(import_discord34.Events.GuildScheduledEventCreate, (event) => {
+    void (async () => {
+      const guild = client.guilds.cache.get(config.guildId);
+      if (!guild || event.guildId !== config.guildId) {
+        return;
+      }
+      const actor = await resolver.resolve(
+        guild,
+        import_discord34.AuditLogEvent.GuildScheduledEventCreate,
+        event.id,
+        recent()
+      );
+      audit.record(
+        scheduledEventEvent(
+          "create",
+          event,
+          config.guildId,
+          actor ? { id: actor.id, tag: actor.tag } : void 0
+        )
+      );
+    })().catch((error) => {
+      logger.warn("Scheduled event create recorder failed", serializeError(error));
+    });
+  });
+  client.on(import_discord34.Events.GuildScheduledEventUpdate, (before, after) => {
+    void (async () => {
+      const guild = client.guilds.cache.get(config.guildId);
+      if (!guild || after.guildId !== config.guildId) {
+        return;
+      }
+      const actor = await resolver.resolve(
+        guild,
+        import_discord34.AuditLogEvent.GuildScheduledEventUpdate,
+        after.id,
+        recent()
+      );
+      audit.record(
+        scheduledEventEvent(
+          "update",
+          after,
+          config.guildId,
+          actor ? { id: actor.id, tag: actor.tag } : void 0
+        )
+      );
+    })().catch((error) => {
+      logger.warn("Scheduled event update recorder failed", serializeError(error));
+    });
+  });
+  client.on(import_discord34.Events.GuildScheduledEventDelete, (event) => {
+    void (async () => {
+      const guild = client.guilds.cache.get(config.guildId);
+      if (!guild || event.guildId !== config.guildId) {
+        return;
+      }
+      const actor = await resolver.resolve(
+        guild,
+        import_discord34.AuditLogEvent.GuildScheduledEventDelete,
+        event.id,
+        recent()
+      );
+      audit.record(
+        scheduledEventEvent(
+          "delete",
+          event,
+          config.guildId,
+          actor ? { id: actor.id, tag: actor.tag } : void 0
+        )
+      );
+    })().catch((error) => {
+      logger.warn("Scheduled event delete recorder failed", serializeError(error));
+    });
+  });
+  client.on(import_discord34.Events.GuildScheduledEventUserAdd, (event, user) => {
+    void (async () => {
+      if (event.guildId !== config.guildId) {
+        return;
+      }
+      audit.record(
+        scheduledEventEvent(
+          "userAdd",
+          event,
+          config.guildId,
+          user
+        )
+      );
+    })().catch((error) => {
+      logger.warn("Scheduled event user add recorder failed", serializeError(error));
+    });
+  });
+  client.on(import_discord34.Events.GuildScheduledEventUserRemove, (event, user) => {
+    void (async () => {
+      if (event.guildId !== config.guildId) {
+        return;
+      }
+      audit.record(
+        scheduledEventEvent(
+          "userRemove",
+          event,
+          config.guildId,
+          user
+        )
+      );
+    })().catch((error) => {
+      logger.warn("Scheduled event user remove recorder failed", serializeError(error));
+    });
+  });
+}
+
+// src/audit/recorders/server-structure.ts
+var import_discord35 = __toESM(require_src());
+function permissionsText(role) {
+  return typeof role.permissions === "string" ? role.permissions : role.permissions.bitfield.toString();
+}
+function rolePresentation(role) {
+  return [
+    { name: "Name", value: role.name, inline: true },
+    { name: "Color", value: `#${role.color.toString(16).padStart(6, "0")}`, inline: true },
+    { name: "Hoist", value: role.hoist ? "yes" : "no", inline: true },
+    { name: "Mentionable", value: role.mentionable ? "yes" : "no", inline: true },
+    { name: "Position", value: String(role.position), inline: true }
+  ];
+}
+function roleCreateEvent(role, guildId, actor) {
+  return {
+    category: "server",
+    type: "role.create",
+    summary: `Role ${role.name} created`,
+    ...actor ? { actor } : {},
+    target: { id: role.id, name: role.name },
+    fields: [
+      ...rolePresentation(role),
+      { name: "Permissions", value: permissionsText(role) }
+    ],
+    payload: { guildId }
+  };
+}
+function roleDeleteEvent(role, guildId, actor) {
+  return {
+    category: "server",
+    type: "role.delete",
+    summary: `Role ${role.name} deleted`,
+    severity: "warn",
+    ...actor ? { actor } : {},
+    target: { id: role.id, name: role.name },
+    fields: rolePresentation(role),
+    payload: {
+      guildId,
+      id: role.id,
+      name: role.name,
+      color: role.color,
+      hoist: role.hoist,
+      mentionable: role.mentionable,
+      position: role.position,
+      permissions: permissionsText(role),
+      managed: role.managed ?? false
+    }
+  };
+}
+function roleUpdateEvents(before, after, guildId, actor) {
+  const events = [];
+  const base = {
+    category: "server",
+    type: "role.update",
+    ...actor ? { actor } : {},
+    target: { id: after.id, name: after.name },
+    payload: { guildId }
+  };
+  if (permissionsText(before) !== permissionsText(after)) {
+    events.push({
+      ...base,
+      summary: `Role ${after.name} permissions updated`,
+      severity: "warn",
+      fields: [
+        { name: "Role", value: `${after.name} (${after.id})`, inline: true },
+        { name: "Before", value: permissionsText(before) },
+        { name: "After", value: permissionsText(after) }
+      ]
+    });
+  }
+  const presentation = [];
+  if (before.name !== after.name) {
+    presentation.push(`name: ${before.name} \u2192 ${after.name}`);
+  }
+  if (before.color !== after.color) {
+    presentation.push(`color: ${before.color} \u2192 ${after.color}`);
+  }
+  if (before.hoist !== after.hoist) {
+    presentation.push(`hoist: ${before.hoist} \u2192 ${after.hoist}`);
+  }
+  if (before.mentionable !== after.mentionable) {
+    presentation.push(`mentionable: ${before.mentionable} \u2192 ${after.mentionable}`);
+  }
+  if (before.position !== after.position) {
+    presentation.push(`position: ${before.position} \u2192 ${after.position}`);
+  }
+  if (presentation.length > 0) {
+    events.push({
+      ...base,
+      summary: `Role ${after.name} updated`,
+      fields: [
+        { name: "Role", value: `${after.name} (${after.id})`, inline: true },
+        { name: "Changes", value: presentation.join("\n") }
+      ]
+    });
+  }
+  return events;
+}
+function emojiEvents(kind, emoji, guildId, actor) {
+  return {
+    category: "server",
+    type: `emoji.${kind}`,
+    summary: `Emoji ${emoji.name ?? emoji.id} ${kind === "create" ? "created" : `${kind}d`}`,
+    severity: kind === "delete" ? "warn" : "info",
+    ...actor ? { actor } : {},
+    target: { id: emoji.id, name: emoji.name ?? void 0 },
+    fields: [
+      { name: "Name", value: emoji.name ?? "unknown", inline: true },
+      { name: "ID", value: emoji.id, inline: true },
+      { name: "Animated", value: emoji.animated ? "yes" : "no", inline: true },
+      { name: "Managed", value: emoji.managed ? "yes" : "no", inline: true }
+    ],
+    payload: { guildId }
+  };
+}
+function stickerEvents(kind, sticker, guildId, actor) {
+  return {
+    category: "server",
+    type: `sticker.${kind}`,
+    summary: `Sticker ${sticker.name} ${kind === "create" ? "created" : `${kind}d`}`,
+    severity: kind === "delete" ? "warn" : "info",
+    ...actor ? { actor } : {},
+    target: { id: sticker.id, name: sticker.name },
+    fields: [
+      { name: "Name", value: sticker.name, inline: true },
+      { name: "ID", value: sticker.id, inline: true },
+      { name: "Tags", value: sticker.tags || "none" },
+      { name: "Description", value: sticker.description || "none" }
+    ],
+    payload: { guildId, name: sticker.name, tags: sticker.tags ?? null }
+  };
+}
+function inviteChannelId(invite) {
+  return invite.channelId ?? invite.channel?.id ?? null;
+}
+function inviteCreateEvent(invite, guildId, actor) {
+  const channelId = inviteChannelId(invite);
+  return {
+    category: "server",
+    type: "invite.create",
+    summary: `Invite ${invite.code} created`,
+    severity: "warn",
+    ...actor || invite.inviter ? {
+      actor: actor ?? {
+        id: invite.inviter.id,
+        tag: invite.inviter.tag ?? invite.inviter.username ?? invite.inviter.id
+      }
+    } : {},
+    target: { id: invite.code, name: invite.code },
+    ...channelId ? { channelId } : {},
+    fields: [
+      { name: "Code", value: invite.code, inline: true },
+      { name: "Channel", value: channelId ? `<#${channelId}>` : "unknown", inline: true },
+      { name: "Uses", value: String(invite.uses ?? 0), inline: true },
+      { name: "Max age", value: `${invite.maxAge ?? 0}s`, inline: true },
+      { name: "Max uses", value: String(invite.maxUses ?? 0), inline: true },
+      { name: "Temporary", value: invite.temporary ? "yes" : "no", inline: true }
+    ],
+    payload: { guildId }
+  };
+}
+function inviteDeleteEvent(invite, guildId, actor) {
+  const channelId = inviteChannelId(invite);
+  return {
+    category: "server",
+    type: "invite.delete",
+    summary: `Invite ${invite.code} deleted`,
+    ...actor ? { actor } : {},
+    target: { id: invite.code, name: invite.code },
+    ...channelId ? { channelId } : {},
+    fields: [
+      { name: "Code", value: invite.code, inline: true },
+      { name: "Channel", value: channelId ? `<#${channelId}>` : "unknown", inline: true }
+    ],
+    payload: { guildId }
+  };
+}
+function webhookUpdateEvent(channel, guildId, actor) {
+  return {
+    category: "server",
+    type: "webhook.update",
+    summary: `Webhooks updated in ${channel.name ?? channel.id}`,
+    severity: "warn",
+    ...actor ? { actor } : {},
+    target: { id: channel.id, name: channel.name },
+    channelId: channel.id,
+    fields: [{ name: "Channel", value: `<#${channel.id}>`, inline: true }],
+    payload: { guildId }
+  };
+}
+function guildUpdateEvents(before, after, guildId, actor) {
+  const groups = [
+    {
+      label: "Identity",
+      changes: before.name !== after.name ? [`Name: ${before.name} \u2192 ${after.name}`] : []
+    },
+    {
+      label: "Branding",
+      changes: [
+        ...before.icon !== after.icon ? [`Icon: ${before.icon ?? "none"} \u2192 ${after.icon ?? "none"}`] : [],
+        ...before.banner !== after.banner ? [`Banner: ${before.banner ?? "none"} \u2192 ${after.banner ?? "none"}`] : [],
+        ...before.splash !== after.splash ? [`Splash: ${before.splash ?? "none"} \u2192 ${after.splash ?? "none"}`] : []
+      ]
+    },
+    {
+      label: "Safety",
+      changes: [
+        ...before.verificationLevel !== after.verificationLevel ? [`Verification level: ${before.verificationLevel ?? "none"} \u2192 ${after.verificationLevel ?? "none"}`] : [],
+        ...before.explicitContentFilter !== after.explicitContentFilter ? [`Explicit content filter: ${before.explicitContentFilter ?? "none"} \u2192 ${after.explicitContentFilter ?? "none"}`] : []
+      ]
+    },
+    {
+      label: "Channels",
+      changes: [
+        ...before.afkChannelId !== after.afkChannelId ? [`AFK channel: ${before.afkChannelId ?? "none"} \u2192 ${after.afkChannelId ?? "none"}`] : [],
+        ...before.systemChannelId !== after.systemChannelId ? [`System channel: ${before.systemChannelId ?? "none"} \u2192 ${after.systemChannelId ?? "none"}`] : []
+      ]
+    },
+    {
+      label: "Locale",
+      changes: before.preferredLocale !== after.preferredLocale ? [`Preferred locale: ${before.preferredLocale ?? "none"} \u2192 ${after.preferredLocale ?? "none"}`] : []
+    }
+  ];
+  return groups.filter((group) => group.changes.length > 0).map((group) => ({
+    category: "server",
+    type: "guild.update",
+    summary: `Guild ${group.label.toLowerCase()} updated`,
+    severity: group.label === "Safety" ? "warn" : "info",
+    ...actor ? { actor } : {},
+    target: { id: guildId, name: after.name },
+    fields: [{ name: "Changes", value: group.changes.join("\n") }],
+    payload: { guildId, group: group.label }
+  }));
+}
+function registerStructureRecorder(client, deps) {
+  const { config, audit, resolver, security, logger } = deps;
+  const webhooks = deps.webhooks ?? new WebhookTracker({ resolver, security, logger });
+  const recent = () => new Date(Date.now() - 1e4);
+  const guild = () => client.guilds.cache.get(config.guildId);
+  client.once(import_discord35.Events.ClientReady, () => {
+    const target = guild();
+    if (target) {
+      void webhooks.warm(target).catch((error) => {
+        logger.warn("Webhook baseline failed", serializeError(error));
+      });
+    }
+  });
+  client.on(import_discord35.Events.GuildRoleCreate, (role) => {
+    void (async () => {
+      const target = guild();
+      if (!target || role.guild.id !== config.guildId) {
+        return;
+      }
+      const actor = await resolver.resolve(target, import_discord35.AuditLogEvent.RoleCreate, role.id, recent());
+      audit.record(roleCreateEvent(role, config.guildId, actor));
+      if (actor && security) {
+        security.observe({
+          kind: "roleCreate",
+          guildId: config.guildId,
+          actorId: actor.id,
+          actorTag: actor.tag,
+          targetId: role.id,
+          targetName: role.name,
+          at: /* @__PURE__ */ new Date(),
+          payload: role
+        });
+      }
+    })().catch((error) => {
+      logger.warn("Role create recorder failed", serializeError(error));
+    });
+  });
+  client.on(import_discord35.Events.GuildRoleUpdate, (before, after) => {
+    void (async () => {
+      const target = guild();
+      if (!target || after.guild.id !== config.guildId) {
+        return;
+      }
+      const actor = await resolver.resolve(target, import_discord35.AuditLogEvent.RoleUpdate, after.id, recent());
+      const events = roleUpdateEvents(
+        before,
+        after,
+        config.guildId,
+        actor
+      );
+      for (const event of events) {
+        audit.record(event);
+      }
+    })().catch((error) => {
+      logger.warn("Role update recorder failed", serializeError(error));
+    });
+  });
+  client.on(import_discord35.Events.GuildRoleDelete, (role) => {
+    void (async () => {
+      const target = guild();
+      if (!target || role.guild.id !== config.guildId) {
+        return;
+      }
+      const actor = await resolver.resolve(target, import_discord35.AuditLogEvent.RoleDelete, role.id, recent());
+      audit.record(roleDeleteEvent(role, config.guildId, actor));
+      if (!actor) {
+        audit.record(
+          attributionFailureEvent({
+            guildId: config.guildId,
+            type: "roleDelete",
+            targetId: role.id,
+            targetName: role.name
+          })
+        );
+        return;
+      }
+      security?.observe({
+        kind: "roleDelete",
+        guildId: config.guildId,
+        actorId: actor.id,
+        actorTag: actor.tag,
+        targetId: role.id,
+        targetName: role.name,
+        at: /* @__PURE__ */ new Date(),
+        payload: role
+      });
+    })().catch((error) => {
+      logger.warn("Role delete recorder failed", serializeError(error));
+    });
+  });
+  const on = client.on.bind(client);
+  const listenExpression = (eventName, auditType, build, observeKind) => {
+    on(eventName, (raw) => {
+      const value = raw;
+      void (async () => {
+        const target = guild();
+        if (!target) {
+          return;
+        }
+        const actor = await resolver.resolve(target, auditType, value.id, recent());
+        audit.record(build(value, actor));
+        if (actor && security && observeKind) {
+          security.observe({
+            kind: observeKind,
+            guildId: config.guildId,
+            actorId: actor.id,
+            actorTag: actor.tag,
+            targetId: value.id,
+            targetName: value.name,
+            at: /* @__PURE__ */ new Date(),
+            payload: value
+          });
+        }
+      })().catch((error) => {
+        logger.warn("Expression recorder failed", serializeError(error));
+      });
+    });
+  };
+  listenExpression(import_discord35.Events.GuildEmojiCreate, import_discord35.AuditLogEvent.EmojiCreate, (value, actor) => emojiEvents("create", value, config.guildId, actor), null);
+  listenExpression(import_discord35.Events.GuildEmojiUpdate, import_discord35.AuditLogEvent.EmojiUpdate, (value, actor) => emojiEvents("update", value, config.guildId, actor), null);
+  listenExpression(import_discord35.Events.GuildEmojiDelete, import_discord35.AuditLogEvent.EmojiDelete, (value, actor) => emojiEvents("delete", value, config.guildId, actor), "emojiDelete");
+  listenExpression(import_discord35.Events.GuildStickerCreate, import_discord35.AuditLogEvent.StickerCreate, (value, actor) => stickerEvents("create", value, config.guildId, actor), null);
+  listenExpression(import_discord35.Events.GuildStickerUpdate, import_discord35.AuditLogEvent.StickerUpdate, (value, actor) => stickerEvents("update", value, config.guildId, actor), null);
+  listenExpression(import_discord35.Events.GuildStickerDelete, import_discord35.AuditLogEvent.StickerDelete, (value, actor) => stickerEvents("delete", value, config.guildId, actor), "stickerDelete");
+  client.on(import_discord35.Events.InviteCreate, (invite) => {
+    void (async () => {
+      const target = guild();
+      if (!target || invite.guild?.id !== config.guildId) {
+        return;
+      }
+      const actor = await resolver.resolve(target, import_discord35.AuditLogEvent.InviteCreate, invite.code, recent());
+      audit.record(inviteCreateEvent(invite, config.guildId, actor));
+      if (actor && security) {
+        security.observe({
+          kind: "inviteCreate",
+          guildId: config.guildId,
+          actorId: actor.id,
+          actorTag: actor.tag,
+          targetId: invite.code,
+          targetName: invite.code,
+          at: /* @__PURE__ */ new Date(),
+          payload: invite
+        });
+      }
+    })().catch((error) => {
+      logger.warn("Invite create recorder failed", serializeError(error));
+    });
+  });
+  client.on(import_discord35.Events.InviteDelete, (invite) => {
+    void (async () => {
+      const target = guild();
+      if (!target || invite.guild?.id !== config.guildId) {
+        return;
+      }
+      const actor = await resolver.resolve(target, import_discord35.AuditLogEvent.InviteDelete, invite.code, recent());
+      audit.record(inviteDeleteEvent(invite, config.guildId, actor));
+    })().catch((error) => {
+      logger.warn("Invite delete recorder failed", serializeError(error));
+    });
+  });
+  client.on(import_discord35.Events.WebhooksUpdate, (channel) => {
+    void (async () => {
+      const target = guild();
+      if (!target || channel.guildId !== config.guildId) {
+        return;
+      }
+      const actor = await resolver.resolve(target, import_discord35.AuditLogEvent.WebhookUpdate, null, recent());
+      audit.record(webhookUpdateEvent(channel, config.guildId, actor));
+      await webhooks.handle(channel);
+    })().catch((error) => {
+      logger.warn("Webhook update recorder failed", serializeError(error));
+    });
+  });
+  client.on(import_discord35.Events.GuildUpdate, (before, after) => {
+    void (async () => {
+      if (after.id !== config.guildId) {
+        return;
+      }
+      const actor = await resolver.resolve(after, import_discord35.AuditLogEvent.GuildUpdate, after.id, recent());
+      const events = guildUpdateEvents(
+        before,
+        after,
+        config.guildId,
+        actor
+      );
+      for (const event of events) {
+        audit.record(event);
+      }
+      if (actor && security) {
+        security.observe({
+          kind: "guildUpdate",
+          guildId: config.guildId,
+          actorId: actor.id,
+          actorTag: actor.tag,
+          targetId: config.guildId,
+          targetName: after.name,
+          at: /* @__PURE__ */ new Date(),
+          payload: { before, after }
+        });
+      }
+    })().catch((error) => {
+      logger.warn("Guild update recorder failed", serializeError(error));
+    });
+  });
+  client.on(import_discord35.Events.ChannelDelete, (channel) => {
+    webhooks.forget(channel.id);
+  });
+}
+
+// src/audit/recorders/voice.ts
+var import_discord36 = __toESM(require_src());
+function voiceUser(state) {
+  if (state.member) {
+    return state.member.user;
+  }
+  return state.userId ? { id: state.userId } : null;
+}
+function tagOf3(user) {
+  return user.tag ?? user.username ?? user.id;
+}
+function muted(state) {
+  return Boolean(state.selfMute || state.serverMute);
+}
+function deafened(state) {
+  return Boolean(state.selfDeaf || state.serverDeaf);
+}
+function changed(before, after) {
+  return before.channelId !== after.channelId || muted(before) !== muted(after) || deafened(before) !== deafened(after) || Boolean(before.streaming) !== Boolean(after.streaming) || Boolean(before.selfVideo) !== Boolean(after.selfVideo) || Boolean(before.suppress) !== Boolean(after.suppress);
+}
+function voiceStateEvent(before, after, guildId) {
+  if (!changed(before, after)) {
+    return null;
+  }
+  const user = voiceUser(after) ?? voiceUser(before);
+  if (!user) {
+    return null;
+  }
+  let type = "voice.state";
+  let summary = `Voice state updated for ${tagOf3(user)}`;
+  if (!before.channelId && after.channelId) {
+    type = "voice.join";
+    summary = `${tagOf3(user)} joined <#${after.channelId}>`;
+  } else if (before.channelId && !after.channelId) {
+    type = "voice.leave";
+    summary = `${tagOf3(user)} left <#${before.channelId}>`;
+  } else if (before.channelId && after.channelId && before.channelId !== after.channelId) {
+    type = "voice.move";
+    summary = `${tagOf3(user)} moved from <#${before.channelId}> to <#${after.channelId}>`;
+  }
+  const channelId = after.channelId ?? before.channelId ?? void 0;
+  const fields = [
+    { name: "User", value: `${tagOf3(user)} (${user.id})`, inline: true },
+    { name: "Before", value: before.channelId ? `<#${before.channelId}>` : "none", inline: true },
+    { name: "After", value: after.channelId ? `<#${after.channelId}>` : "none", inline: true },
+    { name: "Muted", value: muted(after) ? "yes" : "no", inline: true },
+    { name: "Deafened", value: deafened(after) ? "yes" : "no", inline: true },
+    { name: "Streaming", value: after.streaming ? "yes" : "no", inline: true },
+    { name: "Camera", value: after.selfVideo ? "yes" : "no", inline: true }
+  ];
+  return {
+    category: "voice",
+    type,
+    summary,
+    actor: { id: user.id, tag: tagOf3(user) },
+    ...channelId ? { channelId } : {},
+    fields,
+    payload: { guildId }
+  };
+}
+function registerVoiceRecorder(client, deps) {
+  const { config, audit, logger } = deps;
+  client.on(import_discord36.Events.VoiceStateUpdate, (before, after) => {
+    void (async () => {
+      if (after.guild.id !== config.guildId) {
+        return;
+      }
+      const event = voiceStateEvent(
+        before,
+        after,
+        config.guildId
+      );
+      if (event) {
+        audit.record(event);
+      }
+    })().catch((error) => {
+      logger.warn("Voice recorder failed", serializeError(error));
+    });
+  });
+}
+
+// src/audit/recorder.ts
+function lifecycle(type, summary, severity, fields) {
+  return { category: "lifecycle", type, summary, severity, feed: false, fields };
+}
+function registerAuditRecorder(options) {
+  const { client, config, audit, resolver, security, logger } = options;
+  const webhooks = options.webhooks ?? new WebhookTracker({ resolver, security, logger });
+  registerMessageRecorder(client, { config, audit, resolver, security, logger });
+  registerMemberRecorder(client, { config, audit, resolver, security, logger });
+  registerChannelRecorder(client, { config, audit, resolver, security, logger });
+  registerStructureRecorder(client, {
+    config,
+    audit,
+    resolver,
+    security,
+    webhooks,
+    logger
+  });
+  registerVoiceRecorder(client, { config, audit, logger });
+  registerAutomodRecorder(client, { config, audit, resolver, logger });
+  registerScheduledEventRecorder(client, { config, audit, resolver, logger });
+  client.on(import_discord37.Events.ShardDisconnect, (event, shardId) => {
+    audit.record(
+      lifecycle(
+        "bot.shardDisconnect",
+        `Shard ${shardId} disconnected (${event.code})`,
+        "warn",
+        [
+          { name: "Shard", value: String(shardId), inline: true },
+          { name: "Code", value: String(event.code), inline: true },
+          { name: "Reason", value: event.reason || "none" }
+        ]
+      )
+    );
+  });
+  client.on(import_discord37.Events.Error, (error) => {
+    audit.record(
+      lifecycle("bot.error", "Discord client error", "warn", [
+        { name: "Error", value: error.message || error.name }
+      ])
+    );
+  });
+}
+
+// src/audit/seen.ts
+var import_promises3 = require("node:fs/promises");
+var import_node_path4 = require("node:path");
+var COLLECTION2 = "audit_seen";
+var DEFAULT_MAX_ENTRIES = 5e3;
+var TTL_SECONDS = 3600;
+function isDuplicateKey(error) {
+  return error.code === 11e3;
+}
+var AuditSeenStore = class {
+  database;
+  jsonPath;
+  logger;
+  maxEntries;
+  cache = /* @__PURE__ */ new Set();
+  collection = null;
+  jsonMode = false;
+  indexed = false;
+  warnedMongo = false;
+  warnedJson = false;
+  queue = Promise.resolve();
+  constructor(options) {
+    this.database = options.database;
+    this.jsonPath = options.jsonPath;
+    this.logger = options.logger;
+    this.maxEntries = Math.max(1, options.maxEntries ?? DEFAULT_MAX_ENTRIES);
+  }
+  async has(entryId) {
+    if (this.cache.has(entryId)) {
+      return true;
+    }
+    await this.queue;
+    if (!this.jsonMode && this.database) {
+      try {
+        const collection = await this.mongoCollection();
+        const document = await collection.findOne({ _id: entryId });
+        if (document) {
+          this.remember(entryId);
+          return true;
+        }
+        return false;
+      } catch (error) {
+        this.failMongo(error);
+      }
+    }
+    const all = await this.readJson();
+    const found = all.entries.some((entry) => entry.id === entryId);
+    if (found) {
+      this.remember(entryId);
+    }
+    return found;
+  }
+  add(entryId) {
+    if (this.cache.has(entryId)) {
+      return Promise.resolve();
+    }
+    this.remember(entryId);
+    this.trimCache();
+    return this.enqueue(() => this.addNow(entryId));
+  }
+  prune() {
+    return this.enqueue(async () => {
+      await this.pruneNow();
+      this.trimCache();
+    });
+  }
+  async close() {
+    await this.queue;
+  }
+  async addNow(entryId) {
+    if (!this.jsonMode && this.database) {
+      try {
+        const collection = await this.mongoCollection();
+        try {
+          await collection.insertOne({ _id: entryId, seenAt: /* @__PURE__ */ new Date() });
+        } catch (error) {
+          if (!isDuplicateKey(error)) {
+            throw error;
+          }
+        }
+        await this.pruneMongo(collection);
+        return;
+      } catch (error) {
+        this.failMongo(error);
+      }
+    }
+    const all = await this.readJson();
+    if (all.entries.some((entry) => entry.id === entryId)) {
+      return;
+    }
+    const entries = [
+      ...all.entries,
+      { id: entryId, seenAt: (/* @__PURE__ */ new Date()).toISOString() }
+    ].slice(-this.maxEntries);
+    await this.writeJson({ entries });
+  }
+  async pruneNow() {
+    if (!this.jsonMode && this.database) {
+      try {
+        const collection = await this.mongoCollection();
+        await this.pruneMongo(collection);
+        return;
+      } catch (error) {
+        this.failMongo(error);
+      }
+    }
+    const all = await this.readJson();
+    if (all.entries.length > this.maxEntries) {
+      await this.writeJson({ entries: all.entries.slice(-this.maxEntries) });
+    }
+  }
+  async pruneMongo(collection) {
+    const count = await collection.countDocuments();
+    if (count <= this.maxEntries) {
+      return;
+    }
+    const oldest = await collection.find({}, { projection: { _id: 1 } }).sort({ seenAt: 1 }).limit(count - this.maxEntries).toArray();
+    if (oldest.length === 0) {
+      return;
+    }
+    await collection.deleteMany({ _id: { $in: oldest.map((entry) => entry._id) } });
+  }
+  async mongoCollection() {
+    if (this.collection) {
+      await this.ensureIndex(this.collection);
+      return this.collection;
+    }
+    const collection = await this.database.collection(COLLECTION2);
+    this.collection = collection;
+    await this.ensureIndex(collection);
+    return collection;
+  }
+  async ensureIndex(collection) {
+    if (this.indexed) {
+      return;
+    }
+    this.indexed = true;
+    try {
+      await collection.createIndex({ seenAt: 1 }, { expireAfterSeconds: TTL_SECONDS });
+    } catch (error) {
+      this.logger.warn("Could not create the audit seen TTL index", serializeError(error));
+    }
+  }
+  async readJson() {
+    try {
+      const raw = await (0, import_promises3.readFile)(this.jsonPath, "utf8");
+      const parsed = JSON.parse(raw);
+      const entries = Array.isArray(parsed.entries) ? parsed.entries.filter(
+        (entry) => typeof entry === "object" && entry !== null && typeof entry.id === "string" && typeof entry.seenAt === "string"
+      ) : [];
+      return { entries };
+    } catch (error) {
+      if (error.code === "ENOENT") {
+        return { entries: [] };
+      }
+      this.warnJson("Could not read the audit seen file; starting a new one", error);
+      return { entries: [] };
+    }
+  }
+  async writeJson(all) {
+    await (0, import_promises3.mkdir)((0, import_node_path4.dirname)(this.jsonPath), { recursive: true });
+    const temp = `${this.jsonPath}.tmp`;
+    await (0, import_promises3.writeFile)(temp, `${JSON.stringify(all, null, 2)}
+`, "utf8");
+    await (0, import_promises3.rename)(temp, this.jsonPath);
+  }
+  remember(entryId) {
+    this.cache.add(entryId);
+  }
+  trimCache() {
+    while (this.cache.size > this.maxEntries) {
+      const oldest = this.cache.values().next().value;
+      if (typeof oldest !== "string") {
+        return;
+      }
+      this.cache.delete(oldest);
+    }
+  }
+  enqueue(task) {
+    const run = this.queue.then(task, task);
+    this.queue = run.then(
+      () => void 0,
+      () => void 0
+    );
+    return run;
+  }
+  failMongo(error) {
+    this.jsonMode = true;
+    if (!this.warnedMongo) {
+      this.warnedMongo = true;
+      this.logger.warn(
+        "Audit seen Mongo store unavailable; falling back to JSON",
+        serializeError(error)
+      );
+    }
+  }
+  warnJson(message, error) {
+    if (this.warnedJson) {
+      return;
+    }
+    this.warnedJson = true;
+    this.logger.warn(message, serializeError(error));
+  }
+};
+
+// src/audit/service.ts
+var import_node_crypto3 = require("node:crypto");
+
+// src/audit/types.ts
+var import_node_crypto2 = require("node:crypto");
+function createAuditEvent(input, guildId, id = (0, import_node_crypto2.randomUUID)(), now = /* @__PURE__ */ new Date()) {
+  return {
+    ...input,
+    id,
+    guildId,
+    createdAt: now,
+    severity: input.severity ?? "info",
+    feed: input.feed ?? true,
+    fields: input.fields ? [...input.fields] : void 0
+  };
+}
+
+// src/audit/service.ts
+var AuditService = class {
+  guildId;
+  store;
+  sink;
+  logger;
+  idFactory;
+  now;
+  inflight = /* @__PURE__ */ new Set();
+  failed = [];
+  constructor(options) {
+    this.guildId = options.guildId;
+    this.store = options.store;
+    this.sink = options.sink;
+    this.logger = options.logger;
+    this.idFactory = options.idFactory ?? (() => (0, import_node_crypto3.randomUUID)());
+    this.now = options.now ?? (() => /* @__PURE__ */ new Date());
+  }
+  record(input) {
+    const event = createAuditEvent(input, this.guildId, this.idFactory(), this.now());
+    const task = this.append(event);
+    this.inflight.add(task);
+    void task.finally(() => this.inflight.delete(task));
+  }
+  async recordNow(input) {
+    const event = createAuditEvent(input, this.guildId, this.idFactory(), this.now());
+    await this.append(event);
+    return event;
+  }
+  async flush() {
+    await Promise.all([...this.inflight]);
+    await this.retryFailed();
+    await this.sink.flush();
+  }
+  async close() {
+    await this.flush();
+    if (this.failed.length > 0) {
+      this.logger.error("Audit events could not be persisted and are being dropped", {
+        count: this.failed.length,
+        ids: this.failed.slice(0, 10).map((event) => event.id)
+      });
+    }
+    await this.store.close();
+    await this.sink.close();
+  }
+  async append(event) {
+    try {
+      await this.store.append(event);
+    } catch (error) {
+      this.failed.push(event);
+      this.logger.warn("Audit archive append failed", {
+        id: event.id,
+        category: event.category,
+        ...serializeError(error)
+      });
+    }
+    if (event.feed) {
+      this.sink.enqueue(event);
+    }
+  }
+  async retryFailed() {
+    const pending = this.failed;
+    this.failed = [];
+    for (const event of pending) {
+      try {
+        await this.store.append(event);
+      } catch (error) {
+        this.failed.push(event);
+        this.logger.warn("Audit archive retry failed", {
+          id: event.id,
+          ...serializeError(error)
+        });
+      }
+    }
+  }
+};
+
+// src/audit/store.ts
+var import_promises4 = require("node:fs/promises");
+var import_node_path5 = require("node:path");
+var COLLECTION3 = "audit_events";
+var TTL_INDEX = "audit_ttl";
+function reviveEvent(document) {
+  const createdAt = document.createdAt instanceof Date ? document.createdAt : new Date(String(document.createdAt));
+  return { ...document, createdAt };
+}
+var AuditStore = class {
+  database;
+  jsonPath;
+  logger;
+  retentionDays;
+  collection = null;
+  indexesReady = false;
+  jsonMode = false;
+  warnedMongo = false;
+  warnedJson = false;
+  queue = Promise.resolve();
+  constructor(options) {
+    this.database = options.database;
+    this.jsonPath = options.jsonPath;
+    this.logger = options.logger;
+    this.retentionDays = options.retentionDays;
+  }
+  get durable() {
+    return Boolean(this.database) && !this.jsonMode;
+  }
+  append(event) {
+    const run = this.queue.then(() => this.write(event));
+    this.queue = run.catch(() => void 0);
+    return run;
+  }
+  async query(query) {
+    await this.queue;
+    if (!this.jsonMode && this.database) {
+      try {
+        return await this.queryMongo(query);
+      } catch (error) {
+        this.failMongo(error);
+      }
+    }
+    return this.queryJson(query);
+  }
+  async close() {
+    await this.queue;
+  }
+  async write(event) {
+    if (!this.jsonMode && this.database) {
+      try {
+        const collection = await this.mongoCollection();
+        await collection.insertOne({ ...event });
+        return;
+      } catch (error) {
+        this.failMongo(error);
+      }
+    }
+    await this.writeJson(event);
+  }
+  async mongoCollection() {
+    if (this.collection && this.indexesReady) {
+      return this.collection;
+    }
+    const collection = await this.database.collection(COLLECTION3);
+    if (!this.indexesReady) {
+      await this.ensureIndexes(collection);
+      this.indexesReady = true;
+    }
+    this.collection = collection;
+    return collection;
+  }
+  async ensureIndexes(collection) {
+    await collection.createIndex({ guildId: 1, createdAt: -1 });
+    await collection.createIndex({ guildId: 1, category: 1, createdAt: -1 });
+    let ttl;
+    try {
+      const indexes = await collection.indexes();
+      ttl = indexes.find(
+        (index) => index.name === TTL_INDEX || index.key.createdAt === 1 && index.expireAfterSeconds !== void 0
+      );
+    } catch (error) {
+      if (error.code !== 26) {
+        throw error;
+      }
+    }
+    if (this.retentionDays > 0) {
+      const expireAfterSeconds = this.retentionDays * 86400;
+      if (ttl && ttl.expireAfterSeconds !== expireAfterSeconds) {
+        await collection.dropIndex(ttl.name ?? TTL_INDEX);
+        ttl = void 0;
+      }
+      if (!ttl) {
+        await collection.createIndex(
+          { createdAt: 1 },
+          { name: TTL_INDEX, expireAfterSeconds }
+        );
+      }
+    } else if (ttl) {
+      await collection.dropIndex(ttl.name ?? TTL_INDEX);
+    }
+  }
+  async queryMongo(query) {
+    const collection = await this.mongoCollection();
+    const filter = { guildId: query.guildId };
+    if (query.category) {
+      filter.category = query.category;
+    }
+    if (query.since) {
+      filter.createdAt = { $gte: query.since };
+    }
+    const documents = await collection.find(filter).sort({ createdAt: -1 }).limit(query.limit ?? 100).toArray();
+    return documents.map(reviveEvent);
+  }
+  async writeJson(event) {
+    await (0, import_promises4.mkdir)((0, import_node_path5.dirname)(this.jsonPath), { recursive: true });
+    await (0, import_promises4.appendFile)(this.jsonPath, `${JSON.stringify(event)}
+`, "utf8");
+  }
+  async queryJson(query) {
+    let raw;
+    try {
+      raw = await (0, import_promises4.readFile)(this.jsonPath, "utf8");
+    } catch (error) {
+      if (error.code === "ENOENT") {
+        return [];
+      }
+      throw error;
+    }
+    const events = [];
+    for (const line of raw.split(/\r?\n/)) {
+      if (!line.trim()) {
+        continue;
+      }
+      try {
+        const parsed = JSON.parse(line);
+        events.push({
+          ...parsed,
+          createdAt: new Date(String(parsed.createdAt))
+        });
+      } catch (error) {
+        if (!this.warnedJson) {
+          this.warnedJson = true;
+          this.logger.warn("Skipping a malformed audit log line", serializeError(error));
+        }
+      }
+    }
+    return events.filter((event) => event.guildId === query.guildId).filter((event) => !query.category || event.category === query.category).filter((event) => !query.since || event.createdAt.getTime() >= query.since.getTime()).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()).slice(0, query.limit ?? 100);
+  }
+  failMongo(error) {
+    this.jsonMode = true;
+    if (!this.warnedMongo) {
+      this.warnedMongo = true;
+      this.logger.warn(
+        "Audit Mongo store unavailable; falling back to NDJSON",
+        serializeError(error)
+      );
+    }
+  }
+};
+
+// src/security/restore.ts
+var import_discord38 = __toESM(require_src());
+var KIND_ORDER = {
+  role: 0,
+  category: 1,
+  channel: 2,
+  thread: 3
+};
+var THREAD_TYPES = /* @__PURE__ */ new Set([
+  import_discord38.ChannelType.AnnouncementThread,
+  import_discord38.ChannelType.PublicThread,
+  import_discord38.ChannelType.PrivateThread
+]);
+var TEXT_TYPES = /* @__PURE__ */ new Set([
+  import_discord38.ChannelType.GuildText,
+  import_discord38.ChannelType.GuildAnnouncement
+]);
+var VOICE_TYPES = /* @__PURE__ */ new Set([
+  import_discord38.ChannelType.GuildVoice,
+  import_discord38.ChannelType.GuildStageVoice
+]);
+function planRestoreOrder(items) {
+  return [...items].sort((left, right) => {
+    const rank = KIND_ORDER[left.kind] - KIND_ORDER[right.kind];
+    return rank !== 0 ? rank : left.position - right.position;
+  });
+}
+function remapOverwrites(overwrites, roleMap) {
+  return overwrites.map((overwrite) => {
+    if (overwrite.type !== "role") {
+      return overwrite;
+    }
+    const mapped = roleMap.get(overwrite.id);
+    return mapped ? { ...overwrite, id: mapped } : overwrite;
+  });
+}
+function isRecord(value) {
+  return typeof value === "object" && value !== null;
+}
+function asRole(value) {
+  if (!isRecord(value) || typeof value.id !== "string" || typeof value.name !== "string") {
+    return null;
+  }
+  return value;
+}
+function asChannel(value) {
+  if (!isRecord(value) || typeof value.id !== "string" || typeof value.type !== "number") {
+    return null;
+  }
+  return value;
+}
+function rolePermissions(role) {
+  if (typeof role.permissions === "string") {
+    return role.permissions;
+  }
+  return role.permissions?.bitfield.toString() ?? "0";
+}
+function roleColor(role) {
+  return typeof role.color === "number" ? role.color : 0;
+}
+function rawOverwrites(channel) {
+  if (channel.overwrites) {
+    return [...channel.overwrites];
+  }
+  if (!channel.permissionOverwrites) {
+    return [];
+  }
+  return [...channel.permissionOverwrites.cache.values()].map((overwrite) => ({
+    id: overwrite.id,
+    type: overwrite.type ?? import_discord38.OverwriteType.Role,
+    allow: overwrite.allow,
+    deny: overwrite.deny
+  }));
+}
+function toOverwritePlans(channel) {
+  return rawOverwrites(channel).map((overwrite) => ({
+    id: overwrite.id,
+    type: overwrite.type === "member" || overwrite.type === import_discord38.OverwriteType.Member ? "member" : "role",
+    allow: typeof overwrite.allow === "bigint" ? overwrite.allow : BigInt(overwrite.allow),
+    deny: typeof overwrite.deny === "bigint" ? overwrite.deny : BigInt(overwrite.deny)
+  }));
+}
+var RestoreService = class {
+  client;
+  config;
+  snapshotStore;
+  audit;
+  logger;
+  roleMap = /* @__PURE__ */ new Map();
+  channelMap = /* @__PURE__ */ new Map();
+  chain = Promise.resolve();
+  constructor(options) {
+    this.client = options.client;
+    this.config = options.config;
+    this.snapshotStore = options.snapshotStore;
+    this.audit = options.audit;
+    this.logger = options.logger;
+  }
+  restoreRole(role, reason2) {
+    return this.enqueue(() => this.restoreRoleNow(role, reason2));
+  }
+  restoreChannel(channel, reason2) {
+    return this.enqueue(() => this.restoreChannelNow(channel, reason2));
+  }
+  restoreIncident(actions, reason2) {
+    return this.enqueue(async () => {
+      this.roleMap.clear();
+      this.channelMap.clear();
+      const results = [];
+      let failed = 0;
+      try {
+        const items = this.restoreItems(actions);
+        const snapshot = items.some((item) => item.kind !== "role") ? await this.loadSnapshot() : null;
+        for (const item of planRestoreOrder(items)) {
+          try {
+            if (item.kind === "role") {
+              const role = asRole(item.payload);
+              results.push(
+                role ? await this.restoreRoleNow(role, reason2) : { kind: "role", restoredId: null, note: "Role payload was unreadable." }
+              );
+              continue;
+            }
+            const channel = asChannel(item.payload);
+            results.push(
+              channel ? await this.restoreChannelNow(channel, reason2, snapshot) : {
+                kind: "channel",
+                restoredId: null,
+                note: "Channel payload was unreadable."
+              }
+            );
+          } catch (error) {
+            failed += 1;
+            this.logger.warn("Security restore item failed", {
+              kind: item.kind,
+              id: item.id,
+              error: serializeError(error)
+            });
+            results.push({
+              kind: item.kind === "role" ? "role" : "channel",
+              restoredId: null,
+              note: "Restore failed; see logs."
+            });
+          }
+        }
+      } catch (error) {
+        failed += 1;
+        this.logger.warn("Security restore failed", serializeError(error));
+      }
+      const restored = results.filter((result) => result.restoredId !== null).length;
+      try {
+        this.audit.record({
+          category: "security",
+          type: "security.restore",
+          summary: "Incident restore complete",
+          severity: failed > 0 ? "warn" : "info",
+          fields: [
+            { name: "Restored", value: String(restored), inline: true },
+            { name: "Failed", value: String(failed), inline: true },
+            { name: "Reason", value: reason2 }
+          ],
+          payload: { restored, failed, reason: reason2 },
+          feed: false
+        });
+      } catch (error) {
+        this.logger.warn("Could not record the restore summary", serializeError(error));
+      }
+      return results;
+    });
+  }
+  async restoreRoleNow(role, reason2) {
+    const guild = this.guild();
+    if (!guild) {
+      return { kind: "role", restoredId: null, note: "Guild is not available." };
+    }
+    if (role.managed) {
+      const note2 = "Managed roles cannot be recreated.";
+      this.recordRestore("role", role.id, role.name, null, note2);
+      return { kind: "role", restoredId: null, note: note2 };
+    }
+    const name = this.uniqueRoleName(guild, role.name);
+    const created = await guild.roles.create({
+      name,
+      colors: { primaryColor: roleColor(role) },
+      hoist: role.hoist ?? false,
+      mentionable: role.mentionable ?? false,
+      permissions: BigInt(rolePermissions(role)),
+      reason: reason2
+    });
+    const highest = guild.members.me?.roles?.highest?.position ?? 0;
+    const position = Math.max(0, Math.min(role.position ?? 0, Math.max(0, highest - 1)));
+    try {
+      await created.setPosition(position);
+    } catch (error) {
+      this.logger.warn("Could not set the restored role position", {
+        roleId: created.id,
+        error: serializeError(error)
+      });
+    }
+    this.roleMap.set(role.id, created.id);
+    const note = `Restored role ${name}.`;
+    this.recordRestore("role", role.id, role.name, created.id, note);
+    return { kind: "role", restoredId: created.id, note };
+  }
+  async restoreChannelNow(channel, reason2, loadedSnapshot) {
+    const guild = this.guild();
+    if (!guild) {
+      return { kind: "channel", restoredId: null, note: "Guild is not available." };
+    }
+    if (THREAD_TYPES.has(channel.type)) {
+      const note2 = "Threads cannot be recreated without their parent message; restore the parent channel first.";
+      this.recordRestore("channel", channel.id, channel.name ?? channel.id, null, note2);
+      return { kind: "channel", restoredId: null, note: note2 };
+    }
+    const supported = channel.type === import_discord38.ChannelType.GuildCategory || TEXT_TYPES.has(channel.type) || VOICE_TYPES.has(channel.type) || channel.type === import_discord38.ChannelType.GuildForum;
+    if (!supported) {
+      const note2 = "Unsupported channel type; restore manually.";
+      this.recordRestore("channel", channel.id, channel.name ?? channel.id, null, note2);
+      return { kind: "channel", restoredId: null, note: note2 };
+    }
+    const snapshot = loadedSnapshot === void 0 ? await this.loadSnapshot() : loadedSnapshot;
+    const snapshotChannel = snapshot?.channels.find((entry) => entry.id === channel.id) ?? null;
+    const parentResult = this.resolveParent(guild, channel, snapshot, snapshotChannel);
+    const name = this.uniqueChannelName(guild, channel.name ?? snapshotChannel?.name ?? channel.id);
+    const position = channel.position ?? snapshotChannel?.position ?? 0;
+    const permissionOverwrites = remapOverwrites(
+      toOverwritePlans(channel),
+      this.roleMap
+    ).map((overwrite) => ({
+      id: overwrite.id,
+      type: overwrite.type === "role" ? import_discord38.OverwriteType.Role : import_discord38.OverwriteType.Member,
+      allow: overwrite.allow,
+      deny: overwrite.deny
+    }));
+    const base = {
+      name,
+      ...parentResult.parentId ? { parent: parentResult.parentId } : {},
+      permissionOverwrites,
+      reason: reason2
+    };
+    let created;
+    if (channel.type === import_discord38.ChannelType.GuildCategory) {
+      created = await guild.channels.create({
+        ...base,
+        type: import_discord38.ChannelType.GuildCategory
+      });
+    } else if (TEXT_TYPES.has(channel.type)) {
+      created = await guild.channels.create({
+        ...base,
+        type: channel.type === import_discord38.ChannelType.GuildAnnouncement ? import_discord38.ChannelType.GuildAnnouncement : import_discord38.ChannelType.GuildText,
+        topic: channel.topic ?? void 0,
+        nsfw: channel.nsfw ?? false,
+        rateLimitPerUser: channel.rateLimitPerUser ?? 0
+      });
+    } else if (channel.type === import_discord38.ChannelType.GuildForum) {
+      created = await guild.channels.create({
+        ...base,
+        type: import_discord38.ChannelType.GuildForum,
+        topic: channel.topic ?? void 0,
+        nsfw: channel.nsfw ?? false,
+        rateLimitPerUser: channel.rateLimitPerUser ?? 0
+      });
+    } else if (channel.type === import_discord38.ChannelType.GuildStageVoice) {
+      created = await guild.channels.create({
+        ...base,
+        type: import_discord38.ChannelType.GuildStageVoice,
+        bitrate: channel.bitrate ?? void 0,
+        userLimit: channel.userLimit ?? void 0
+      });
+    } else {
+      created = await guild.channels.create({
+        ...base,
+        type: import_discord38.ChannelType.GuildVoice,
+        bitrate: channel.bitrate ?? void 0,
+        userLimit: channel.userLimit ?? void 0
+      });
+    }
+    try {
+      await created.setPosition(Math.max(0, position));
+    } catch (error) {
+      this.logger.warn("Could not set the restored channel position", {
+        channelId: created.id,
+        error: serializeError(error)
+      });
+    }
+    this.channelMap.set(channel.id, created.id);
+    const note = [
+      `Restored channel ${name}.`,
+      "Message history cannot be restored.",
+      ...parentResult.notes
+    ].join(" ");
+    this.recordRestore("channel", channel.id, channel.name ?? channel.id, created.id, note);
+    return { kind: "channel", restoredId: created.id, note };
+  }
+  restoreItems(actions) {
+    const items = [];
+    for (const action of actions) {
+      if (action.kind === "roleDelete") {
+        const role = asRole(action.payload);
+        if (role) {
+          items.push({
+            kind: "role",
+            id: role.id,
+            position: role.position ?? 0,
+            payload: role
+          });
+        }
+        continue;
+      }
+      if (action.kind === "channelDelete" || action.kind === "threadDelete") {
+        const channel = asChannel(action.payload);
+        if (!channel) {
+          continue;
+        }
+        items.push({
+          kind: action.kind === "threadDelete" ? "thread" : channel.type === import_discord38.ChannelType.GuildCategory ? "category" : "channel",
+          id: channel.id,
+          position: channel.position ?? 0,
+          payload: channel
+        });
+      }
+    }
+    return items;
+  }
+  resolveParent(guild, channel, snapshot, snapshotChannel) {
+    const raw = channel.parentId ?? snapshotChannel?.parentId ?? null;
+    if (!raw) {
+      return { parentId: null, notes: [] };
+    }
+    const fromIncident = this.channelMap.get(raw);
+    if (fromIncident) {
+      return { parentId: fromIncident, notes: [] };
+    }
+    if (guild.channels.cache.has(raw)) {
+      return { parentId: raw, notes: [] };
+    }
+    const snapshotParent = snapshot?.channels.find((entry) => entry.id === raw) ?? null;
+    if (snapshotParent) {
+      const byName = guild.channels.cache.find(
+        (entry) => entry.type === import_discord38.ChannelType.GuildCategory && entry.name === snapshotParent.name
+      );
+      if (byName) {
+        return { parentId: byName.id, notes: [] };
+      }
+    }
+    return {
+      parentId: null,
+      notes: ["Parent category could not be found; restored at the guild root."]
+    };
+  }
+  uniqueRoleName(guild, name) {
+    const names = new Set([...guild.roles.cache.values()].map((role) => role.name));
+    return uniqueName(name, (candidate) => names.has(candidate));
+  }
+  uniqueChannelName(guild, name) {
+    const names = new Set([...guild.channels.cache.values()].map((channel) => channel.name));
+    return uniqueName(name, (candidate) => names.has(candidate));
+  }
+  recordRestore(kind, oldId, name, newId, note) {
+    try {
+      this.audit.record({
+        category: "security",
+        type: "security.restore",
+        summary: newId ? `Restored ${kind} ${name}` : `Could not restore ${kind} ${name}`,
+        severity: newId ? "info" : "warn",
+        target: { id: oldId, name },
+        fields: [
+          { name: "Type", value: kind, inline: true },
+          { name: "Old ID", value: oldId, inline: true },
+          { name: "New ID", value: newId ?? "none", inline: true },
+          { name: "Note", value: note }
+        ],
+        payload: { oldId, newId, kind, note }
+      });
+    } catch (error) {
+      this.logger.warn("Could not record the security restore", serializeError(error));
+    }
+  }
+  async loadSnapshot() {
+    const guild = this.guild();
+    if (!guild) {
+      return null;
+    }
+    try {
+      return await this.snapshotStore.load(guild.id);
+    } catch (error) {
+      this.logger.warn("Could not load the guild snapshot", serializeError(error));
+      return null;
+    }
+  }
+  enqueue(task) {
+    const run = this.chain.then(task, task);
+    this.chain = run.then(
+      () => void 0,
+      () => void 0
+    );
+    return run;
+  }
+  guild() {
+    return this.client.guilds.cache.get(this.config.guildId) ?? null;
+  }
+};
+function uniqueName(base, taken) {
+  if (!taken(base)) {
+    return base;
+  }
+  let candidate = `${base}-restored`;
+  let index = 2;
+  while (taken(candidate)) {
+    candidate = `${base}-restored-${index}`;
+    index += 1;
+  }
+  return candidate;
+}
+
+// src/security/raid.ts
+var DAY_MS = 864e5;
+var QUARANTINE_TIMEOUT_MS = 36e5;
+var KICK_REASON = "Raid guard: account too new during a join flood.";
+var QUARANTINE_REASON = "Raid guard: join during a join flood.";
+var RaidGuard = class {
+  config;
+  security;
+  audit;
+  logger;
+  state;
+  clock;
+  joins = [];
+  activeUntil = null;
+  constructor(options) {
+    this.config = options.config;
+    this.security = options.security;
+    this.audit = options.audit;
+    this.logger = options.logger;
+    this.state = options.state;
+    this.clock = options.now ?? (() => /* @__PURE__ */ new Date());
+  }
+  get active() {
+    return this.activeUntil !== null;
+  }
+  snapshot() {
+    const now = this.clock();
+    if (this.activeUntil && now.getTime() > this.activeUntil.getTime()) {
+      this.activeUntil = null;
+      void this.persist(null);
+    }
+    return {
+      active: this.active,
+      activeUntil: this.activeUntil,
+      joinsInWindow: this.prune(now.getTime()).length
+    };
+  }
+  async observeJoin(member) {
+    if (!this.config.raidGuardEnabled || member.user.bot) {
+      return { contained: false };
+    }
+    const now = this.clock();
+    const nowMs = now.getTime();
+    if (this.activeUntil && nowMs > this.activeUntil.getTime()) {
+      await this.setActive(false, "raid window expired");
+    }
+    this.prune(nowMs);
+    this.joins.push(nowMs);
+    if (this.active) {
+      await this.extend(now);
+      return this.contain(member, now);
+    }
+    if (this.joins.length >= this.config.raidJoinThreshold) {
+      await this.setActive(true, "join flood");
+      return this.contain(member, now);
+    }
+    return { contained: false };
+  }
+  async restoreState() {
+    if (!this.state) {
+      return;
+    }
+    try {
+      const state = await this.state.get(this.config.guildId);
+      const now = this.clock();
+      if (state.raidMode && state.raidUntil && state.raidUntil.getTime() > now.getTime()) {
+        this.activeUntil = state.raidUntil;
+        return;
+      }
+      if (state.raidMode || state.raidUntil !== null) {
+        this.activeUntil = null;
+        await this.state.setRaidMode(this.config.guildId, null);
+      }
+    } catch (error) {
+      this.logger.warn("Could not restore the raid guard state", serializeError(error));
+    }
+  }
+  async setActive(active, reason2) {
+    const now = this.clock();
+    if (active) {
+      const wasActive = this.active;
+      const base = Math.max(now.getTime(), this.activeUntil?.getTime() ?? 0);
+      const until = new Date(base + this.config.raidModeMinutes * 6e4);
+      this.activeUntil = until;
+      if (!wasActive) {
+        this.recordRaid(true, reason2, until);
+      }
+      await this.persist(until);
+      return;
+    }
+    if (!this.active) {
+      await this.persist(null);
+      return;
+    }
+    this.activeUntil = null;
+    this.recordRaid(false, reason2, null);
+    await this.persist(null);
+  }
+  async contain(member, now) {
+    const createdTimestamp = member.user.createdTimestamp;
+    const ageDays = Number.isFinite(createdTimestamp) ? (now.getTime() - createdTimestamp) / DAY_MS : Number.POSITIVE_INFINITY;
+    if (ageDays < this.config.raidMinAccountAgeDays) {
+      try {
+        await member.kick(KICK_REASON);
+        this.recordContainment(member, "kick", ageDays);
+        return { contained: true };
+      } catch (error) {
+        this.logger.warn("Raid guard could not kick a young account", {
+          userId: member.id,
+          error: serializeError(error)
+        });
+        return { contained: false };
+      }
+    }
+    try {
+      const record = await this.security.quarantineMember(member, QUARANTINE_REASON, {
+        raid: true,
+        timeoutMs: QUARANTINE_TIMEOUT_MS,
+        rule: "join flood"
+      });
+      if (!record) {
+        this.logger.warn("Raid guard quarantine returned no case", {
+          userId: member.id
+        });
+        return { contained: false };
+      }
+      this.recordContainment(member, "quarantine", ageDays);
+      return { contained: true };
+    } catch (error) {
+      this.logger.warn("Raid guard could not quarantine a join", {
+        userId: member.id,
+        error: serializeError(error)
+      });
+      return { contained: false };
+    }
+  }
+  async extend(now) {
+    const base = Math.max(now.getTime(), this.activeUntil?.getTime() ?? now.getTime());
+    const until = new Date(base + this.config.raidModeMinutes * 6e4);
+    this.activeUntil = until;
+    await this.persist(until);
+  }
+  prune(nowMs) {
+    const windowMs = this.config.raidWindowSeconds * 1e3;
+    this.joins = this.joins.filter((at) => nowMs - at <= windowMs);
+    return this.joins;
+  }
+  async persist(until) {
+    if (!this.state) {
+      return;
+    }
+    try {
+      await this.state.setRaidMode(this.config.guildId, until);
+    } catch (error) {
+      this.logger.warn("Could not persist the raid mode", serializeError(error));
+    }
+  }
+  recordRaid(active, reason2, until) {
+    try {
+      this.audit.record({
+        category: "security",
+        type: "security.raid",
+        summary: active ? "Raid mode enabled" : "Raid mode disabled",
+        severity: active ? "critical" : "info",
+        fields: [
+          { name: "Mode", value: active ? "active" : "inactive", inline: true },
+          {
+            name: "Until",
+            value: until ? until.toISOString() : "n/a",
+            inline: true
+          },
+          {
+            name: "Joins in window",
+            value: String(this.joins.length),
+            inline: true
+          },
+          { name: "Reason", value: reason2 }
+        ],
+        payload: {
+          active,
+          until: until ? until.toISOString() : null,
+          joinsInWindow: this.joins.length,
+          reason: reason2
+        }
+      });
+    } catch (error) {
+      this.logger.warn("Could not record the raid mode change", serializeError(error));
+    }
+  }
+  recordContainment(member, action, accountAgeDays2) {
+    try {
+      this.audit.record({
+        category: "security",
+        type: "security.raid",
+        summary: `Raid guard ${action === "kick" ? "kicked" : "quarantined"} a join`,
+        severity: "critical",
+        actor: { id: member.id, tag: member.user.tag ?? member.user.username ?? member.id },
+        fields: [
+          { name: "Action", value: action, inline: true },
+          {
+            name: "Account age",
+            value: `${Math.max(0, Math.floor(accountAgeDays2))}d`,
+            inline: true
+          },
+          {
+            name: "Joins in window",
+            value: String(this.joins.length),
+            inline: true
+          }
+        ],
+        payload: {
+          action,
+          accountAgeDays: accountAgeDays2,
+          joinsInWindow: this.joins.length
+        }
+      });
+    } catch (error) {
+      this.logger.warn("Could not record raid containment", serializeError(error));
+    }
+  }
+};
+
+// src/security/service.ts
+var import_discord39 = __toESM(require_src());
+var DEFAULT_TIMEOUT_MS = 864e5;
+var SUPPRESSION_MS = 3e5;
+var RETENTION_MS = 3e5;
+var QUARANTINE_ROLE_NAME = "Quarantined";
+function memberTag(member) {
+  return member.user.tag ?? member.user.username ?? member.id;
+}
+function caseNumber3(value) {
+  return `#${String(value).padStart(4, "0")}`;
+}
+var SecurityService = class {
+  client;
+  config;
+  cases;
+  audit;
+  restore;
+  state;
+  logger;
+  clock;
+  actions = /* @__PURE__ */ new Map();
+  chains = /* @__PURE__ */ new Map();
+  actionedAt = /* @__PURE__ */ new Map();
+  lastAlert = null;
+  constructor(options) {
+    this.client = options.client;
+    this.config = options.config;
+    this.cases = options.cases;
+    this.audit = options.audit;
+    this.restore = options.restore;
+    this.state = options.state;
+    this.logger = options.logger;
+    this.clock = options.now ?? (() => /* @__PURE__ */ new Date());
+  }
+  observe(action) {
+    if (!this.config.antiNukeEnabled) {
+      return;
+    }
+    const now = this.clock().getTime();
+    const retained = (this.actions.get(action.actorId) ?? []).filter(
+      (entry) => now - entry.at.getTime() <= RETENTION_MS
+    );
+    retained.push(action);
+    this.actions.set(action.actorId, retained);
+    const previous = this.chains.get(action.actorId) ?? Promise.resolve();
+    const next = previous.then(() => this.evaluate(action.actorId)).catch((error) => {
+      this.logger.warn("Security evaluation failed", {
+        actorId: action.actorId,
+        error: serializeError(error)
+      });
+    });
+    this.chains.set(action.actorId, next);
+  }
+  async flush() {
+    await Promise.allSettled([...this.chains.values()]);
+  }
+  snapshot() {
+    return {
+      enabled: this.config.antiNukeEnabled,
+      mode: this.config.antiNukeMode,
+      ruleCount: SECURITY_RULES.length,
+      lastAlertAt: this.lastAlert
+    };
+  }
+  async quarantineMember(member, reason2, metadata) {
+    const guild = this.guild();
+    if (!guild) {
+      return null;
+    }
+    const target = await this.fetchMember(guild, member.id);
+    if (!target) {
+      await this.recordAlert({
+        summary: `Quarantine skipped: ${member.id} is no longer in the guild`,
+        severity: "critical",
+        actor: { id: member.id, tag: memberTag(member) },
+        rule: this.metadataString(metadata.rule),
+        count: this.metadataNumber(metadata.count),
+        windowSeconds: this.metadataNumber(metadata.windowSeconds),
+        action: "quarantine",
+        metadata: { ...metadata, missingMember: true }
+      });
+      return null;
+    }
+    const role = await this.quarantineRole(guild);
+    if (!role) {
+      await this.recordAlert({
+        summary: `Quarantine failed: no ${QUARANTINE_ROLE_NAME} role available`,
+        severity: "critical",
+        actor: { id: target.id, tag: memberTag(target) },
+        rule: this.metadataString(metadata.rule),
+        count: this.metadataNumber(metadata.count),
+        windowSeconds: this.metadataNumber(metadata.windowSeconds),
+        action: "quarantine",
+        metadata: { ...metadata, quarantineRoleMissing: true }
+      });
+      return null;
+    }
+    const removedRoleIds = [...target.roles.cache.keys()].filter(
+      (roleId) => roleId !== role.id
+    );
+    const timeoutMs = typeof metadata.timeoutMs === "number" && metadata.timeoutMs > 0 ? metadata.timeoutMs : DEFAULT_TIMEOUT_MS;
+    let rolesRemoved = false;
+    try {
+      await target.roles.set([role.id], reason2);
+      rolesRemoved = true;
+    } catch (error) {
+      this.logger.warn("Quarantine role removal failed", {
+        actorId: target.id,
+        error: serializeError(error)
+      });
+    }
+    let timedOut = false;
+    const me = guild.members.me;
+    if (me?.permissions?.has(import_discord39.PermissionFlagsBits.ModerateMembers)) {
+      try {
+        await target.timeout(timeoutMs, reason2);
+        timedOut = true;
+      } catch (error) {
+        this.logger.warn("Quarantine timeout failed", {
+          actorId: target.id,
+          error: serializeError(error)
+        });
+      }
+    }
+    if (!rolesRemoved && !timedOut) {
+      await this.recordAlert({
+        summary: `Quarantine failed for ${memberTag(target)}: roles and timeout both rejected`,
+        severity: "critical",
+        actor: { id: target.id, tag: memberTag(target) },
+        rule: this.metadataString(metadata.rule),
+        count: this.metadataNumber(metadata.count),
+        windowSeconds: this.metadataNumber(metadata.windowSeconds),
+        action: "quarantine",
+        metadata: { ...metadata, quarantineFailed: true }
+      });
+      return null;
+    }
+    const record = await this.cases.create({
+      guildId: guild.id,
+      action: "quarantine",
+      targetId: target.id,
+      targetTag: memberTag(target),
+      moderatorId: this.client.user?.id ?? "system",
+      moderatorTag: this.client.user?.tag ?? "Wrightyard",
+      reason: reason2,
+      metadata: {
+        ...metadata,
+        removedRoleIds,
+        quarantineRoleId: role.id,
+        ...rolesRemoved ? {} : { quarantineFallback: "timeout" },
+        ...timedOut ? { timeoutMs } : {}
+      }
+    });
+    await this.recordAlert({
+      summary: `Quarantined ${memberTag(target)} \xB7 case ${caseNumber3(record.caseId)}`,
+      severity: "critical",
+      actor: { id: target.id, tag: memberTag(target) },
+      rule: this.metadataString(metadata.rule),
+      count: this.metadataNumber(metadata.count),
+      windowSeconds: this.metadataNumber(metadata.windowSeconds),
+      action: "quarantine",
+      caseId: record.caseId,
+      metadata: { ...metadata, removedRoleIds }
+    });
+    this.audit.record({
+      category: "security",
+      type: "security.quarantine",
+      summary: `Quarantined ${memberTag(target)} (case ${caseNumber3(record.caseId)})`,
+      severity: "critical",
+      actor: { id: target.id, tag: memberTag(target) },
+      fields: [
+        { name: "Case", value: caseNumber3(record.caseId), inline: true },
+        { name: "Rule", value: this.metadataString(metadata.rule) ?? "unknown", inline: true },
+        {
+          name: "Removed roles",
+          value: removedRoleIds.length > 0 ? removedRoleIds.join(", ") : "none"
+        },
+        {
+          name: "Response",
+          value: rolesRemoved ? "roles replaced" : "timeout fallback",
+          inline: true
+        }
+      ],
+      payload: { caseId: record.caseId, ...metadata, removedRoleIds },
+      feed: true
+    });
+    await this.markAction(guild.id, target.id);
+    await this.markAlert(guild.id);
+    return record;
+  }
+  async banMember(member, reason2, metadata) {
+    const guild = this.guild();
+    if (!guild) {
+      throw new Error("Guild is not cached; cannot ban.");
+    }
+    await guild.members.ban(member.id, { reason: reason2, deleteMessageSeconds: 0 });
+    const record = await this.cases.create({
+      guildId: guild.id,
+      action: "securityBan",
+      targetId: member.id,
+      targetTag: memberTag(member),
+      moderatorId: this.client.user?.id ?? "system",
+      moderatorTag: this.client.user?.tag ?? "Wrightyard",
+      reason: reason2,
+      metadata
+    });
+    await this.recordAlert({
+      summary: `Banned ${memberTag(member)} \xB7 case ${caseNumber3(record.caseId)}`,
+      severity: "critical",
+      actor: { id: member.id, tag: memberTag(member) },
+      rule: this.metadataString(metadata.rule),
+      count: this.metadataNumber(metadata.count),
+      windowSeconds: this.metadataNumber(metadata.windowSeconds),
+      action: "ban",
+      caseId: record.caseId,
+      metadata
+    });
+    this.audit.record({
+      category: "security",
+      type: "security.ban",
+      summary: `Security ban for ${memberTag(member)} (case ${caseNumber3(record.caseId)})`,
+      severity: "critical",
+      actor: { id: member.id, tag: memberTag(member) },
+      fields: [
+        { name: "Case", value: caseNumber3(record.caseId), inline: true },
+        { name: "Rule", value: this.metadataString(metadata.rule) ?? "unknown", inline: true },
+        { name: "Reason", value: reason2 }
+      ],
+      payload: { caseId: record.caseId, ...metadata },
+      feed: true
+    });
+    await this.markAction(guild.id, member.id);
+    await this.markAlert(guild.id);
+    return record;
+  }
+  async evaluate(actorId) {
+    const guild = this.guild();
+    if (!guild) {
+      return;
+    }
+    const now = this.clock();
+    const actions = this.actions.get(actorId) ?? [];
+    if (actions.length === 0) {
+      return;
+    }
+    if (this.isExempt(guild, actorId)) {
+      return;
+    }
+    const member = await this.fetchMember(guild, actorId);
+    if (!member) {
+      await this.recordAlert({
+        summary: `Destructive activity from an unresolved actor (${actorId})`,
+        severity: "critical",
+        actor: { id: actorId, tag: "Unknown" },
+        rule: null,
+        count: actions.length,
+        windowSeconds: null,
+        action: "alert",
+        metadata: { missingMember: true }
+      });
+      return;
+    }
+    if (this.hasQuarantineRole(member)) {
+      return;
+    }
+    const actioned = this.actionedAt.get(actorId);
+    if (actioned !== void 0 && now.getTime() - actioned < SUPPRESSION_MS) {
+      await this.recordAlert({
+        summary: `Suppressed repeat activity from an already-actioned actor (${memberTag(member)})`,
+        severity: "warn",
+        actor: { id: member.id, tag: memberTag(member) },
+        rule: null,
+        count: actions.length,
+        windowSeconds: null,
+        action: "alert",
+        metadata: { suppressed: true }
+      });
+      return;
+    }
+    const botPosition = guild.members.me?.roles?.highest?.position ?? 0;
+    const actorPosition = member.roles?.highest?.position ?? 0;
+    if (actorPosition >= botPosition) {
+      await this.recordAlert({
+        summary: `Blocked: ${memberTag(member)} is at or above the bot's role`,
+        severity: "critical",
+        actor: { id: member.id, tag: memberTag(member) },
+        rule: null,
+        count: actions.length,
+        windowSeconds: null,
+        action: "alert",
+        metadata: { blocked: true }
+      });
+      return;
+    }
+    const decision = evaluateSecurity(actions, now, this.config.antiNukeMode);
+    if (decision.action === "none") {
+      return;
+    }
+    const metadata = this.metadataFor(decision);
+    const reason2 = `Anti-nuke: ${decision.kind ?? "activity"} \xD7${decision.count} in ${decision.rule?.windowSeconds ?? 0}s`;
+    if (decision.action === "alert") {
+      await this.recordAlert({
+        summary: `Anti-nuke alert: ${memberTag(member)} \xB7 ${decision.kind}`,
+        severity: "warn",
+        actor: { id: member.id, tag: memberTag(member) },
+        rule: decision.kind,
+        count: decision.count,
+        windowSeconds: decision.rule?.windowSeconds ?? null,
+        action: "alert",
+        metadata: { ...metadata }
+      });
+      return;
+    }
+    let record = null;
+    if (decision.action === "ban") {
+      try {
+        record = await this.banMember(member, reason2, metadata);
+      } catch (error) {
+        this.logger.warn("Security ban failed; falling back to quarantine", {
+          actorId: member.id,
+          error: serializeError(error)
+        });
+        record = await this.quarantineMember(member, reason2, metadata);
+      }
+    } else {
+      record = await this.quarantineMember(member, reason2, metadata);
+    }
+    if (record && this.config.antiNukeRestore) {
+      try {
+        await this.restore.restoreIncident([...actions], "anti-nuke");
+      } catch (error) {
+        this.logger.warn("Incident restore failed", {
+          actorId: member.id,
+          error: serializeError(error)
+        });
+      }
+    }
+  }
+  metadataFor(decision) {
+    return {
+      rule: decision.kind,
+      count: decision.count,
+      windowSeconds: decision.rule?.windowSeconds ?? null
+    };
+  }
+  isExempt(guild, actorId) {
+    return actorId === this.client.user?.id || actorId === guild.ownerId || actorId === this.config.ownerId || this.config.antiNukeTrustedUserIds.includes(actorId);
+  }
+  hasQuarantineRole(member) {
+    const configured = this.config.antiNukeQuarantineRoleId;
+    return member.roles.cache.some(
+      (role) => role.name === QUARANTINE_ROLE_NAME || configured !== null && role.id === configured
+    );
+  }
+  async fetchMember(guild, actorId) {
+    const cached = guild.members.cache?.get(actorId);
+    if (cached) {
+      return cached;
+    }
+    try {
+      return await guild.members.fetch(actorId);
+    } catch {
+      return null;
+    }
+  }
+  async quarantineRole(guild) {
+    const configured = this.config.antiNukeQuarantineRoleId;
+    if (configured) {
+      const cached = guild.roles.cache.get(configured);
+      if (cached) {
+        return cached;
+      }
+      try {
+        return await guild.roles.fetch(configured);
+      } catch {
+      }
+    }
+    const byName = guild.roles.cache.find(
+      (role) => role.name === QUARANTINE_ROLE_NAME
+    );
+    if (byName) {
+      return byName;
+    }
+    try {
+      return await guild.roles.create({
+        name: QUARANTINE_ROLE_NAME,
+        permissions: [],
+        hoist: false,
+        mentionable: false,
+        reason: "Anti-nuke quarantine role"
+      });
+    } catch (error) {
+      this.logger.warn("Could not create the quarantine role", serializeError(error));
+      return null;
+    }
+  }
+  async recordAlert(input) {
+    const now = this.clock();
+    this.lastAlert = now;
+    await this.markAlert(this.guild()?.id ?? this.config.guildId);
+    const fields = [
+      { name: "Rule", value: input.rule ?? "none", inline: true },
+      { name: "Count", value: String(input.count), inline: true },
+      {
+        name: "Window",
+        value: input.windowSeconds === null ? "n/a" : `${input.windowSeconds}s`,
+        inline: true
+      },
+      { name: "Action", value: input.action, inline: true }
+    ];
+    if (input.caseId !== void 0) {
+      fields.push({ name: "Case", value: caseNumber3(input.caseId), inline: true });
+    }
+    this.audit.record({
+      category: "security",
+      type: "security.alert",
+      summary: input.summary,
+      severity: input.severity,
+      actor: input.actor,
+      ...input.channelId ? { channelId: input.channelId } : {},
+      fields,
+      payload: { ...input.metadata, action: input.action },
+      feed: true
+    });
+  }
+  async markAction(guildId, actorId) {
+    this.actionedAt.set(actorId, this.clock().getTime());
+    try {
+      await this.state?.markAction(guildId, actorId, this.clock());
+    } catch (error) {
+      this.logger.warn("Could not persist the security action mark", serializeError(error));
+    }
+  }
+  async markAlert(guildId) {
+    try {
+      await this.state?.markAlert(guildId, this.clock());
+    } catch (error) {
+      this.logger.warn("Could not persist the security alert mark", serializeError(error));
+    }
+  }
+  metadataString(value) {
+    return typeof value === "string" ? value : null;
+  }
+  metadataNumber(value) {
+    return typeof value === "number" && Number.isFinite(value) ? value : 0;
+  }
+  guild() {
+    return this.client.guilds.cache.get(this.config.guildId) ?? null;
+  }
+};
+
+// src/security/snapshot.ts
+var import_promises5 = require("node:fs/promises");
+var import_node_path6 = require("node:path");
+var COLLECTION4 = "guild_snapshots";
+function toJson(snapshot) {
+  return {
+    ...snapshot,
+    capturedAt: snapshot.capturedAt.toISOString(),
+    roles: [...snapshot.roles],
+    channels: [...snapshot.channels]
+  };
+}
+function fromJson(guildId, raw) {
+  return {
+    guildId,
+    capturedAt: new Date(raw.capturedAt),
+    roles: raw.roles,
+    channels: raw.channels,
+    version: 1
+  };
+}
+function revive(document) {
+  const capturedAt = document.capturedAt instanceof Date ? document.capturedAt : new Date(String(document.capturedAt));
+  return {
+    guildId: document._id,
+    capturedAt,
+    roles: document.roles ?? [],
+    channels: document.channels ?? [],
+    version: 1
+  };
+}
+function captureSnapshot(guild) {
+  const everyoneId = guild.roles.everyone?.id ?? guild.id;
+  const roles = [];
+  for (const role of guild.roles.cache.values()) {
+    if (role.id === everyoneId || role.name === "@everyone") {
+      continue;
+    }
+    roles.push({
+      id: role.id,
+      name: role.name,
+      color: role.color,
+      hoist: role.hoist,
+      mentionable: role.mentionable,
+      permissions: role.permissions.bitfield.toString(),
+      position: role.position,
+      managed: role.managed
+    });
+  }
+  const channels = [];
+  for (const channel of guild.channels.cache.values()) {
+    const value = channel;
+    const overwrites = [];
+    for (const overwrite of value.permissionOverwrites?.cache?.values() ?? []) {
+      overwrites.push({
+        id: overwrite.id,
+        type: overwrite.type,
+        allow: overwrite.allow.bitfield.toString(),
+        deny: overwrite.deny.bitfield.toString()
+      });
+    }
+    channels.push({
+      id: value.id,
+      name: value.name ?? "",
+      type: value.type ?? 0,
+      parentId: value.parentId ?? null,
+      position: value.position ?? 0,
+      topic: value.topic ?? null,
+      nsfw: value.nsfw ?? false,
+      rateLimitPerUser: value.rateLimitPerUser ?? 0,
+      bitrate: value.bitrate ?? null,
+      userLimit: value.userLimit ?? null,
+      overwrites
+    });
+  }
+  return {
+    guildId: guild.id,
+    capturedAt: /* @__PURE__ */ new Date(),
+    roles,
+    channels,
+    version: 1
+  };
+}
+var SnapshotStore = class {
+  database;
+  jsonPath;
+  logger;
+  collection = null;
+  jsonMode = false;
+  warnedMongo = false;
+  warnedJson = false;
+  constructor(options) {
+    this.database = options.database;
+    this.jsonPath = options.jsonPath;
+    this.logger = options.logger;
+  }
+  async save(snapshot) {
+    if (!this.jsonMode && this.database) {
+      try {
+        const collection = await this.mongoCollection();
+        await collection.replaceOne(
+          { _id: snapshot.guildId },
+          {
+            _id: snapshot.guildId,
+            capturedAt: snapshot.capturedAt,
+            roles: [...snapshot.roles],
+            channels: [...snapshot.channels],
+            version: 1
+          },
+          { upsert: true }
+        );
+        return;
+      } catch (error) {
+        this.failMongo(error);
+      }
+    }
+    const all = await this.readJson();
+    all[snapshot.guildId] = toJson(snapshot);
+    await this.writeJson(all);
+  }
+  async load(guildId) {
+    if (!this.jsonMode && this.database) {
+      try {
+        const collection = await this.mongoCollection();
+        const document = await collection.findOne({ _id: guildId });
+        return document ? revive(document) : null;
+      } catch (error) {
+        this.failMongo(error);
+      }
+    }
+    const all = await this.readJson();
+    const raw = all[guildId];
+    return raw ? fromJson(guildId, raw) : null;
+  }
+  async close() {
+    return void 0;
+  }
+  async mongoCollection() {
+    if (this.collection) {
+      return this.collection;
+    }
+    const collection = await this.database.collection(COLLECTION4);
+    this.collection = collection;
+    return collection;
+  }
+  async readJson() {
+    try {
+      const raw = await (0, import_promises5.readFile)(this.jsonPath, "utf8");
+      const parsed = JSON.parse(raw);
+      return parsed && typeof parsed === "object" ? parsed : {};
+    } catch (error) {
+      if (error.code === "ENOENT") {
+        return {};
+      }
+      this.warnJson("Could not read the guild snapshot; starting a new file", error);
+      return {};
+    }
+  }
+  async writeJson(all) {
+    await (0, import_promises5.mkdir)((0, import_node_path6.dirname)(this.jsonPath), { recursive: true });
+    const temp = `${this.jsonPath}.tmp`;
+    await (0, import_promises5.writeFile)(temp, `${JSON.stringify(all, null, 2)}
+`, "utf8");
+    await (0, import_promises5.rename)(temp, this.jsonPath);
+  }
+  failMongo(error) {
+    this.jsonMode = true;
+    if (!this.warnedMongo) {
+      this.warnedMongo = true;
+      this.logger.warn(
+        "Snapshot Mongo store unavailable; falling back to JSON",
+        serializeError(error)
+      );
+    }
+  }
+  warnJson(message, error) {
+    if (this.warnedJson) {
+      return;
+    }
+    this.warnedJson = true;
+    this.logger.warn(message, serializeError(error));
+  }
+};
+
+// src/security/snapshot-service.ts
+var SnapshotService = class {
+  getGuild;
+  store;
+  audit;
+  config;
+  logger;
+  intervalMs;
+  timer = null;
+  lastSnapshot = null;
+  warned = false;
+  constructor(options) {
+    this.getGuild = options.getGuild;
+    this.store = options.store;
+    this.audit = options.audit;
+    this.config = options.config;
+    this.logger = options.logger;
+    this.intervalMs = Math.max(
+      1e3,
+      options.intervalMs ?? this.config.snapshotIntervalMinutes * 6e4
+    );
+  }
+  start() {
+    if (this.timer) {
+      return;
+    }
+    void this.captureNow().catch((error) => this.logCaptureError(error));
+    this.timer = setInterval(() => {
+      void this.captureNow().catch((error) => this.logCaptureError(error));
+    }, this.intervalMs);
+    this.timer.unref();
+  }
+  stop() {
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+  }
+  async captureNow() {
+    const guild = this.getGuild();
+    if (!guild) {
+      throw new Error("Guild is not available.");
+    }
+    const snapshot = captureSnapshot(guild);
+    await this.store.save(snapshot);
+    this.lastSnapshot = snapshot;
+    this.warned = false;
+    this.audit.record({
+      category: "security",
+      type: "security.snapshot",
+      summary: "Guild snapshot captured",
+      severity: "info",
+      fields: [
+        { name: "Roles", value: String(snapshot.roles.length), inline: true },
+        { name: "Channels", value: String(snapshot.channels.length), inline: true },
+        { name: "Captured", value: snapshot.capturedAt.toISOString(), inline: true }
+      ],
+      payload: {
+        capturedAt: snapshot.capturedAt.toISOString(),
+        roles: snapshot.roles.length,
+        channels: snapshot.channels.length
+      },
+      feed: false
+    });
+    return snapshot;
+  }
+  last() {
+    return this.lastSnapshot;
+  }
+  logCaptureError(error) {
+    if (this.warned) {
+      return;
+    }
+    this.warned = true;
+    this.logger.warn("Guild snapshot capture failed", serializeError(error));
+  }
+};
+
+// src/security/state.ts
+var import_promises6 = require("node:fs/promises");
+var import_node_path7 = require("node:path");
+var COLLECTION5 = "security_state";
+function emptyState() {
+  return {
+    raidMode: false,
+    raidUntil: null,
+    lastActionAt: {},
+    lastAlertAt: null,
+    updatedAt: null
+  };
+}
+function toDate(value) {
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? null : value;
+  }
+  if (typeof value === "string" || typeof value === "number") {
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+  }
+  return null;
+}
+function toIso(value) {
+  return value ? value.toISOString() : null;
+}
+function normalizeDocument(document) {
+  const actions = {};
+  const rawActions = document.lastActionAt;
+  if (rawActions && typeof rawActions === "object") {
+    for (const [actorId, at] of Object.entries(rawActions)) {
+      if (typeof at === "string") {
+        actions[actorId] = at;
+      }
+    }
+  }
+  return {
+    raidMode: document.raidMode === true,
+    raidUntil: toDate(document.raidUntil),
+    lastActionAt: actions,
+    lastAlertAt: toDate(document.lastAlertAt),
+    updatedAt: toDate(document.updatedAt)
+  };
+}
+function normalizeJson(raw) {
+  const actions = {};
+  if (raw.lastActionAt && typeof raw.lastActionAt === "object") {
+    for (const [actorId, at] of Object.entries(raw.lastActionAt)) {
+      if (typeof at === "string") {
+        actions[actorId] = at;
+      }
+    }
+  }
+  return {
+    raidMode: raw.raidMode === true,
+    raidUntil: toDate(raw.raidUntil),
+    lastActionAt: actions,
+    lastAlertAt: toDate(raw.lastAlertAt),
+    updatedAt: toDate(raw.updatedAt)
+  };
+}
+var SecurityStateStore = class {
+  database;
+  jsonPath;
+  logger;
+  collection = null;
+  jsonMode = false;
+  warnedMongo = false;
+  warnedJson = false;
+  queue = Promise.resolve();
+  constructor(options) {
+    this.database = options.database;
+    this.jsonPath = options.jsonPath;
+    this.logger = options.logger;
+  }
+  async get(guildId) {
+    await this.queue;
+    if (!this.jsonMode && this.database) {
+      try {
+        const collection = await this.mongoCollection();
+        const document = await collection.findOne({ _id: guildId });
+        return document ? normalizeDocument(document) : emptyState();
+      } catch (error) {
+        this.failMongo(error);
+      }
+    }
+    const all = await this.readJson();
+    return all[guildId] ? normalizeJson(all[guildId]) : emptyState();
+  }
+  setRaidMode(guildId, until) {
+    const now = /* @__PURE__ */ new Date();
+    return this.enqueue(() => this.writeRaidMode(guildId, until, now));
+  }
+  markAction(guildId, actorId, at) {
+    return this.enqueue(() => this.writeAction(guildId, actorId, at, /* @__PURE__ */ new Date()));
+  }
+  markAlert(guildId, at) {
+    return this.enqueue(() => this.writeAlert(guildId, at, /* @__PURE__ */ new Date()));
+  }
+  async close() {
+    await this.queue;
+  }
+  async writeRaidMode(guildId, until, now) {
+    if (!this.jsonMode && this.database) {
+      try {
+        const collection = await this.mongoCollection();
+        await collection.updateOne(
+          { _id: guildId },
+          {
+            $set: {
+              raidMode: until !== null,
+              raidUntil: until,
+              updatedAt: now
+            }
+          },
+          { upsert: true }
+        );
+        return;
+      } catch (error) {
+        this.failMongo(error);
+      }
+    }
+    const all = await this.readJson();
+    all[guildId] = {
+      ...all[guildId],
+      raidMode: until !== null,
+      raidUntil: toIso(until),
+      updatedAt: now.toISOString()
+    };
+    await this.writeJson(all);
+  }
+  async writeAction(guildId, actorId, at, now) {
+    if (!this.jsonMode && this.database) {
+      try {
+        const collection = await this.mongoCollection();
+        await collection.updateOne(
+          { _id: guildId },
+          {
+            $set: {
+              [`lastActionAt.${actorId}`]: at.toISOString(),
+              updatedAt: now
+            }
+          },
+          { upsert: true }
+        );
+        return;
+      } catch (error) {
+        this.failMongo(error);
+      }
+    }
+    const all = await this.readJson();
+    const current = all[guildId] ?? {};
+    all[guildId] = {
+      ...current,
+      lastActionAt: {
+        ...current.lastActionAt ?? {},
+        [actorId]: at.toISOString()
+      },
+      updatedAt: now.toISOString()
+    };
+    await this.writeJson(all);
+  }
+  async writeAlert(guildId, at, now) {
+    if (!this.jsonMode && this.database) {
+      try {
+        const collection = await this.mongoCollection();
+        await collection.updateOne(
+          { _id: guildId },
+          {
+            $set: {
+              lastAlertAt: at,
+              updatedAt: now
+            }
+          },
+          { upsert: true }
+        );
+        return;
+      } catch (error) {
+        this.failMongo(error);
+      }
+    }
+    const all = await this.readJson();
+    all[guildId] = {
+      ...all[guildId],
+      lastAlertAt: at.toISOString(),
+      updatedAt: now.toISOString()
+    };
+    await this.writeJson(all);
+  }
+  async mongoCollection() {
+    if (this.collection) {
+      return this.collection;
+    }
+    const collection = await this.database.collection(COLLECTION5);
+    this.collection = collection;
+    return collection;
+  }
+  async readJson() {
+    try {
+      const raw = await (0, import_promises6.readFile)(this.jsonPath, "utf8");
+      const parsed = JSON.parse(raw);
+      return parsed && typeof parsed === "object" ? parsed : {};
+    } catch (error) {
+      if (error.code === "ENOENT") {
+        return {};
+      }
+      this.warnJson("Could not read the security state; starting a new file", error);
+      return {};
+    }
+  }
+  async writeJson(all) {
+    await (0, import_promises6.mkdir)((0, import_node_path7.dirname)(this.jsonPath), { recursive: true });
+    const temp = `${this.jsonPath}.tmp`;
+    await (0, import_promises6.writeFile)(temp, `${JSON.stringify(all, null, 2)}
+`, "utf8");
+    await (0, import_promises6.rename)(temp, this.jsonPath);
+  }
+  enqueue(task) {
+    const run = this.queue.then(task, task);
+    this.queue = run.then(
+      () => void 0,
+      () => void 0
+    );
+    return run;
+  }
+  failMongo(error) {
+    this.jsonMode = true;
+    if (!this.warnedMongo) {
+      this.warnedMongo = true;
+      this.logger.warn(
+        "Security state Mongo store unavailable; falling back to JSON",
+        serializeError(error)
+      );
+    }
+  }
+  warnJson(message, error) {
+    if (this.warnedJson) {
+      return;
+    }
+    this.warnedJson = true;
+    this.logger.warn(message, serializeError(error));
+  }
+};
+
+// src/staff/cases.ts
+var import_promises7 = require("node:fs/promises");
+var import_node_path8 = require("node:path");
+var CASES = "mod_cases";
+var COUNTERS = "counters";
+var IMMEDIATE_CLOSE = /* @__PURE__ */ new Set([
+  "kick",
+  "purge",
+  "lock",
+  "unlock",
+  "slowmode",
+  "note",
+  "unban",
+  "untimeout",
+  "warnClear",
+  "caseResolve"
+]);
+function defaultStatus(action) {
+  return IMMEDIATE_CLOSE.has(action) ? "closed" : "open";
+}
+function toJsonCase(record) {
+  return {
+    ...record,
+    expiresAt: record.expiresAt ? record.expiresAt.toISOString() : null,
+    createdAt: record.createdAt.toISOString(),
+    updatedAt: record.updatedAt.toISOString()
+  };
+}
+function fromJsonCase(raw) {
+  return {
+    ...raw,
+    expiresAt: raw.expiresAt ? new Date(raw.expiresAt) : null,
+    createdAt: new Date(raw.createdAt),
+    updatedAt: new Date(raw.updatedAt)
+  };
+}
+function reviveCase(document) {
+  const date = (value) => value instanceof Date ? value : new Date(String(value));
+  return {
+    ...document,
+    expiresAt: document.expiresAt instanceof Date ? document.expiresAt : document.expiresAt ? new Date(String(document.expiresAt)) : null,
+    createdAt: date(document.createdAt),
+    updatedAt: date(document.updatedAt),
+    metadata: document.metadata ?? {}
+  };
+}
+var CaseStore = class {
+  database;
+  jsonPath;
+  logger;
+  collection = null;
+  counters = null;
+  indexesReady = false;
+  jsonMode = false;
+  warnedMongo = false;
+  warnedJson = false;
+  queue = Promise.resolve();
+  constructor(options) {
+    this.database = options.database;
+    this.jsonPath = options.jsonPath;
+    this.logger = options.logger;
+  }
+  get durable() {
+    return Boolean(this.database) && !this.jsonMode;
+  }
+  create(input) {
+    const run = this.queue.then(() => this.createNow(input));
+    this.queue = run.then(
+      () => void 0,
+      () => void 0
+    );
+    return run;
+  }
+  async get(guildId, caseId) {
+    await this.queue;
+    if (!this.jsonMode && this.database) {
+      try {
+        const collection = await this.mongoCases();
+        const document = await collection.findOne({ _id: `${guildId}:${caseId}` });
+        return document ? reviveCase(document) : null;
+      } catch (error) {
+        this.failMongo(error);
+      }
+    }
+    const all = await this.readJson();
+    const record = all[guildId]?.cases.find((entry) => entry.caseId === caseId);
+    return record ? fromJsonCase(record) : null;
+  }
+  async list(guildId, filter = {}) {
+    await this.queue;
+    if (!this.jsonMode && this.database) {
+      try {
+        const collection = await this.mongoCases();
+        const query = { guildId };
+        if (filter.targetId) {
+          query.targetId = filter.targetId;
+        }
+        if (filter.moderatorId) {
+          query.moderatorId = filter.moderatorId;
+        }
+        if (filter.action) {
+          query.action = filter.action;
+        }
+        if (filter.status) {
+          query.status = filter.status;
+        }
+        if (filter.since) {
+          query.createdAt = { $gte: filter.since };
+        }
+        const documents = await collection.find(query).sort({ caseId: -1 }).limit(filter.limit ?? 100).toArray();
+        return documents.map(reviveCase);
+      } catch (error) {
+        this.failMongo(error);
+      }
+    }
+    const all = await this.readJson();
+    return (all[guildId]?.cases ?? []).map(fromJsonCase).filter((record) => !filter.targetId || record.targetId === filter.targetId).filter((record) => !filter.moderatorId || record.moderatorId === filter.moderatorId).filter((record) => !filter.action || record.action === filter.action).filter((record) => !filter.status || record.status === filter.status).filter((record) => !filter.since || record.createdAt.getTime() >= filter.since.getTime()).sort((a, b) => b.caseId - a.caseId).slice(0, filter.limit ?? 100);
+  }
+  updateStatus(guildId, caseId, status, actorId, note) {
+    const run = this.queue.then(() => this.updateStatusNow(guildId, caseId, status, actorId, note));
+    this.queue = run.then(
+      () => void 0,
+      () => void 0
+    );
+    return run;
+  }
+  async countByModerator(guildId, moderatorId, since) {
+    await this.queue;
+    if (!this.jsonMode && this.database) {
+      try {
+        const collection = await this.mongoCases();
+        return await collection.countDocuments({
+          guildId,
+          moderatorId,
+          createdAt: { $gte: since }
+        });
+      } catch (error) {
+        this.failMongo(error);
+      }
+    }
+    const all = await this.readJson();
+    return (all[guildId]?.cases ?? []).filter(
+      (record) => record.moderatorId === moderatorId && new Date(record.createdAt).getTime() >= since.getTime()
+    ).length;
+  }
+  markExpired(guildId, now) {
+    const run = this.queue.then(() => this.markExpiredNow(guildId, now));
+    this.queue = run.then(
+      () => void 0,
+      () => void 0
+    );
+    return run;
+  }
+  async close() {
+    await this.queue;
+  }
+  buildCase(input, caseId) {
+    const now = /* @__PURE__ */ new Date();
+    return {
+      caseId,
+      guildId: input.guildId,
+      action: input.action,
+      targetId: input.targetId ?? null,
+      targetTag: input.targetTag ?? null,
+      moderatorId: input.moderatorId,
+      moderatorTag: input.moderatorTag ?? input.moderatorId,
+      reason: input.reason ?? "",
+      durationMs: input.durationMs ?? null,
+      expiresAt: input.expiresAt ?? null,
+      channelId: input.channelId ?? null,
+      messageId: input.messageId ?? null,
+      status: input.status ?? defaultStatus(input.action),
+      metadata: input.metadata ?? {},
+      createdAt: now,
+      updatedAt: now
+    };
+  }
+  async createNow(input) {
+    if (!this.jsonMode && this.database) {
+      let reserved = null;
+      try {
+        reserved = await this.reserveMongoId(input.guildId);
+        const record = this.buildCase(input, reserved);
+        const collection = await this.mongoCases();
+        await collection.insertOne({ _id: `${record.guildId}:${record.caseId}`, ...record });
+        return record;
+      } catch (error) {
+        this.failMongo(error);
+        return this.createJson(input, reserved);
+      }
+    }
+    return this.createJson(input, null);
+  }
+  async createJson(input, reserved) {
+    const all = await this.readJson();
+    const state = all[input.guildId] ?? { nextCaseId: 1, cases: [] };
+    const highest = state.cases.reduce((max, entry) => Math.max(max, entry.caseId), 0);
+    const caseId = Math.max(state.nextCaseId, highest + 1, reserved ?? 1);
+    const record = this.buildCase(input, caseId);
+    state.nextCaseId = caseId + 1;
+    state.cases.push(toJsonCase(record));
+    all[input.guildId] = state;
+    await this.writeJson(all);
+    return record;
+  }
+  async updateStatusNow(guildId, caseId, status, actorId, note) {
+    const now = /* @__PURE__ */ new Date();
+    if (!this.jsonMode && this.database) {
+      try {
+        const collection = await this.mongoCases();
+        await collection.updateOne(
+          { _id: `${guildId}:${caseId}` },
+          {
+            $set: {
+              status,
+              updatedAt: now,
+              "metadata.statusActorId": actorId,
+              "metadata.statusChangedAt": now.toISOString(),
+              ...note ? { "metadata.statusNote": note } : {}
+            }
+          }
+        );
+        return;
+      } catch (error) {
+        this.failMongo(error);
+      }
+    }
+    const all = await this.readJson();
+    const state = all[guildId];
+    const record = state?.cases.find((entry) => entry.caseId === caseId);
+    if (!state || !record) {
+      return;
+    }
+    record.status = status;
+    record.updatedAt = now.toISOString();
+    record.metadata = {
+      ...record.metadata,
+      statusActorId: actorId,
+      statusChangedAt: now.toISOString(),
+      ...note ? { statusNote: note } : {}
+    };
+    await this.writeJson(all);
+  }
+  async markExpiredNow(guildId, now) {
+    if (!this.jsonMode && this.database) {
+      try {
+        const collection = await this.mongoCases();
+        const result = await collection.updateMany(
+          {
+            guildId,
+            status: "open",
+            expiresAt: { $ne: null, $lte: now }
+          },
+          { $set: { status: "expired", updatedAt: now } }
+        );
+        return result.modifiedCount;
+      } catch (error) {
+        this.failMongo(error);
+      }
+    }
+    const all = await this.readJson();
+    const state = all[guildId];
+    if (!state) {
+      return 0;
+    }
+    let expired = 0;
+    for (const record of state.cases) {
+      if (record.status === "open" && record.expiresAt !== null && new Date(record.expiresAt).getTime() <= now.getTime()) {
+        record.status = "expired";
+        record.updatedAt = now.toISOString();
+        expired += 1;
+      }
+    }
+    if (expired > 0) {
+      await this.writeJson(all);
+    }
+    return expired;
+  }
+  async reserveMongoId(guildId) {
+    await this.mongoCases();
+    const counters = await this.mongoCounters();
+    const document = await counters.findOneAndUpdate(
+      { _id: `mod_cases:${guildId}` },
+      { $inc: { seq: 1 } },
+      { upsert: true, returnDocument: "after" }
+    );
+    if (!document || typeof document.seq !== "number") {
+      throw new Error("Moderation case counter did not return a sequence");
+    }
+    return document.seq;
+  }
+  async mongoCases() {
+    if (this.collection && this.indexesReady) {
+      return this.collection;
+    }
+    const collection = await this.database.collection(CASES);
+    if (!this.indexesReady) {
+      await collection.createIndex({ guildId: 1, caseId: 1 }, { unique: true });
+      await collection.createIndex({ guildId: 1, targetId: 1, caseId: -1 });
+      await collection.createIndex({ guildId: 1, moderatorId: 1, createdAt: -1 });
+      this.indexesReady = true;
+    }
+    this.collection = collection;
+    return collection;
+  }
+  async mongoCounters() {
+    if (this.counters) {
+      return this.counters;
+    }
+    const counters = await this.database.collection(COUNTERS);
+    this.counters = counters;
+    return counters;
+  }
+  async readJson() {
+    try {
+      const raw = await (0, import_promises7.readFile)(this.jsonPath, "utf8");
+      const parsed = JSON.parse(raw);
+      return parsed && typeof parsed === "object" ? parsed : {};
+    } catch (error) {
+      if (error.code === "ENOENT") {
+        return {};
+      }
+      this.warnJson("Could not read moderation cases; starting a new file", error);
+      return {};
+    }
+  }
+  async writeJson(all) {
+    await (0, import_promises7.mkdir)((0, import_node_path8.dirname)(this.jsonPath), { recursive: true });
+    const temp = `${this.jsonPath}.tmp`;
+    await (0, import_promises7.writeFile)(temp, `${JSON.stringify(all, null, 2)}
+`, "utf8");
+    await (0, import_promises7.rename)(temp, this.jsonPath);
+  }
+  failMongo(error) {
+    this.jsonMode = true;
+    if (!this.warnedMongo) {
+      this.warnedMongo = true;
+      this.logger.warn(
+        "Moderation case Mongo store unavailable; falling back to JSON",
+        serializeError(error)
+      );
+    }
+  }
+  warnJson(message, error) {
+    if (this.warnedJson) {
+      return;
+    }
+    this.warnedJson = true;
+    this.logger.warn(message, serializeError(error));
+  }
+};
+
+// src/staff/channels.ts
+var import_discord40 = __toESM(require_src());
+var FOURTEEN_DAYS_MS = 14 * 864e5;
+var MAX_PURGE = 100;
+var MAX_SLOWMODE = 21600;
+function parsePurgeFilter(filter) {
+  const needle = filter.contains?.toLowerCase();
+  return (message) => (!filter.memberId || message.author.id === filter.memberId) && (!needle || message.content.toLowerCase().includes(needle));
+}
+function tagOf4(member) {
+  return member.user.tag ?? member.user.username ?? member.id;
+}
+function positionOf2(member) {
+  return member.roles?.highest?.position ?? 0;
+}
+var StaffChannelActions = class {
+  client;
+  config;
+  cases;
+  audit;
+  logger;
+  constructor(options) {
+    this.client = options.client;
+    this.config = options.config;
+    this.cases = options.cases;
+    this.audit = options.audit;
+    this.logger = options.logger;
+  }
+  async purge(actor, channel, count, filter = {}) {
+    this.assertChannelPermission(actor, channel, import_discord40.PermissionFlagsBits.ManageMessages, "Manage Messages");
+    const limit = Math.max(1, Math.min(MAX_PURGE, Math.trunc(count)));
+    try {
+      const fetched = await channel.messages.fetch({ limit });
+      const messages = [...fetched.values()];
+      const predicate = parsePurgeFilter(filter);
+      const matched = messages.filter(predicate);
+      const now = Date.now();
+      const deletable = matched.filter(
+        (message) => now - message.createdTimestamp <= FOURTEEN_DAYS_MS
+      );
+      const skipped = matched.length - deletable.length;
+      const deletedIds = deletable.map((message) => message.id);
+      if (deletedIds.length > 0) {
+        await channel.messages.bulkDelete(deletedIds, true);
+      }
+      const record = await this.cases.create({
+        guildId: channel.guild.id,
+        action: "purge",
+        targetId: filter.memberId ?? null,
+        moderatorId: actor.id,
+        moderatorTag: tagOf4(actor),
+        reason: `Purged ${deletedIds.length} message${deletedIds.length === 1 ? "" : "s"} in ${this.channelName(channel)}`,
+        channelId: channel.id,
+        metadata: {
+          deleted: deletedIds.length,
+          skipped,
+          ...filter.memberId ? { memberId: filter.memberId } : {},
+          ...filter.contains ? { contains: filter.contains } : {}
+        }
+      });
+      this.audit.record(this.actionEvent(record, actor, channel));
+      return { deletedIds, skipped };
+    } catch (error) {
+      this.recordFailure("purge", actor, channel, error);
+      throw error;
+    }
+  }
+  lock(actor, channel) {
+    return this.changeChannel(
+      actor,
+      channel,
+      "lock",
+      () => channel.permissionOverwrites.edit(
+        channel.guild.roles.everyone,
+        { SendMessages: false },
+        { reason: `Channel locked by ${tagOf4(actor)}` }
+      ),
+      `Locked ${this.channelName(channel)}`
+    );
+  }
+  unlock(actor, channel) {
+    return this.changeChannel(
+      actor,
+      channel,
+      "unlock",
+      () => channel.permissionOverwrites.edit(
+        channel.guild.roles.everyone,
+        { SendMessages: null },
+        { reason: `Channel unlocked by ${tagOf4(actor)}` }
+      ),
+      `Unlocked ${this.channelName(channel)}`
+    );
+  }
+  slowmode(actor, channel, seconds) {
+    if (!Number.isInteger(seconds) || seconds < 0 || seconds > MAX_SLOWMODE) {
+      return Promise.reject(
+        new Error(`Slowmode must be between 0 and ${MAX_SLOWMODE} seconds.`)
+      );
+    }
+    return this.changeChannel(
+      actor,
+      channel,
+      "slowmode",
+      () => channel.setRateLimitPerUser(
+        seconds,
+        `Slowmode set by ${tagOf4(actor)}`
+      ),
+      seconds === 0 ? `Slowmode disabled in ${this.channelName(channel)}` : `Slowmode set to ${seconds}s in ${this.channelName(channel)}`,
+      { slowmode: seconds }
+    );
+  }
+  async changeChannel(actor, channel, action, call, reason2, metadata = {}) {
+    this.assertChannelPermission(actor, channel, import_discord40.PermissionFlagsBits.ManageChannels, "Manage Channels");
+    try {
+      await call();
+    } catch (error) {
+      this.recordFailure(action, actor, channel, error);
+      throw error;
+    }
+    const record = await this.cases.create({
+      guildId: channel.guild.id,
+      action,
+      moderatorId: actor.id,
+      moderatorTag: tagOf4(actor),
+      reason: reason2,
+      channelId: channel.id,
+      metadata
+    });
+    this.audit.record(this.actionEvent(record, actor, channel));
+    return record;
+  }
+  assertChannelPermission(actor, channel, permission, permissionName2) {
+    const guild = channel.guild;
+    const guard = canModerate({
+      actorId: actor.id,
+      actorRank: resolveStaffRank(actor, this.config),
+      actorPosition: positionOf2(actor),
+      targetId: channel.id,
+      targetPosition: 0,
+      guildOwnerId: guild.ownerId,
+      botId: this.client.user?.id,
+      botPosition: guild.members.me?.roles?.highest?.position ?? 0,
+      botPermissions: guild.members.me?.permissions,
+      config: this.config,
+      minimumRank: "moderator",
+      skipHierarchy: true
+    });
+    if (!guard.ok) {
+      throw new StaffGuardError(guard.reason);
+    }
+    const me = guild.members.me;
+    const permissions = me ? channel.permissionsFor(me) : null;
+    if (!permissions?.has(permission)) {
+      throw new StaffGuardError(
+        `I need ${permissionName2} in ${this.channelName(channel)} to do that.`
+      );
+    }
+  }
+  channelName(channel) {
+    return channel.name ? `#${channel.name}` : channel.id;
+  }
+  actionEvent(record, actor, channel) {
+    return {
+      category: "moderation",
+      type: "moderation.action",
+      summary: `${record.action} in ${this.channelName(channel)} (case #${String(record.caseId).padStart(4, "0")})`,
+      severity: "info",
+      actor: { id: actor.id, tag: tagOf4(actor) },
+      channelId: channel.id,
+      fields: [
+        { name: "Case", value: `#${String(record.caseId).padStart(4, "0")}`, inline: true },
+        { name: "Action", value: record.action, inline: true },
+        { name: "Channel", value: `<#${channel.id}>`, inline: true },
+        { name: "Reason", value: truncate(record.reason || "No reason provided", 1e3) }
+      ],
+      payload: { caseId: record.caseId, action: record.action }
+    };
+  }
+  recordFailure(action, actor, channel, error) {
+    this.logger.warn("Staff channel action failed", {
+      action,
+      actorId: actor.id,
+      channelId: channel.id,
+      error: serializeError(error)
+    });
+    this.audit.record({
+      category: "moderation",
+      type: "moderation.failed",
+      summary: `${action} failed in ${this.channelName(channel)}: ${error instanceof Error ? error.name : "UnknownError"}`,
+      severity: "warn",
+      actor: { id: actor.id, tag: tagOf4(actor) },
+      channelId: channel.id,
+      fields: [
+        { name: "Action", value: action, inline: true },
+        {
+          name: "Error",
+          value: error instanceof Error ? `${error.name}: ${error.message}` : String(error)
+        }
+      ],
+      payload: { action }
+    });
+  }
+};
+
+// src/staff/duty.ts
+var import_node_crypto4 = require("node:crypto");
+var import_promises8 = require("node:fs/promises");
+var import_node_path9 = require("node:path");
+var COLLECTION6 = "staff_duty";
+function revive2(document) {
+  return {
+    id: document._id,
+    guildId: document.guildId,
+    moderatorId: document.moderatorId,
+    startedAt: document.startedAt instanceof Date ? document.startedAt : new Date(String(document.startedAt)),
+    endedAt: document.endedAt instanceof Date ? document.endedAt : document.endedAt ? new Date(String(document.endedAt)) : null
+  };
+}
+function fromJson2(raw) {
+  return {
+    ...raw,
+    startedAt: new Date(raw.startedAt),
+    endedAt: raw.endedAt ? new Date(raw.endedAt) : null
+  };
+}
+function toJson2(session) {
+  return {
+    ...session,
+    startedAt: session.startedAt.toISOString(),
+    endedAt: session.endedAt ? session.endedAt.toISOString() : null
+  };
+}
+var DutyStore = class {
+  database;
+  jsonPath;
+  logger;
+  collection = null;
+  jsonMode = false;
+  warnedMongo = false;
+  warnedJson = false;
+  queue = Promise.resolve();
+  constructor(options) {
+    this.database = options.database;
+    this.jsonPath = options.jsonPath;
+    this.logger = options.logger;
+  }
+  start(guildId, moderatorId, at = /* @__PURE__ */ new Date()) {
+    const run = this.queue.then(async () => {
+      const existing = await this.findActive(guildId, moderatorId);
+      if (existing) {
+        return existing;
+      }
+      return this.startNow(guildId, moderatorId, at);
+    });
+    this.queue = run.then(
+      () => void 0,
+      () => void 0
+    );
+    return run;
+  }
+  async stop(guildId, moderatorId, at = /* @__PURE__ */ new Date()) {
+    await this.queue;
+    const run = this.queue.then(() => this.stopNow(guildId, moderatorId, at));
+    this.queue = run.then(
+      () => void 0,
+      () => void 0
+    );
+    return run;
+  }
+  async activeSession(guildId, moderatorId) {
+    await this.queue;
+    return this.findActive(guildId, moderatorId);
+  }
+  async findActive(guildId, moderatorId) {
+    if (!this.jsonMode && this.database) {
+      try {
+        const collection = await this.mongoCollection();
+        const document = await collection.findOne(
+          { guildId, moderatorId, endedAt: null },
+          { sort: { startedAt: -1 } }
+        );
+        return document ? revive2(document) : null;
+      } catch (error) {
+        this.failMongo(error);
+      }
+    }
+    const all = await this.readJson();
+    const sessions = (all[guildId]?.sessions ?? []).map(fromJson2).filter((session) => session.moderatorId === moderatorId && session.endedAt === null).sort((a, b) => b.startedAt.getTime() - a.startedAt.getTime());
+    return sessions[0] ?? null;
+  }
+  async minutesSince(guildId, moderatorId, since) {
+    await this.queue;
+    const now = /* @__PURE__ */ new Date();
+    let sessions = [];
+    let loaded = false;
+    if (!this.jsonMode && this.database) {
+      try {
+        const collection = await this.mongoCollection();
+        const documents = await collection.find({ guildId, moderatorId }).toArray();
+        sessions = documents.map(revive2);
+        loaded = true;
+      } catch (error) {
+        this.failMongo(error);
+      }
+    }
+    if (!loaded) {
+      const all = await this.readJson();
+      sessions = (all[guildId]?.sessions ?? []).map(fromJson2).filter((session) => session.moderatorId === moderatorId);
+    }
+    let totalMs = 0;
+    for (const session of sessions) {
+      const start = Math.max(session.startedAt.getTime(), since.getTime());
+      const end = Math.min((session.endedAt ?? now).getTime(), now.getTime());
+      if (end > start) {
+        totalMs += end - start;
+      }
+    }
+    return Math.floor(totalMs / 6e4);
+  }
+  async closeStaleSessions(guildId, at = /* @__PURE__ */ new Date()) {
+    await this.queue;
+    const run = this.queue.then(() => this.closeStaleNow(guildId, at));
+    this.queue = run.then(
+      () => void 0,
+      () => void 0
+    );
+    return run;
+  }
+  async close() {
+    await this.queue;
+  }
+  async startNow(guildId, moderatorId, at) {
+    const session = {
+      id: (0, import_node_crypto4.randomUUID)(),
+      guildId,
+      moderatorId,
+      startedAt: at,
+      endedAt: null
+    };
+    if (!this.jsonMode && this.database) {
+      try {
+        const collection = await this.mongoCollection();
+        await collection.insertOne({
+          _id: session.id,
+          guildId,
+          moderatorId,
+          startedAt: at,
+          endedAt: null
+        });
+        return session;
+      } catch (error) {
+        this.failMongo(error);
+      }
+    }
+    const all = await this.readJson();
+    const state = all[guildId] ?? { sessions: [] };
+    state.sessions.push(toJson2(session));
+    all[guildId] = state;
+    await this.writeJson(all);
+    return session;
+  }
+  async stopNow(guildId, moderatorId, at) {
+    if (!this.jsonMode && this.database) {
+      try {
+        const collection = await this.mongoCollection();
+        const document = await collection.findOneAndUpdate(
+          { guildId, moderatorId, endedAt: null },
+          { $set: { endedAt: at } },
+          { sort: { startedAt: -1 }, returnDocument: "after" }
+        );
+        return document ? revive2(document) : null;
+      } catch (error) {
+        this.failMongo(error);
+      }
+    }
+    const all = await this.readJson();
+    const sessions = all[guildId]?.sessions ?? [];
+    const open = sessions.filter((session) => session.moderatorId === moderatorId && session.endedAt === null).sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime())[0];
+    if (!open) {
+      return null;
+    }
+    open.endedAt = at.toISOString();
+    await this.writeJson(all);
+    return fromJson2(open);
+  }
+  async closeStaleNow(guildId, at) {
+    if (!this.jsonMode && this.database) {
+      try {
+        const collection = await this.mongoCollection();
+        const result = await collection.updateMany(
+          { guildId, endedAt: null },
+          { $set: { endedAt: at } }
+        );
+        return result.modifiedCount;
+      } catch (error) {
+        this.failMongo(error);
+      }
+    }
+    const all = await this.readJson();
+    const sessions = all[guildId]?.sessions ?? [];
+    let closed = 0;
+    for (const session of sessions) {
+      if (session.endedAt === null) {
+        session.endedAt = at.toISOString();
+        closed += 1;
+      }
+    }
+    if (closed > 0) {
+      await this.writeJson(all);
+    }
+    return closed;
+  }
+  async mongoCollection() {
+    if (this.collection) {
+      return this.collection;
+    }
+    const collection = await this.database.collection(COLLECTION6);
+    await collection.createIndex({ guildId: 1, moderatorId: 1, endedAt: 1 });
+    this.collection = collection;
+    return collection;
+  }
+  async readJson() {
+    try {
+      const raw = await (0, import_promises8.readFile)(this.jsonPath, "utf8");
+      const parsed = JSON.parse(raw);
+      return parsed && typeof parsed === "object" ? parsed : {};
+    } catch (error) {
+      if (error.code === "ENOENT") {
+        return {};
+      }
+      this.warnJson("Could not read duty sessions; starting a new file", error);
+      return {};
+    }
+  }
+  async writeJson(all) {
+    await (0, import_promises8.mkdir)((0, import_node_path9.dirname)(this.jsonPath), { recursive: true });
+    const temp = `${this.jsonPath}.tmp`;
+    await (0, import_promises8.writeFile)(temp, `${JSON.stringify(all, null, 2)}
+`, "utf8");
+    await (0, import_promises8.rename)(temp, this.jsonPath);
+  }
+  failMongo(error) {
+    this.jsonMode = true;
+    if (!this.warnedMongo) {
+      this.warnedMongo = true;
+      this.logger.warn(
+        "Duty Mongo store unavailable; falling back to JSON",
+        serializeError(error)
+      );
+    }
+  }
+  warnJson(message, error) {
+    if (this.warnedJson) {
+      return;
+    }
+    this.warnedJson = true;
+    this.logger.warn(message, serializeError(error));
+  }
+};
+
+// src/staff/maintenance.ts
+var DEFAULT_INTERVAL_MS = 6e4;
+var MaintenanceService = class {
+  guildId;
+  cases;
+  duty;
+  logger;
+  intervalMs;
+  timer = null;
+  running = false;
+  staleDutySessions = 0;
+  constructor(options) {
+    this.guildId = options.guildId;
+    this.cases = options.cases;
+    this.duty = options.duty;
+    this.logger = options.logger;
+    this.intervalMs = Math.max(1e3, options.intervalMs ?? DEFAULT_INTERVAL_MS);
+  }
+  async initialize() {
+    try {
+      this.staleDutySessions = await this.duty.closeStaleSessions(this.guildId);
+    } catch (error) {
+      this.staleDutySessions = 0;
+      this.logger.warn("Could not close stale duty sessions", serializeError(error));
+    }
+    return this.staleDutySessions;
+  }
+  start() {
+    if (this.timer) {
+      return;
+    }
+    this.timer = setInterval(() => {
+      void this.runOnce();
+    }, this.intervalMs);
+    this.timer.unref();
+  }
+  stop() {
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+  }
+  async runOnce(now = /* @__PURE__ */ new Date()) {
+    if (this.running) {
+      return {
+        expiredCases: 0,
+        staleDutySessions: this.staleDutySessions
+      };
+    }
+    this.running = true;
+    let expiredCases = 0;
+    try {
+      expiredCases = await this.cases.markExpired(this.guildId, now);
+    } catch (error) {
+      this.logger.warn("Could not expire moderation cases", serializeError(error));
+    } finally {
+      this.running = false;
+    }
+    return {
+      expiredCases,
+      staleDutySessions: this.staleDutySessions
+    };
+  }
+};
+
+// src/runtime/shutdown.ts
+var DEFAULT_TIMEOUT_MS2 = 5e3;
+function withTimeout(step, timeoutMs) {
+  return new Promise((resolve3, reject) => {
+    const timer = setTimeout(() => {
+      reject(new Error(`Shutdown step "${step.name}" timed out after ${timeoutMs}ms.`));
+    }, timeoutMs);
+    timer.unref();
+    Promise.resolve().then(() => step.run()).then(
+      () => {
+        clearTimeout(timer);
+        resolve3();
+      },
+      (error) => {
+        clearTimeout(timer);
+        reject(error);
+      }
+    );
+  });
+}
+async function runShutdown(steps, logger, timeoutMs = DEFAULT_TIMEOUT_MS2) {
+  const budget = Math.max(1, timeoutMs);
+  for (const step of steps) {
+    try {
+      await withTimeout(step, budget);
+    } catch (error) {
+      logger.warn("Shutdown step failed", {
+        step: step.name,
+        ...serializeError(error)
+      });
+    }
+  }
+}
+
+// src/version.ts
+var VERSION = "1.1.0";
+
+// src/runtime.ts
+var FLUSH_TIMEOUT_MS = 5e3;
+function storeMode(durable) {
+  return durable ? "mongodb" : "json";
+}
+var AssembledRuntime = class {
+  audit;
+  auditStore;
+  cases;
+  duty;
+  staff;
+  staffChannels;
+  security;
+  raid;
+  snapshots;
+  webhooks;
+  reconciler;
+  cursors;
+  maintenance;
+  client;
+  config;
+  logger;
+  database;
+  snapshotStore;
+  stateStore;
+  seenStore;
+  channels = /* @__PURE__ */ new Map();
+  initialized = false;
+  shuttingDown = false;
+  constructor(options) {
+    this.client = options.client;
+    this.config = options.config;
+    this.logger = options.logger;
+    const dataDir = options.dataDir ?? "data";
+    const path = (name) => (0, import_node_path10.join)(dataDir, name);
+    this.database = new BotDatabase({
+      uri: options.config.mongoUri,
+      dbName: options.config.mongoDb,
+      logger: options.logger.child("db")
+    });
+    const database = options.config.mongoUri ? this.database : null;
+    this.auditStore = new AuditStore({
+      database,
+      jsonPath: path("audit.ndjson"),
+      logger: options.logger.child("audit-store"),
+      retentionDays: options.config.auditRetentionDays
+    });
+    this.cases = new CaseStore({
+      database,
+      jsonPath: path("mod-cases.json"),
+      logger: options.logger.child("cases")
+    });
+    this.duty = new DutyStore({
+      database,
+      jsonPath: path("staff-duty.json"),
+      logger: options.logger.child("duty")
+    });
+    this.snapshotStore = new SnapshotStore({
+      database,
+      jsonPath: path("guild-snapshot.json"),
+      logger: options.logger.child("snapshots")
+    });
+    this.stateStore = new SecurityStateStore({
+      database,
+      jsonPath: path("security-state.json"),
+      logger: options.logger.child("security-state")
+    });
+    this.seenStore = new AuditSeenStore({
+      database,
+      jsonPath: path("audit-seen.json"),
+      logger: options.logger.child("audit-seen")
+    });
+    this.cursors = new AuditCursorStore({
+      database,
+      jsonPath: path("audit-cursors.json"),
+      logger: options.logger.child("audit-cursors")
+    });
+    const dispatcher = new AuditDispatcher({
+      client: options.client,
+      config: options.config,
+      logger: options.logger.child("audit-dispatcher"),
+      resolveChannels: () => this.channels
+    });
+    this.audit = new AuditService({
+      guildId: options.config.guildId,
+      store: this.auditStore,
+      sink: dispatcher,
+      logger: options.logger.child("audit")
+    });
+    const restore = new RestoreService({
+      client: options.client,
+      config: options.config,
+      snapshotStore: this.snapshotStore,
+      audit: this.audit,
+      logger: options.logger.child("restore")
+    });
+    this.security = new SecurityService({
+      client: options.client,
+      config: options.config,
+      cases: this.cases,
+      audit: this.audit,
+      restore,
+      state: this.stateStore,
+      logger: options.logger.child("security")
+    });
+    this.raid = new RaidGuard({
+      config: options.config,
+      security: this.security,
+      audit: this.audit,
+      logger: options.logger.child("raid"),
+      state: this.stateStore
+    });
+    this.snapshots = new SnapshotService({
+      getGuild: () => this.client.guilds.cache.get(options.config.guildId) ?? null,
+      store: this.snapshotStore,
+      audit: this.audit,
+      config: options.config,
+      logger: options.logger.child("snapshot-service")
+    });
+    this.staff = new StaffActions({
+      client: options.client,
+      config: options.config,
+      cases: this.cases,
+      audit: this.audit,
+      logger: options.logger.child("staff")
+    });
+    this.staffChannels = new StaffChannelActions({
+      client: options.client,
+      config: options.config,
+      cases: this.cases,
+      audit: this.audit,
+      logger: options.logger.child("staff-channels")
+    });
+    this.maintenance = new MaintenanceService({
+      guildId: options.config.guildId,
+      cases: this.cases,
+      duty: this.duty,
+      logger: options.logger.child("maintenance")
+    });
+    const resolver = new AuditLogResolver({
+      client: options.client,
+      logger: options.logger.child("audit-resolver"),
+      seen: this.seenStore
+    });
+    this.webhooks = new WebhookTracker({
+      resolver,
+      security: this.security,
+      logger: options.logger.child("webhooks")
+    });
+    this.reconciler = new AuditReconciler({
+      client: options.client,
+      config: options.config,
+      audit: this.audit,
+      logger: options.logger.child("reconciler"),
+      cursors: this.cursors,
+      seen: this.seenStore
+    });
+    registerAuditRecorder({
+      client: options.client,
+      config: options.config,
+      audit: this.audit,
+      resolver,
+      security: this.security,
+      webhooks: this.webhooks,
+      logger: options.logger.child("recorders")
+    });
+    this.audit.record({
+      category: "lifecycle",
+      type: "bot.startup",
+      summary: "Runtime assembled",
+      severity: "info",
+      feed: false,
+      fields: [
+        { name: "Version", value: VERSION, inline: true },
+        { name: "Intents", value: String(options.intents?.length ?? 0), inline: true },
+        { name: "Audit store", value: storeMode(this.auditStore.durable), inline: true },
+        { name: "Case store", value: storeMode(this.cases.durable), inline: true },
+        { name: "Security mode", value: options.config.antiNukeMode, inline: true }
+      ],
+      payload: {
+        version: VERSION,
+        intents: options.intents?.length ?? 0,
+        auditStore: storeMode(this.auditStore.durable),
+        caseStore: storeMode(this.cases.durable),
+        securityMode: options.config.antiNukeMode,
+        securityEnabled: options.config.antiNukeEnabled
+      }
+    });
+  }
+  get auditChannels() {
+    return this.channels;
+  }
+  async initialize(guild) {
+    if (this.initialized) {
+      return;
+    }
+    this.initialized = true;
+    let created = 0;
+    let warnings = [];
+    try {
+      const result = await ensureAuditChannels(
+        guild,
+        this.config,
+        this.logger.child("audit-channels")
+      );
+      this.channels = result.channels;
+      created = result.created.length;
+      warnings = result.warnings;
+      for (const warning of result.warnings) {
+        this.logger.warn(warning);
+      }
+    } catch (error) {
+      this.logger.warn("Audit channel provisioning failed", serializeError(error));
+    }
+    try {
+      await this.webhooks.warm(guild);
+    } catch (error) {
+      this.logger.warn("Webhook baseline warm-up failed", serializeError(error));
+    }
+    try {
+      await this.raid.restoreState();
+    } catch (error) {
+      this.logger.warn("Raid state restore failed", serializeError(error));
+    }
+    try {
+      const stale = await this.maintenance.initialize();
+      if (stale > 0) {
+        this.logger.info("Closed stale duty sessions", { count: stale });
+      }
+    } catch (error) {
+      this.logger.warn("Maintenance initialization failed", serializeError(error));
+    }
+    this.maintenance.start();
+    this.snapshots.start();
+    this.reconciler.start();
+    this.audit.record({
+      category: "lifecycle",
+      type: "bot.ready",
+      summary: "Runtime ready",
+      severity: "info",
+      feed: false,
+      fields: [
+        { name: "Version", value: VERSION, inline: true },
+        { name: "Channels", value: String(this.channels.size), inline: true },
+        { name: "Created", value: String(created), inline: true },
+        {
+          name: "Stores",
+          value: `audit ${storeMode(this.auditStore.durable)} \xB7 cases ${storeMode(this.cases.durable)}`
+        },
+        { name: "Warnings", value: String(warnings.length), inline: true }
+      ],
+      payload: {
+        version: VERSION,
+        guildId: guild.id,
+        channels: [...this.channels.entries()],
+        created,
+        warnings: [...warnings],
+        auditStore: storeMode(this.auditStore.durable),
+        caseStore: storeMode(this.cases.durable)
+      }
+    });
+  }
+  async shutdown() {
+    if (this.shuttingDown) {
+      return;
+    }
+    this.shuttingDown = true;
+    this.audit.record({
+      category: "lifecycle",
+      type: "bot.shutdown",
+      summary: "Runtime shutting down",
+      severity: "info",
+      feed: false,
+      fields: [
+        { name: "Version", value: VERSION, inline: true },
+        {
+          name: "Stores",
+          value: `audit ${storeMode(this.auditStore.durable)} \xB7 cases ${storeMode(this.cases.durable)}`
+        }
+      ],
+      payload: {
+        version: VERSION,
+        auditStore: storeMode(this.auditStore.durable),
+        caseStore: storeMode(this.cases.durable)
+      }
+    });
+    const steps = [
+      { name: "reconciler", run: () => this.reconciler.stop() },
+      { name: "snapshots", run: () => this.snapshots.stop() },
+      { name: "maintenance", run: () => this.maintenance.stop() },
+      { name: "security", run: () => this.security.flush() },
+      { name: "audit-flush", run: () => this.audit.flush() },
+      { name: "audit-close", run: () => this.audit.close() },
+      { name: "cases", run: () => this.cases.close() },
+      { name: "duty", run: () => this.duty.close() },
+      { name: "snapshot-store", run: () => this.snapshotStore.close() },
+      { name: "state", run: () => this.stateStore.close() },
+      { name: "audit-seen", run: () => this.seenStore.close() },
+      { name: "audit-cursors", run: () => this.cursors.close() },
+      { name: "database", run: () => this.database.close() }
+    ];
+    await runShutdown(steps, this.logger.child("shutdown"), FLUSH_TIMEOUT_MS);
+  }
+};
+async function createRuntime(options) {
+  return new AssembledRuntime(options);
+}
+
+// src/services/member-join.ts
+async function handleMemberJoin(options) {
+  try {
+    const result = await options.raid.observeJoin(options.member);
+    if (result.contained) {
+      return "contained";
+    }
+  } catch (error) {
+    options.logger.warn("Raid guard evaluation failed; continuing the join", {
+      userId: options.member.id,
+      ...serializeError(error)
+    });
+  }
+  try {
+    await options.community.onMemberJoin(options.member);
+    return "community";
+  } catch (error) {
+    options.logger.warn("Member join handling failed", {
+      userId: options.member.id,
+      ...serializeError(error)
+    });
+    return "failed";
+  }
+}
+
 // src/services/community.ts
-var import_discord18 = __toESM(require_src());
+var import_discord41 = __toESM(require_src());
 var CommunityService = class {
   constructor(config, levels, logger) {
     this.config = config;
@@ -111827,7 +119609,7 @@ var CommunityService = class {
     const rulesChannel = this.findNamedChannel(member.guild, "rules");
     const rolesChannel = this.findNamedChannel(member.guild, "roles");
     const ticketChannel = this.findNamedChannel(member.guild, "open-a-ticket");
-    const embed = new import_discord18.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / THE GATE" }).setTitle("A new name in the ledger.").setDescription(
+    const embed = new import_discord41.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / THE GATE" }).setTitle("A new name in the ledger.").setDescription(
       `Welcome in, ${member}. The yard is a software studio on one side and an after-hours crew on the other.`
     ).setColor(BRAND.colors.brass).addFields(
       {
@@ -111846,24 +119628,24 @@ var CommunityService = class {
     const buttons = [];
     if (rulesChannel) {
       buttons.push(
-        new import_discord18.ButtonBuilder().setLabel("Rules").setStyle(import_discord18.ButtonStyle.Link).setURL(channelUrl(member.guild.id, rulesChannel.id))
+        new import_discord41.ButtonBuilder().setLabel("Rules").setStyle(import_discord41.ButtonStyle.Link).setURL(channelUrl(member.guild.id, rulesChannel.id))
       );
     }
     if (rolesChannel) {
       buttons.push(
-        new import_discord18.ButtonBuilder().setLabel("Pick roles").setStyle(import_discord18.ButtonStyle.Link).setURL(channelUrl(member.guild.id, rolesChannel.id))
+        new import_discord41.ButtonBuilder().setLabel("Pick roles").setStyle(import_discord41.ButtonStyle.Link).setURL(channelUrl(member.guild.id, rolesChannel.id))
       );
     }
     if (ticketChannel) {
       buttons.push(
-        new import_discord18.ButtonBuilder().setLabel("Open a ticket").setStyle(import_discord18.ButtonStyle.Link).setURL(channelUrl(member.guild.id, ticketChannel.id))
+        new import_discord41.ButtonBuilder().setLabel("Open a ticket").setStyle(import_discord41.ButtonStyle.Link).setURL(channelUrl(member.guild.id, ticketChannel.id))
       );
     }
     try {
       await channel.send({
         content: `<@${member.id}>`,
         embeds: [embed],
-        components: buttons.length > 0 ? [new import_discord18.ActionRowBuilder().addComponents(buttons)] : [],
+        components: buttons.length > 0 ? [new import_discord41.ActionRowBuilder().addComponents(buttons)] : [],
         allowedMentions: { users: [member.id] }
       });
     } catch (error) {
@@ -111874,16 +119656,16 @@ var CommunityService = class {
       });
     }
   }
-  async applyAutoRoles(member, roleIds, reason) {
-    if (roleIds.length === 0) {
+  async applyAutoRoles(member, roleIds2, reason2) {
+    if (roleIds2.length === 0) {
       return;
     }
-    const roles = roleIds.filter((id) => member.guild.roles.cache.has(id));
+    const roles = roleIds2.filter((id) => member.guild.roles.cache.has(id));
     if (roles.length === 0) {
       return;
     }
     try {
-      await member.roles.add(roles, reason);
+      await member.roles.add(roles, reason2);
     } catch (error) {
       this.logger.warn("Auto-role failed", {
         userId: member.id,
@@ -111966,7 +119748,7 @@ var CommunityService = class {
     if (!channel) {
       return;
     }
-    const embed = new import_discord18.EmbedBuilder().setAuthor({
+    const embed = new import_discord41.EmbedBuilder().setAuthor({
       name: member.displayName,
       iconURL: member.displayAvatarURL({ size: 128 })
     }).setTitle(`Level ${grant.record.level}`).setDescription(
@@ -112010,7 +119792,7 @@ var CommunityService = class {
 };
 
 // src/services/heartbeat.ts
-var import_node_crypto2 = require("node:crypto");
+var import_node_crypto5 = require("node:crypto");
 var HEARTBEAT_INTERVAL_MS = 3e4;
 var REQUEST_TIMEOUT_MS2 = 1e4;
 var FAILURE_LOG_INTERVAL_MS = 5 * 6e4;
@@ -112098,7 +119880,7 @@ var HeartbeatService = class {
     try {
       const body = this.buildBody();
       const raw = JSON.stringify(body);
-      const signature = (0, import_node_crypto2.createHmac)("sha256", secret).update(raw).digest("hex");
+      const signature = (0, import_node_crypto5.createHmac)("sha256", secret).update(raw).digest("hex");
       const response = await fetch(`${siteUrl2}/api/bot/heartbeat`, {
         method: "POST",
         headers: {
@@ -112127,7 +119909,7 @@ var HeartbeatService = class {
       if (payload === null) {
         return;
       }
-      if (!isRecord(payload)) {
+      if (!isRecord2(payload)) {
         this.logger.debug("Heartbeat response was not an object; ignoring.");
         return;
       }
@@ -112221,17 +120003,17 @@ var HeartbeatService = class {
       this.logger.error("Heartbeat command sync failed", { error: serializeError(error) });
     }
   }
-  recordFailure(reason) {
+  recordFailure(reason2) {
     this.lastFailureAt = /* @__PURE__ */ new Date();
-    this.lastFailureReason = reason;
+    this.lastFailureReason = reason2;
     const now = Date.now();
     if (now - this.lastFailureLoggedAt >= FAILURE_LOG_INTERVAL_MS) {
       this.lastFailureLoggedAt = now;
-      this.logger.warn("Website heartbeat failed; the bot will keep running.", { reason });
+      this.logger.warn("Website heartbeat failed; the bot will keep running.", { reason: reason2 });
     }
   }
 };
-function isRecord(value) {
+function isRecord2(value) {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 function isAbortError(error) {
@@ -112348,8 +120130,8 @@ var BotState = class {
 };
 
 // src/tickets/ledger.ts
-var import_mongodb2 = __toESM(require_lib3());
-var CONNECT_TIMEOUT_MS2 = 5e3;
+var import_mongodb3 = __toESM(require_lib3());
+var CONNECT_TIMEOUT_MS3 = 5e3;
 var FAILURE_BACKOFF_MS = 6e4;
 var TicketLedger = class {
   uri;
@@ -112369,7 +120151,7 @@ var TicketLedger = class {
   get configured() {
     return Boolean(this.uri);
   }
-  opened(record, guildId, channelName) {
+  opened(record, guildId, channelName2) {
     this.track(
       this.run("open", async (tickets) => {
         const now = /* @__PURE__ */ new Date();
@@ -112383,7 +120165,7 @@ var TicketLedger = class {
               openerTag: record.openerTag,
               claimedById: record.claimedById,
               status: "open",
-              channelName,
+              channelName: channelName2,
               updatedAt: now
             },
             $setOnInsert: {
@@ -112399,7 +120181,7 @@ var TicketLedger = class {
       })
     );
   }
-  claimed(record, guildId, channelName) {
+  claimed(record, guildId, channelName2) {
     this.track(
       this.run("claim", async (tickets) => {
         await tickets.updateOne(
@@ -112412,7 +120194,7 @@ var TicketLedger = class {
               openerTag: record.openerTag,
               claimedById: record.claimedById,
               status: "open",
-              channelName,
+              channelName: channelName2,
               updatedAt: /* @__PURE__ */ new Date()
             },
             $setOnInsert: {
@@ -112428,7 +120210,7 @@ var TicketLedger = class {
       })
     );
   }
-  closed(record, guildId, closedById, channelName) {
+  closed(record, guildId, closedById, channelName2) {
     this.track(
       this.run("close", async (tickets) => {
         const now = /* @__PURE__ */ new Date();
@@ -112442,7 +120224,7 @@ var TicketLedger = class {
               openerTag: record.openerTag,
               claimedById: record.claimedById,
               status: "closed",
-              channelName,
+              channelName: channelName2,
               closedAt: now,
               closedById,
               updatedAt: now
@@ -112557,11 +120339,11 @@ var TicketLedger = class {
   }
   collection() {
     if (!this.collectionPromise) {
-      const client = new import_mongodb2.MongoClient(this.uri, {
+      const client = new import_mongodb3.MongoClient(this.uri, {
         appName: "WrightyardBot",
         maxPoolSize: 5,
-        serverSelectionTimeoutMS: CONNECT_TIMEOUT_MS2,
-        connectTimeoutMS: CONNECT_TIMEOUT_MS2,
+        serverSelectionTimeoutMS: CONNECT_TIMEOUT_MS3,
+        connectTimeoutMS: CONNECT_TIMEOUT_MS3,
         retryWrites: true
       });
       this.client = client;
@@ -112586,7 +120368,33 @@ var TicketLedger = class {
 };
 
 // src/tickets/service.ts
-var import_discord19 = __toESM(require_src());
+var import_discord42 = __toESM(require_src());
+
+// src/audit/tickets.ts
+var VERBS = {
+  open: "opened",
+  claim: "claimed",
+  close: "closed",
+  delete: "deleted"
+};
+function ticketAuditEvent(input) {
+  return {
+    category: "ticket",
+    type: `ticket.${input.action}`,
+    summary: `Ticket #${input.ticketNumber} ${VERBS[input.action]}`,
+    severity: input.action === "delete" ? "warn" : "info",
+    actor: { id: input.actorId, tag: input.actorId },
+    target: { id: input.channelId },
+    channelId: input.channelId,
+    fields: [
+      { name: "Ticket", value: `#${input.ticketNumber}`, inline: true },
+      { name: "Channel", value: `<#${input.channelId}>`, inline: true },
+      { name: "Opened by", value: `<@${input.openerId}>`, inline: true },
+      { name: "Actor", value: `<@${input.actorId}>`, inline: true }
+    ],
+    payload: { ticketNumber: input.ticketNumber, openerId: input.openerId }
+  };
+}
 
 // src/tickets/store.ts
 var TICKET_TOPIC = /^Wrightyard ticket #(\d{4,}) · opener (\d{17,20}) · (?:claimed by (\d{17,20}) · )?(open|closed)$/;
@@ -112701,6 +120509,7 @@ var TicketService = class {
   cooldowns;
   store;
   ledger;
+  audit;
   categoryId;
   queueTail = Promise.resolve();
   warnedMissingStaff = false;
@@ -112713,6 +120522,7 @@ var TicketService = class {
     this.cooldowns = options.cooldowns;
     this.store = options.store ?? new TicketStore();
     this.ledger = options.ledger ?? null;
+    this.audit = options.audit ?? null;
     this.categoryId = options.config.ticketCategoryId;
   }
   get openCount() {
@@ -112733,7 +120543,7 @@ var TicketService = class {
     let closed = 0;
     const channelNames = /* @__PURE__ */ new Map();
     for (const channel of guild.channels.cache.values()) {
-      if (channel.parentId !== category.id || channel.type !== import_discord19.ChannelType.GuildText) {
+      if (channel.parentId !== category.id || channel.type !== import_discord42.ChannelType.GuildText) {
         continue;
       }
       const parsed = parseTicketTopic(channel.topic);
@@ -112777,7 +120587,7 @@ var TicketService = class {
     if (this.state.maintenance) {
       await interaction.reply({
         content: "The yard is closed for maintenance. The gate reopens when the work is done.",
-        flags: import_discord19.MessageFlags.Ephemeral,
+        flags: import_discord42.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -112785,7 +120595,7 @@ var TicketService = class {
     if (this.config.staffRoleIds.length === 0) {
       await interaction.reply({
         content: "Ticket intake is not configured on this deployment. A studio member can open the gate.",
-        flags: import_discord19.MessageFlags.Ephemeral,
+        flags: import_discord42.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -112795,12 +120605,12 @@ var TicketService = class {
     if (remaining > 0) {
       await interaction.reply({
         content: `Give the gate a moment. Try again in ${Math.ceil(remaining / 1e3)}s.`,
-        flags: import_discord19.MessageFlags.Ephemeral,
+        flags: import_discord42.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
     }
-    await interaction.deferReply({ flags: import_discord19.MessageFlags.Ephemeral });
+    await interaction.deferReply({ flags: import_discord42.MessageFlags.Ephemeral });
     try {
       const category = await this.resolveCategory(guild, true);
       if (!category) {
@@ -112819,6 +120629,15 @@ var TicketService = class {
         channelId: record.channelId,
         openerId: record.openerId
       });
+      this.audit?.record(
+        ticketAuditEvent({
+          action: "open",
+          ticketNumber: record.number,
+          channelId: record.channelId,
+          actorId: record.openerId,
+          openerId: record.openerId
+        })
+      );
     } catch (error) {
       if (error instanceof UserFacingError) {
         await interaction.editReply(error.message);
@@ -112843,7 +120662,7 @@ var TicketService = class {
     if (!this.isStaff(interaction)) {
       await interaction.reply({
         content: "Only studio staff can claim a ticket.",
-        flags: import_discord19.MessageFlags.Ephemeral,
+        flags: import_discord42.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -112853,7 +120672,7 @@ var TicketService = class {
     if (!channel || !record) {
       await interaction.reply({
         content: "That button belongs to a ticket channel that is no longer on the ledger.",
-        flags: import_discord19.MessageFlags.Ephemeral,
+        flags: import_discord42.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -112861,7 +120680,7 @@ var TicketService = class {
     if (record.status === "closed") {
       await interaction.reply({
         content: "This ticket is already closed.",
-        flags: import_discord19.MessageFlags.Ephemeral,
+        flags: import_discord42.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -112869,24 +120688,24 @@ var TicketService = class {
     if (record.claimedById) {
       await interaction.reply({
         content: `This ticket is already claimed by <@${record.claimedById}>.`,
-        flags: import_discord19.MessageFlags.Ephemeral,
+        flags: import_discord42.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
     }
     const missing = this.missingChannelPermissions(channel, [
-      import_discord19.PermissionFlagsBits.ManageChannels,
-      import_discord19.PermissionFlagsBits.SendMessages
+      import_discord42.PermissionFlagsBits.ManageChannels,
+      import_discord42.PermissionFlagsBits.SendMessages
     ]);
     if (missing.length > 0) {
       await interaction.reply({
         content: `I need ${formatPermissionList(missing)} in this ticket channel to claim it.`,
-        flags: import_discord19.MessageFlags.Ephemeral,
+        flags: import_discord42.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
     }
-    await interaction.deferReply({ flags: import_discord19.MessageFlags.Ephemeral });
+    await interaction.deferReply({ flags: import_discord42.MessageFlags.Ephemeral });
     try {
       record.claimedById = interaction.user.id;
       await channel.setTopic(ticketTopic(record), `Ticket #${ticketNumber(record.number)} claimed`);
@@ -112902,6 +120721,15 @@ var TicketService = class {
         channelId: record.channelId,
         staffId: interaction.user.id
       });
+      this.audit?.record(
+        ticketAuditEvent({
+          action: "claim",
+          ticketNumber: record.number,
+          channelId: record.channelId,
+          actorId: interaction.user.id,
+          openerId: record.openerId
+        })
+      );
     } catch (error) {
       this.logger.error("Ticket claim failed", {
         ticketNumber: record.number,
@@ -112922,7 +120750,7 @@ var TicketService = class {
     if (!channel || !record) {
       await interaction.reply({
         content: "That button belongs to a ticket channel that is no longer on the ledger.",
-        flags: import_discord19.MessageFlags.Ephemeral,
+        flags: import_discord42.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -112930,7 +120758,7 @@ var TicketService = class {
     if (!this.canClose(interaction, record)) {
       await interaction.reply({
         content: "Only the person who opened this ticket or a studio member can close it.",
-        flags: import_discord19.MessageFlags.Ephemeral,
+        flags: import_discord42.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -112938,7 +120766,7 @@ var TicketService = class {
     if (record.status === "closed") {
       await interaction.reply({
         content: "This ticket is already closed.",
-        flags: import_discord19.MessageFlags.Ephemeral,
+        flags: import_discord42.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -112946,7 +120774,7 @@ var TicketService = class {
     await interaction.reply({
       content: `Close ticket #${ticketNumber(record.number)}? The room stays on the ledger; staff can remove it later.`,
       components: [closeConfirmRow()],
-      flags: import_discord19.MessageFlags.Ephemeral,
+      flags: import_discord42.MessageFlags.Ephemeral,
       allowedMentions: { parse: [] }
     });
   }
@@ -112960,7 +120788,7 @@ var TicketService = class {
     if (!channel || !record) {
       await interaction.reply({
         content: "That button belongs to a ticket channel that is no longer on the ledger.",
-        flags: import_discord19.MessageFlags.Ephemeral,
+        flags: import_discord42.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -112968,7 +120796,7 @@ var TicketService = class {
     if (!this.canClose(interaction, record)) {
       await interaction.reply({
         content: "Only the person who opened this ticket or a studio member can close it.",
-        flags: import_discord19.MessageFlags.Ephemeral,
+        flags: import_discord42.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -112976,20 +120804,20 @@ var TicketService = class {
     if (record.status === "closed" || channel.name.startsWith("closed-")) {
       await interaction.reply({
         content: "This ticket is already closed.",
-        flags: import_discord19.MessageFlags.Ephemeral,
+        flags: import_discord42.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
     }
     const missing = this.missingChannelPermissions(channel, [
-      import_discord19.PermissionFlagsBits.ManageChannels,
-      import_discord19.PermissionFlagsBits.ManageRoles,
-      import_discord19.PermissionFlagsBits.SendMessages
+      import_discord42.PermissionFlagsBits.ManageChannels,
+      import_discord42.PermissionFlagsBits.ManageRoles,
+      import_discord42.PermissionFlagsBits.SendMessages
     ]);
     if (missing.length > 0) {
       await interaction.reply({
         content: `I need ${formatPermissionList(missing)} in this ticket channel to close it.`,
-        flags: import_discord19.MessageFlags.Ephemeral,
+        flags: import_discord42.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -113027,6 +120855,15 @@ var TicketService = class {
         channelId: record.channelId,
         closedById: interaction.user.id
       });
+      this.audit?.record(
+        ticketAuditEvent({
+          action: "close",
+          ticketNumber: record.number,
+          channelId: record.channelId,
+          actorId: interaction.user.id,
+          openerId: record.openerId
+        })
+      );
     } catch (error) {
       this.logger.error("Ticket close failed", {
         ticketNumber: record.number,
@@ -113049,7 +120886,7 @@ var TicketService = class {
     if (!this.isStaff(interaction)) {
       await interaction.reply({
         content: "Only studio staff can remove a ticket channel.",
-        flags: import_discord19.MessageFlags.Ephemeral,
+        flags: import_discord42.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -113059,7 +120896,7 @@ var TicketService = class {
     if (!channel || !record) {
       await interaction.reply({
         content: "That button belongs to a ticket channel that is no longer on the ledger.",
-        flags: import_discord19.MessageFlags.Ephemeral,
+        flags: import_discord42.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -113067,7 +120904,7 @@ var TicketService = class {
     if (record.status !== "closed" && !channel.name.startsWith("closed-")) {
       await interaction.reply({
         content: "Close the ticket before removing the room.",
-        flags: import_discord19.MessageFlags.Ephemeral,
+        flags: import_discord42.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -113075,7 +120912,7 @@ var TicketService = class {
     await interaction.reply({
       content: `Delete <#${channel.id}>? This removes the channel and its history. This cannot be undone.`,
       components: [deleteConfirmRow()],
-      flags: import_discord19.MessageFlags.Ephemeral,
+      flags: import_discord42.MessageFlags.Ephemeral,
       allowedMentions: { parse: [] }
     });
   }
@@ -113087,7 +120924,7 @@ var TicketService = class {
     if (!this.isStaff(interaction)) {
       await interaction.reply({
         content: "Only studio staff can remove a ticket channel.",
-        flags: import_discord19.MessageFlags.Ephemeral,
+        flags: import_discord42.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -113097,7 +120934,7 @@ var TicketService = class {
     if (!channel || !record) {
       await interaction.reply({
         content: "That button belongs to a ticket channel that is no longer on the ledger.",
-        flags: import_discord19.MessageFlags.Ephemeral,
+        flags: import_discord42.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -113105,16 +120942,16 @@ var TicketService = class {
     if (record.status !== "closed" && !channel.name.startsWith("closed-")) {
       await interaction.reply({
         content: "Close the ticket before removing the room.",
-        flags: import_discord19.MessageFlags.Ephemeral,
+        flags: import_discord42.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
     }
-    const missing = this.missingChannelPermissions(channel, [import_discord19.PermissionFlagsBits.ManageChannels]);
+    const missing = this.missingChannelPermissions(channel, [import_discord42.PermissionFlagsBits.ManageChannels]);
     if (missing.length > 0) {
       await interaction.reply({
         content: `I need ${formatPermissionList(missing)} in this ticket channel to remove it.`,
-        flags: import_discord19.MessageFlags.Ephemeral,
+        flags: import_discord42.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       });
       return;
@@ -113131,6 +120968,15 @@ var TicketService = class {
         channelId: record.channelId,
         deletedById: interaction.user.id
       });
+      this.audit?.record(
+        ticketAuditEvent({
+          action: "delete",
+          ticketNumber: record.number,
+          channelId: record.channelId,
+          actorId: interaction.user.id,
+          openerId: record.openerId
+        })
+      );
     } catch (error) {
       this.logger.error("Ticket channel delete failed", {
         ticketNumber: record.number,
@@ -113158,7 +121004,7 @@ var TicketService = class {
       throw new UserFacingError("I couldn't resolve my own guild member record.");
     }
     const permissions = channel.permissionsFor(me);
-    if (!permissions?.has(import_discord19.PermissionFlagsBits.ViewChannel) || !permissions.has(import_discord19.PermissionFlagsBits.SendMessages) || !permissions.has(import_discord19.PermissionFlagsBits.EmbedLinks)) {
+    if (!permissions?.has(import_discord42.PermissionFlagsBits.ViewChannel) || !permissions.has(import_discord42.PermissionFlagsBits.SendMessages) || !permissions.has(import_discord42.PermissionFlagsBits.EmbedLinks)) {
       throw new UserFacingError("I need View Channel, Send Messages, and Embed Links in the ticket panel channel.");
     }
     const embed = buildTicketPanel();
@@ -113187,7 +121033,7 @@ var TicketService = class {
     if (!interaction.inCachedGuild()) {
       void interaction.reply({
         content: "The yard lives in a server. Run this there.",
-        flags: import_discord19.MessageFlags.Ephemeral,
+        flags: import_discord42.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       }).catch(() => void 0);
       return null;
@@ -113195,7 +121041,7 @@ var TicketService = class {
     if (interaction.guildId !== this.config.guildId) {
       void interaction.reply({
         content: "This bot serves a different yard.",
-        flags: import_discord19.MessageFlags.Ephemeral,
+        flags: import_discord42.MessageFlags.Ephemeral,
         allowedMentions: { parse: [] }
       }).catch(() => void 0);
       return null;
@@ -113209,7 +121055,7 @@ var TicketService = class {
     return this.isStaff(interaction) || interaction.user.id === record.openerId;
   }
   ticketChannel(channel) {
-    if (!channel || channel.type !== import_discord19.ChannelType.GuildText) {
+    if (!channel || channel.type !== import_discord42.ChannelType.GuildText) {
       return null;
     }
     return channel;
@@ -113242,7 +121088,7 @@ var TicketService = class {
       return stored;
     }
     for (const channel of guild.channels.cache.values()) {
-      if (channel.parentId !== category.id || channel.type !== import_discord19.ChannelType.GuildText) {
+      if (channel.parentId !== category.id || channel.type !== import_discord42.ChannelType.GuildText) {
         continue;
       }
       const parsed = parseTicketTopic(channel.topic);
@@ -113278,7 +121124,7 @@ var TicketService = class {
       this.categoryId = null;
     }
     const byName = guild.channels.cache.find(
-      (channel) => channel.type === import_discord19.ChannelType.GuildCategory && channel.name.toLowerCase() === "tickets"
+      (channel) => channel.type === import_discord42.ChannelType.GuildCategory && channel.name.toLowerCase() === "tickets"
     );
     if (byName) {
       this.categoryId = byName.id;
@@ -113291,19 +121137,19 @@ var TicketService = class {
   }
   async fetchCategory(guild, id) {
     const cached = guild.channels.cache.get(id);
-    if (cached?.type === import_discord19.ChannelType.GuildCategory) {
+    if (cached?.type === import_discord42.ChannelType.GuildCategory) {
       return cached;
     }
     try {
       const fetched = await guild.channels.fetch(id);
-      return fetched?.type === import_discord19.ChannelType.GuildCategory ? fetched : null;
+      return fetched?.type === import_discord42.ChannelType.GuildCategory ? fetched : null;
     } catch {
       return null;
     }
   }
   async createCategory(guild) {
     const me = guild.members.me;
-    if (!me?.permissions.has(import_discord19.PermissionFlagsBits.ManageChannels) || !me.permissions.has(import_discord19.PermissionFlagsBits.ManageRoles)) {
+    if (!me?.permissions.has(import_discord42.PermissionFlagsBits.ManageChannels) || !me.permissions.has(import_discord42.PermissionFlagsBits.ManageRoles)) {
       throw new UserFacingError(
         "I need Manage Channels and Manage Roles to create the private ticket desk. A studio member can fix the permissions."
       );
@@ -113314,30 +121160,30 @@ var TicketService = class {
     }
     const category = await guild.channels.create({
       name: "Tickets",
-      type: import_discord19.ChannelType.GuildCategory,
+      type: import_discord42.ChannelType.GuildCategory,
       permissionOverwrites: [
         {
           id: guild.roles.everyone.id,
-          deny: [import_discord19.PermissionFlagsBits.ViewChannel]
+          deny: [import_discord42.PermissionFlagsBits.ViewChannel]
         },
         ...staffRoleIds.map((roleId) => ({
           id: roleId,
           allow: [
-            import_discord19.PermissionFlagsBits.ViewChannel,
-            import_discord19.PermissionFlagsBits.SendMessages,
-            import_discord19.PermissionFlagsBits.ReadMessageHistory,
-            import_discord19.PermissionFlagsBits.AttachFiles
+            import_discord42.PermissionFlagsBits.ViewChannel,
+            import_discord42.PermissionFlagsBits.SendMessages,
+            import_discord42.PermissionFlagsBits.ReadMessageHistory,
+            import_discord42.PermissionFlagsBits.AttachFiles
           ]
         })),
         {
           id: me.id,
           allow: [
-            import_discord19.PermissionFlagsBits.ViewChannel,
-            import_discord19.PermissionFlagsBits.SendMessages,
-            import_discord19.PermissionFlagsBits.ReadMessageHistory,
-            import_discord19.PermissionFlagsBits.AttachFiles,
-            import_discord19.PermissionFlagsBits.ManageChannels,
-            import_discord19.PermissionFlagsBits.EmbedLinks
+            import_discord42.PermissionFlagsBits.ViewChannel,
+            import_discord42.PermissionFlagsBits.SendMessages,
+            import_discord42.PermissionFlagsBits.ReadMessageHistory,
+            import_discord42.PermissionFlagsBits.AttachFiles,
+            import_discord42.PermissionFlagsBits.ManageChannels,
+            import_discord42.PermissionFlagsBits.EmbedLinks
           ]
         }
       ],
@@ -113349,7 +121195,7 @@ var TicketService = class {
   }
   async createTicket(guild, category, user) {
     const me = guild.members.me;
-    if (!me?.permissions.has(import_discord19.PermissionFlagsBits.ManageChannels) || !me.permissions.has(import_discord19.PermissionFlagsBits.ManageRoles)) {
+    if (!me?.permissions.has(import_discord42.PermissionFlagsBits.ManageChannels) || !me.permissions.has(import_discord42.PermissionFlagsBits.ManageRoles)) {
       throw new UserFacingError(
         "I need Manage Channels and Manage Roles to open a private room. A studio member can fix the permissions."
       );
@@ -113363,42 +121209,42 @@ var TicketService = class {
     try {
       channel = await guild.channels.create({
         name: ticketChannelName(number, user.username),
-        type: import_discord19.ChannelType.GuildText,
+        type: import_discord42.ChannelType.GuildText,
         parent: category.id,
         topic: ticketTopic({ number, openerId: user.id, claimedById: null, status: "open" }),
         permissionOverwrites: [
           {
             id: guild.roles.everyone.id,
-            deny: [import_discord19.PermissionFlagsBits.ViewChannel]
+            deny: [import_discord42.PermissionFlagsBits.ViewChannel]
           },
           {
             id: user.id,
             allow: [
-              import_discord19.PermissionFlagsBits.ViewChannel,
-              import_discord19.PermissionFlagsBits.SendMessages,
-              import_discord19.PermissionFlagsBits.ReadMessageHistory,
-              import_discord19.PermissionFlagsBits.AttachFiles
+              import_discord42.PermissionFlagsBits.ViewChannel,
+              import_discord42.PermissionFlagsBits.SendMessages,
+              import_discord42.PermissionFlagsBits.ReadMessageHistory,
+              import_discord42.PermissionFlagsBits.AttachFiles
             ]
           },
           ...staffRoleIds.map((roleId) => ({
             id: roleId,
             allow: [
-              import_discord19.PermissionFlagsBits.ViewChannel,
-              import_discord19.PermissionFlagsBits.SendMessages,
-              import_discord19.PermissionFlagsBits.ReadMessageHistory,
-              import_discord19.PermissionFlagsBits.AttachFiles
+              import_discord42.PermissionFlagsBits.ViewChannel,
+              import_discord42.PermissionFlagsBits.SendMessages,
+              import_discord42.PermissionFlagsBits.ReadMessageHistory,
+              import_discord42.PermissionFlagsBits.AttachFiles
             ]
           })),
           {
             id: me.id,
             allow: [
-              import_discord19.PermissionFlagsBits.ViewChannel,
-              import_discord19.PermissionFlagsBits.SendMessages,
-              import_discord19.PermissionFlagsBits.ReadMessageHistory,
-              import_discord19.PermissionFlagsBits.AttachFiles,
-              import_discord19.PermissionFlagsBits.ManageChannels,
-              import_discord19.PermissionFlagsBits.EmbedLinks,
-              import_discord19.PermissionFlagsBits.ManageMessages
+              import_discord42.PermissionFlagsBits.ViewChannel,
+              import_discord42.PermissionFlagsBits.SendMessages,
+              import_discord42.PermissionFlagsBits.ReadMessageHistory,
+              import_discord42.PermissionFlagsBits.AttachFiles,
+              import_discord42.PermissionFlagsBits.ManageChannels,
+              import_discord42.PermissionFlagsBits.EmbedLinks,
+              import_discord42.PermissionFlagsBits.ManageMessages
             ]
           }
         ],
@@ -113547,7 +121393,7 @@ var TicketService = class {
     if (!channel) {
       return;
     }
-    const embed = new import_discord19.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / TICKET DESK" }).setTitle(`Ticket #${ticketNumber(record.number)} channel removed`).setColor(BRAND.colors.ink).addFields(
+    const embed = new import_discord42.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / TICKET DESK" }).setTitle(`Ticket #${ticketNumber(record.number)} channel removed`).setColor(BRAND.colors.ink).addFields(
       { name: "Opened by", value: `<@${record.openerId}>`, inline: true },
       { name: "Removed by", value: `<@${deletedById}>`, inline: true },
       { name: "Opened", value: formatTimestamp(record.openedAt, "f"), inline: true },
@@ -113566,11 +121412,11 @@ var TicketService = class {
       return null;
     }
     const cached = guild.channels.cache.get(id);
-    if (cached?.type === import_discord19.ChannelType.GuildText) {
+    if (cached?.type === import_discord42.ChannelType.GuildText) {
       return cached;
     }
     const fetched = await guild.channels.fetch(id).catch(() => null);
-    if (fetched?.type !== import_discord19.ChannelType.GuildText) {
+    if (fetched?.type !== import_discord42.ChannelType.GuildText) {
       this.logger.warn("Ticket log channel is missing or not a text channel", { channelId: id });
       return null;
     }
@@ -113584,10 +121430,10 @@ var TicketService = class {
     }
     if (!channel) {
       channel = guild.channels.cache.find(
-        (candidate) => (candidate.type === import_discord19.ChannelType.GuildText || candidate.type === import_discord19.ChannelType.GuildAnnouncement) && candidate.name.toLowerCase() === "open-a-ticket"
+        (candidate) => (candidate.type === import_discord42.ChannelType.GuildText || candidate.type === import_discord42.ChannelType.GuildAnnouncement) && candidate.name.toLowerCase() === "open-a-ticket"
       ) ?? null;
     }
-    if (!channel || channel.type !== import_discord19.ChannelType.GuildText && channel.type !== import_discord19.ChannelType.GuildAnnouncement) {
+    if (!channel || channel.type !== import_discord42.ChannelType.GuildText && channel.type !== import_discord42.ChannelType.GuildAnnouncement) {
       throw new UserFacingError("I couldn't find the ticket panel channel. Set TICKET_PANEL_CHANNEL_ID or create #open-a-ticket.");
     }
     return channel;
@@ -113611,7 +121457,7 @@ var TicketService = class {
     if (!channel) {
       return;
     }
-    const embed = new import_discord19.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / TICKET DESK" }).setTitle("Ticket intake failed").setColor(BRAND.colors.red).setDescription(
+    const embed = new import_discord42.EmbedBuilder().setAuthor({ name: "WRIGHTYARD / TICKET DESK" }).setTitle("Ticket intake failed").setColor(BRAND.colors.red).setDescription(
       "A private room could not be created. The user received a safe error and the real error is in the bot logs."
     ).addFields({ name: "Opened by", value: `<@${openerId}>`, inline: true }).setFooter({ text: BRAND.footer }).setTimestamp();
     await channel.send({ embeds: [embed], allowedMentions: { parse: [] } }).catch((error) => {
@@ -113634,14 +121480,14 @@ var TicketService = class {
 };
 function permissionName(permission) {
   const names = [
-    [import_discord19.PermissionFlagsBits.ViewChannel, "View Channel"],
-    [import_discord19.PermissionFlagsBits.SendMessages, "Send Messages"],
-    [import_discord19.PermissionFlagsBits.EmbedLinks, "Embed Links"],
-    [import_discord19.PermissionFlagsBits.ReadMessageHistory, "Read Message History"],
-    [import_discord19.PermissionFlagsBits.AttachFiles, "Attach Files"],
-    [import_discord19.PermissionFlagsBits.ManageChannels, "Manage Channels"],
-    [import_discord19.PermissionFlagsBits.ManageRoles, "Manage Roles"],
-    [import_discord19.PermissionFlagsBits.ManageMessages, "Manage Messages"]
+    [import_discord42.PermissionFlagsBits.ViewChannel, "View Channel"],
+    [import_discord42.PermissionFlagsBits.SendMessages, "Send Messages"],
+    [import_discord42.PermissionFlagsBits.EmbedLinks, "Embed Links"],
+    [import_discord42.PermissionFlagsBits.ReadMessageHistory, "Read Message History"],
+    [import_discord42.PermissionFlagsBits.AttachFiles, "Attach Files"],
+    [import_discord42.PermissionFlagsBits.ManageChannels, "Manage Channels"],
+    [import_discord42.PermissionFlagsBits.ManageRoles, "Manage Roles"],
+    [import_discord42.PermissionFlagsBits.ManageMessages, "Manage Messages"]
   ];
   return names.find(([flag]) => flag === permission)?.[1] ?? "the required permission";
 }
@@ -113677,31 +121523,47 @@ var CommandSyncer = class {
   commands;
   logger;
   inFlight = null;
-  sync(reason) {
+  sync(reason2) {
     if (this.inFlight) {
       return this.inFlight;
     }
-    const run = this.perform(reason).finally(() => {
+    const run = this.perform(reason2).finally(() => {
       this.inFlight = null;
     });
     this.inFlight = run;
     return run;
   }
-  async perform(reason) {
+  async perform(reason2) {
     const guild = await this.client.guilds.fetch(this.guildId);
     const body = [...this.commands.values()].map((command) => command.data.toJSON());
     const registered = await guild.commands.set(body);
     this.logger.info("Guild commands registered", {
       count: registered.size,
       guildId: guild.id,
-      reason
+      reason: reason2
     });
     return registered.size;
   }
 };
 
 // src/validate.ts
-var import_discord20 = __toESM(require_src());
+var import_discord43 = __toESM(require_src());
+var REQUIRED_PERMISSIONS = [
+  import_discord43.PermissionFlagsBits.ViewChannel,
+  import_discord43.PermissionFlagsBits.SendMessages,
+  import_discord43.PermissionFlagsBits.EmbedLinks,
+  import_discord43.PermissionFlagsBits.ReadMessageHistory,
+  import_discord43.PermissionFlagsBits.AttachFiles,
+  import_discord43.PermissionFlagsBits.ManageChannels,
+  import_discord43.PermissionFlagsBits.ManageRoles,
+  import_discord43.PermissionFlagsBits.ManageMessages,
+  import_discord43.PermissionFlagsBits.ViewAuditLog,
+  import_discord43.PermissionFlagsBits.ModerateMembers,
+  import_discord43.PermissionFlagsBits.KickMembers,
+  import_discord43.PermissionFlagsBits.BanMembers,
+  import_discord43.PermissionFlagsBits.ManageWebhooks,
+  import_discord43.PermissionFlagsBits.ManageGuildExpressions
+];
 async function validateGuildConfiguration(client, config, logger) {
   const guild = client.guilds.cache.get(config.guildId);
   if (!guild) {
@@ -113716,12 +121578,19 @@ async function validateGuildConfiguration(client, config, logger) {
     members: guild.memberCount
   });
   const checks = [
-    { name: "announcements", id: config.announcementsChannelId, types: [import_discord20.ChannelType.GuildText, import_discord20.ChannelType.GuildAnnouncement] },
-    { name: "ticket panel", id: config.ticketPanelChannelId, types: [import_discord20.ChannelType.GuildText, import_discord20.ChannelType.GuildAnnouncement] },
-    { name: "ticket log", id: config.ticketLogChannelId, types: [import_discord20.ChannelType.GuildText] },
-    { name: "ticket category", id: config.ticketCategoryId, types: [import_discord20.ChannelType.GuildCategory] },
-    { name: "welcome", id: config.welcomeChannelId, types: [import_discord20.ChannelType.GuildText] },
-    { name: "level-up", id: config.levelUpChannelId, types: [import_discord20.ChannelType.GuildText] }
+    { name: "announcements", id: config.announcementsChannelId, types: [import_discord43.ChannelType.GuildText, import_discord43.ChannelType.GuildAnnouncement] },
+    { name: "ticket panel", id: config.ticketPanelChannelId, types: [import_discord43.ChannelType.GuildText, import_discord43.ChannelType.GuildAnnouncement] },
+    { name: "ticket log", id: config.ticketLogChannelId, types: [import_discord43.ChannelType.GuildText] },
+    { name: "ticket category", id: config.ticketCategoryId, types: [import_discord43.ChannelType.GuildCategory] },
+    { name: "welcome", id: config.welcomeChannelId, types: [import_discord43.ChannelType.GuildText] },
+    { name: "level-up", id: config.levelUpChannelId, types: [import_discord43.ChannelType.GuildText] },
+    { name: "audit category", id: config.logCategoryId, types: [import_discord43.ChannelType.GuildCategory] },
+    { name: "message log", id: config.messageLogChannelId, types: [import_discord43.ChannelType.GuildText] },
+    { name: "member log", id: config.memberLogChannelId, types: [import_discord43.ChannelType.GuildText] },
+    { name: "server log", id: config.serverLogChannelId, types: [import_discord43.ChannelType.GuildText] },
+    { name: "voice log", id: config.voiceLogChannelId, types: [import_discord43.ChannelType.GuildText] },
+    { name: "security log", id: config.securityLogChannelId, types: [import_discord43.ChannelType.GuildText] },
+    { name: "mod log", id: config.modLogChannelId, types: [import_discord43.ChannelType.GuildText] }
   ];
   for (const check of checks) {
     if (!check.id) {
@@ -113743,6 +121612,16 @@ async function validateGuildConfiguration(client, config, logger) {
     if (!guild.roles.cache.has(roleId)) {
       logger.warn("Configured staff role is not present in the guild.", { roleId });
     }
+  }
+  if (config.antiNukeQuarantineRoleId && !guild.roles.cache.has(config.antiNukeQuarantineRoleId)) {
+    logger.warn("Configured quarantine role is not present in the guild.", {
+      roleId: config.antiNukeQuarantineRoleId
+    });
+  }
+  if (config.logMessageContent && !GATEWAY_INTENTS.includes(import_discord43.GatewayIntentBits.MessageContent)) {
+    logger.warn(
+      "LOG_MESSAGE_CONTENT is on but the Message Content intent is not requested; content will not be stored."
+    );
   }
   for (const roleId of config.autoRoleIds) {
     if (!guild.roles.cache.has(roleId)) {
@@ -113771,17 +121650,9 @@ async function validateGuildConfiguration(client, config, logger) {
     logger.error("The bot's guild member record is missing.");
     return;
   }
-  const required2 = [
-    import_discord20.PermissionFlagsBits.ViewChannel,
-    import_discord20.PermissionFlagsBits.SendMessages,
-    import_discord20.PermissionFlagsBits.EmbedLinks,
-    import_discord20.PermissionFlagsBits.ReadMessageHistory,
-    import_discord20.PermissionFlagsBits.AttachFiles,
-    import_discord20.PermissionFlagsBits.ManageChannels,
-    import_discord20.PermissionFlagsBits.ManageRoles,
-    import_discord20.PermissionFlagsBits.ManageMessages
-  ];
-  const missing = required2.filter((permission) => !me.permissions.has(permission));
+  const missing = REQUIRED_PERMISSIONS.filter(
+    (permission) => !me.permissions.has(permission)
+  );
   if (missing.length > 0) {
     logger.warn("The bot is missing permissions needed for the full yard experience.", {
       permissions: missing.map((permission) => permission.toString())
@@ -113792,14 +121663,14 @@ async function validateGuildConfiguration(client, config, logger) {
 }
 
 // src/deploy.ts
-var import_discord21 = __toESM(require_src());
+var import_discord44 = __toESM(require_src());
 async function deployCommands() {
   const logger = new Logger("deploy");
   const config = loadDeployConfig();
   const commands = await loadCommands();
   const body = [...commands.values()].map((command) => command.data.toJSON());
-  const rest = new import_discord21.REST({ version: "10" }).setToken(config.token);
-  const result = await rest.put(import_discord21.Routes.applicationGuildCommands(config.clientId, config.guildId), {
+  const rest = new import_discord44.REST({ version: "10" }).setToken(config.token);
+  const result = await rest.put(import_discord44.Routes.applicationGuildCommands(config.clientId, config.guildId), {
     body
   });
   logger.info("Commands deployed to the guild", {
@@ -113808,9 +121679,6 @@ async function deployCommands() {
     commands: body.map((command) => command.name)
   });
 }
-
-// src/version.ts
-var VERSION = "1.1.0";
 
 // src/index.ts
 async function main() {
@@ -113841,13 +121709,21 @@ async function main() {
   });
   const state = new BotState();
   const cooldowns = new CooldownStore();
-  const client = new import_discord22.Client({
-    intents: [
-      import_discord22.GatewayIntentBits.Guilds,
-      import_discord22.GatewayIntentBits.GuildMembers,
-      import_discord22.GatewayIntentBits.GuildMessages
+  const client = new import_discord45.Client({
+    intents: [...GATEWAY_INTENTS],
+    partials: [
+      import_discord45.Partials.Message,
+      import_discord45.Partials.Channel,
+      import_discord45.Partials.GuildMember,
+      import_discord45.Partials.User
     ],
     allowedMentions: { parse: [] }
+  });
+  const runtime = await createRuntime({
+    client,
+    config,
+    logger,
+    intents: GATEWAY_INTENTS
   });
   const commands = await loadCommands();
   logger.info("Commands loaded", { count: commands.size, commands: [...commands.keys()] });
@@ -113866,6 +121742,7 @@ async function main() {
     state,
     cooldowns,
     ledger,
+    audit: runtime.audit,
     logger: logger.child("tickets")
   });
   const levels = new LevelStore({
@@ -113916,8 +121793,16 @@ async function main() {
     syncer,
     commands,
     version,
-    startedAt: state.startedAt
+    startedAt: state.startedAt,
+    audit: runtime.audit,
+    runtime
   };
+  logger.info("Audit and security services ready", {
+    auditStore: runtime.auditStore.durable ? "mongodb" : "json",
+    caseStore: runtime.cases.durable ? "mongodb" : "json",
+    securityMode: config.antiNukeEnabled ? config.antiNukeMode : "disabled",
+    raidGuard: config.raidGuardEnabled ? "enabled" : "disabled"
+  });
   let healthServer = await startHealthServer({
     port: config.port,
     client,
@@ -113944,6 +121829,7 @@ async function main() {
         await stopHealthServer(healthServer);
         healthServer = null;
       }
+      await runtime.shutdown();
       await ledger.close();
       await levels.close();
       await client.destroy();
@@ -113960,34 +121846,38 @@ async function main() {
   process.once("SIGTERM", () => {
     void shutdown("SIGTERM");
   });
-  process.on("unhandledRejection", (reason) => {
-    logger.error("Unhandled rejection", { error: serializeError(reason) });
+  process.on("unhandledRejection", (reason2) => {
+    logger.error("Unhandled rejection", { error: serializeError(reason2) });
   });
   process.on("uncaughtException", (error) => {
     logger.error("Uncaught exception", { error: serializeError(error) });
     void shutdown("uncaughtException", 1);
   });
-  client.on(import_discord22.Events.Error, (error) => {
+  client.on(import_discord45.Events.Error, (error) => {
     logger.error("Gateway error", { error: serializeError(error) });
   });
-  client.on(import_discord22.Events.Warn, (message) => {
+  client.on(import_discord45.Events.Warn, (message) => {
     logger.warn("Gateway warning", { message });
   });
-  client.on(import_discord22.Events.InteractionCreate, (interaction) => {
+  client.on(import_discord45.Events.InteractionCreate, (interaction) => {
     void handleInteraction(interaction, context);
   });
-  client.on(import_discord22.Events.GuildMemberAdd, (member) => {
+  client.on(import_discord45.Events.GuildMemberAdd, (member) => {
     if (member.guild.id !== config.guildId) {
       return;
     }
-    void community.onMemberJoin(member).catch((error) => {
-      logger.warn("Member join handling failed", {
-        userId: member.id,
-        error: serializeError(error)
-      });
+    void handleMemberJoin({
+      member,
+      raid: runtime.raid,
+      community,
+      logger
+    }).then((outcome) => {
+      if (outcome === "failed") {
+        logger.warn("Member join handling failed", { userId: member.id });
+      }
     });
   });
-  client.on(import_discord22.Events.MessageCreate, (message) => {
+  client.on(import_discord45.Events.MessageCreate, (message) => {
     if (message.guildId !== config.guildId) {
       return;
     }
@@ -113999,12 +121889,12 @@ async function main() {
       });
     });
   });
-  client.on(import_discord22.Events.ChannelDelete, (channel) => {
+  client.on(import_discord45.Events.ChannelDelete, (channel) => {
     void tickets.handleChannelDelete(channel.id).catch((error) => {
       logger.warn("Ticket channel cleanup failed", { channelId: channel.id, error: serializeError(error) });
     });
   });
-  client.once(import_discord22.Events.ClientReady, (readyClient) => {
+  client.once(import_discord45.Events.ClientReady, (readyClient) => {
     void (async () => {
       logger.info("Gateway ready", {
         user: readyClient.user.tag,
@@ -114020,6 +121910,18 @@ async function main() {
         ledger: levels.durable ? "mongodb" : "json"
       });
       await validateGuildConfiguration(readyClient, config, logger);
+      const guild = readyClient.guilds.cache.get(config.guildId);
+      if (guild) {
+        try {
+          await runtime.initialize(guild);
+        } catch (error) {
+          logger.error("Runtime initialization failed", { error: serializeError(error) });
+        }
+      } else {
+        logger.error("Configured guild is not cached; runtime initialization was skipped", {
+          guildId: config.guildId
+        });
+      }
       try {
         await tickets.initialize();
       } catch (error) {
