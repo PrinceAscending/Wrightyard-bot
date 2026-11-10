@@ -297,6 +297,101 @@ export class StaffActions {
     });
   }
 
+  public note(actor: GuildMember, target: GuildMember, text: string): Promise<ModerationCase> {
+    return this.runAction(
+      { actor, target, minimumRank: "moderator" },
+      { action: "note", reason: text },
+      async () => undefined,
+    );
+  }
+
+  public listNotes(target: GuildMember): Promise<ModerationCase[]> {
+    return this.cases.list(target.guild.id, {
+      targetId: target.id,
+      action: "note",
+      limit: 100,
+    });
+  }
+
+  public async report(
+    reporter: GuildMember,
+    target: GuildMember,
+    reason: string,
+  ): Promise<ModerationCase> {
+    const record = await this.cases.create({
+      guildId: target.guild.id,
+      action: "report",
+      targetId: target.id,
+      targetTag: tagOf(target),
+      moderatorId: reporter.id,
+      moderatorTag: tagOf(reporter),
+      reason,
+      metadata: { reporterId: reporter.id },
+    });
+    this.audit.record({
+      category: "moderation",
+      type: "moderation.report",
+      summary: `Report against ${tagOf(target)} (case #${String(record.caseId).padStart(4, "0")})`,
+      severity: "warn",
+      actor: { id: reporter.id, tag: tagOf(reporter) },
+      target: { id: target.id, name: tagOf(target) },
+      fields: [
+        { name: "Case", value: `#${String(record.caseId).padStart(4, "0")}`, inline: true },
+        { name: "Target", value: `${tagOf(target)} (${target.id})`, inline: true },
+        { name: "Reporter", value: `${tagOf(reporter)} (${reporter.id})`, inline: true },
+        { name: "Reason", value: truncate(reason || "No reason provided", 1_000) },
+      ],
+      payload: { caseId: record.caseId, reporterId: reporter.id },
+    });
+    return record;
+  }
+
+  public async resolveCase(
+    actor: GuildMember,
+    caseId: number,
+    note?: string,
+  ): Promise<ModerationCase> {
+    const guild = this.guild();
+    this.assertGuard({
+      actorId: actor.id,
+      actorRank: resolveStaffRank(actor, this.config),
+      actorPosition: positionOf(actor),
+      targetId: "",
+      targetPosition: 0,
+      guildOwnerId: guild.ownerId,
+      botId: this.client.user?.id,
+      botPosition: this.botPosition(guild),
+      botPermissions: guild.members.me?.permissions,
+      config: this.config,
+      minimumRank: "moderator",
+      skipHierarchy: true,
+    });
+
+    const existing = await this.cases.get(guild.id, caseId);
+    if (!existing) {
+      throw new Error(`Case #${String(caseId).padStart(4, "0")} was not found.`);
+    }
+    if (existing.status !== "open") {
+      throw new Error(
+        `Case #${String(caseId).padStart(4, "0")} is ${existing.status}, not open.`,
+      );
+    }
+
+    await this.cases.updateStatus(guild.id, caseId, "closed", actor.id, note);
+    const record = await this.cases.create({
+      guildId: guild.id,
+      action: "caseResolve",
+      targetId: existing.targetId,
+      targetTag: existing.targetTag,
+      moderatorId: actor.id,
+      moderatorTag: tagOf(actor),
+      reason: note ?? `Case #${String(caseId).padStart(4, "0")} resolved`,
+      metadata: { resolvedCaseId: caseId },
+    });
+    this.audit.record(this.actionEvent(record, actor));
+    return record;
+  }
+
   private async runAction(
     context: ActionContext,
     details: {
