@@ -47,6 +47,6 @@ export interface BotContext {
   readonly commands: CommandRegistry;
   readonly version: string;
   readonly startedAt: Date;
-  readonly audit?: AuditService;
-  readonly runtime?: Runtime;
+  readonly audit: AuditService;
+  readonly runtime: Runtime;
 }

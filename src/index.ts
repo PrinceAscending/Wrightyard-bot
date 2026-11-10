@@ -3,14 +3,17 @@ import type { Server } from "node:http";
 import {
   Client,
   Events,
-  GatewayIntentBits,
+  Partials,
   type Client as DiscordClient,
 } from "discord.js";
 import { loadConfig } from "./config.js";
 import { CooldownStore } from "./cooldowns.js";
+import { GATEWAY_INTENTS } from "./intents.js";
 import { handleInteraction } from "./interactions/handler.js";
 import { loadCommands } from "./load-commands.js";
 import { Logger, serializeError } from "./logger.js";
+import { createRuntime } from "./runtime.js";
+import { handleMemberJoin } from "./services/member-join.js";
 import { AIService } from "./services/ai.js";
 import { CommunityService } from "./services/community.js";
 import { HeartbeatService } from "./services/heartbeat.js";
@@ -59,12 +62,21 @@ async function main(): Promise<void> {
   const state = new BotState();
   const cooldowns = new CooldownStore();
   const client: DiscordClient = new Client({
-    intents: [
-      GatewayIntentBits.Guilds,
-      GatewayIntentBits.GuildMembers,
-      GatewayIntentBits.GuildMessages,
+    intents: [...GATEWAY_INTENTS],
+    partials: [
+      Partials.Message,
+      Partials.Channel,
+      Partials.GuildMember,
+      Partials.User,
     ],
     allowedMentions: { parse: [] },
+  });
+
+  const runtime = await createRuntime({
+    client,
+    config,
+    logger,
+    intents: GATEWAY_INTENTS,
   });
 
   const commands = await loadCommands();
@@ -85,6 +97,7 @@ async function main(): Promise<void> {
     state,
     cooldowns,
     ledger,
+    audit: runtime.audit,
     logger: logger.child("tickets"),
   });
   const levels = new LevelStore({
@@ -138,7 +151,16 @@ async function main(): Promise<void> {
     commands,
     version,
     startedAt: state.startedAt,
+    audit: runtime.audit,
+    runtime,
   };
+
+  logger.info("Audit and security services ready", {
+    auditStore: runtime.auditStore.durable ? "mongodb" : "json",
+    caseStore: runtime.cases.durable ? "mongodb" : "json",
+    securityMode: config.antiNukeEnabled ? config.antiNukeMode : "disabled",
+    raidGuard: config.raidGuardEnabled ? "enabled" : "disabled",
+  });
 
   let healthServer: Server | null = await startHealthServer({
     port: config.port,
@@ -170,6 +192,7 @@ async function main(): Promise<void> {
         await stopHealthServer(healthServer);
         healthServer = null;
       }
+      await runtime.shutdown();
       await ledger.close();
       await levels.close();
       await client.destroy();
@@ -214,11 +237,15 @@ async function main(): Promise<void> {
     if (member.guild.id !== config.guildId) {
       return;
     }
-    void community.onMemberJoin(member).catch((error: unknown) => {
-      logger.warn("Member join handling failed", {
-        userId: member.id,
-        error: serializeError(error),
-      });
+    void handleMemberJoin({
+      member,
+      raid: runtime.raid,
+      community,
+      logger,
+    }).then((outcome) => {
+      if (outcome === "failed") {
+        logger.warn("Member join handling failed", { userId: member.id });
+      }
     });
   });
 
@@ -258,6 +285,19 @@ async function main(): Promise<void> {
       });
 
       await validateGuildConfiguration(readyClient, config, logger);
+
+      const guild = readyClient.guilds.cache.get(config.guildId);
+      if (guild) {
+        try {
+          await runtime.initialize(guild);
+        } catch (error) {
+          logger.error("Runtime initialization failed", { error: serializeError(error) });
+        }
+      } else {
+        logger.error("Configured guild is not cached; runtime initialization was skipped", {
+          guildId: config.guildId,
+        });
+      }
 
       try {
         await tickets.initialize();
