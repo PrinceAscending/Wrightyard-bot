@@ -1,4 +1,5 @@
 import type { Config } from "../config.js";
+import type { Client, Guild } from "discord.js";
 import type { Logger } from "../logger.js";
 
 export const GUILD_ID = "1566778873985892442";
@@ -81,4 +82,15 @@ export function makeConfig(overrides: Partial<Config> = {}): Config {
     snapshotIntervalMinutes: 360,
     ...overrides,
   };
+}
+
+export function fakeClient(guilds: Guild[] = []): Client {
+  const stub = {
+    guilds: { cache: new Map(guilds.map((guild) => [guild.id, guild])) },
+    channels: { cache: new Map() },
+    on: () => stub,
+    once: () => stub,
+    isReady: () => true,
+  };
+  return stub as unknown as Client;
 }
