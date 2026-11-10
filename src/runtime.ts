@@ -5,6 +5,7 @@ import type { StaffActions } from "./staff/actions.js";
 import type { CaseStore } from "./staff/cases.js";
 import type { StaffChannelActions } from "./staff/channels.js";
 import type { DutyStore } from "./staff/duty.js";
+import type { SecurityService } from "./security/service.js";
 
 /**
  * The process-wide service graph. Task 32 completes the implementation; later
@@ -17,6 +18,7 @@ export interface Runtime {
   readonly duty: DutyStore;
   readonly staff: StaffActions;
   readonly staffChannels: StaffChannelActions;
+  readonly security: SecurityService;
   initialize(guild: Guild): Promise<void>;
   shutdown(): Promise<void>;
 }

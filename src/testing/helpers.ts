@@ -113,6 +113,7 @@ export function makeMember(options: FakeMemberOptions = {}): GuildMember {
 
 export function fakeClient(guilds: Guild[] = []): Client {
   const stub = {
+    user: { id: BOT_ID, tag: "wrightyard#0001", username: "wrightyard", bot: true },
     guilds: { cache: new Map(guilds.map((guild) => [guild.id, guild])) },
     channels: { cache: new Map() },
     on: () => stub,
