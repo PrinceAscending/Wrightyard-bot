@@ -114236,10 +114236,14 @@ function oldestId(entries) {
   }
   return oldest;
 }
-var delay2 = (ms) => new Promise((resolve3) => {
-  const timer = setTimeout(resolve3, ms);
-  timer.unref();
-});
+var delay2 = (ms) => {
+  if (ms <= 0) {
+    return Promise.resolve();
+  }
+  return new Promise((resolve3) => {
+    setTimeout(resolve3, ms);
+  });
+};
 var AuditReconciler = class {
   client;
   config;

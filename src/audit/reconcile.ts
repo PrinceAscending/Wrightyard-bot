@@ -103,11 +103,14 @@ function oldestId(entries: readonly AuditEntryLike[]): string | null {
   return oldest;
 }
 
-const delay = (ms: number): Promise<void> =>
-  new Promise((resolve) => {
-    const timer = setTimeout(resolve, ms);
-    timer.unref();
+const delay = (ms: number): Promise<void> => {
+  if (ms <= 0) {
+    return Promise.resolve();
+  }
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
   });
+};
 
 /**
  * Backfills native Discord audit-log entries the gateway recorders could not
